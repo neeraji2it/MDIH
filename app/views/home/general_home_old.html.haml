@@ -1,0 +1,52 @@
+- if @show_signup_form
+  %script
+    signup()
+#largecontent
+  #slideshow_top
+    - image_num = 1 #[1,2,3,4,5,6,7].rand
+    #slideshow
+      %div{:class=>"#{image_num == 1 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-youngcpl.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 2 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-asian.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 3 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-interracial.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 4 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-mature.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 5 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-men.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 6 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-women.jpg", :alt=>"" }
+      %div{:class=>"#{image_num == 7 ? 'active' : ''}"}
+        %img{:src=>"/images/homepageheros/hero-africanamerican.jpg", :alt=>""}
+  #slideshow_inner
+    #largebubble
+      #starburst
+        = image_tag("free-starburst.png")
+      #starburst-text
+        = I18n.t('general_home.starburst_text.enjoy_the_best')
+      #simple_search{ :style => "padding-top: 120px; padding-left: 50px;color: #000000;" }
+        = render "searches/simple_search"
+    %br{ :clear => "all" }
+      #lrgfb
+        %div{:id => "fb-login"}
+          = link_to image_tag("facebook-ab.gif"), "http://www.facebook.com/group.php?gid=153338041350894", :target => "_blank"
+      #lrgtwit
+        = link_to image_tag("twitter-ab.gif"), "http://twitter.com/mydateishere", :target => "_blank"
+      #lrgfb{:style => "padding-right: 90px;"}
+        = image_tag("follow-us-ab.gif")
+
+
+
+%script
+  jQuery(function(){
+  setInterval( "slideSwitch()", 5000 );
+  });
+  //change_image()
+  function change_image(){
+  var images = ['hero-africanamerican.jpg', 'hero-asian.jpg', 'hero-interracial.jpg', 'hero-mature.jpg', 'hero-men.jpg', 'hero-women.jpg', 'hero-youngcpl.jpg']
+  var num = Math.floor(Math.random()*images.length)
+  document.getElementById('largecontent').style.backgroundImage = "url(/images/homepageheros/"+images[num]+")";
+  setTimeout('change_image()', 5000);
+  }
+  

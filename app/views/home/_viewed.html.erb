@@ -1,0 +1,73 @@
+<div class="content-box open-box">
+  <header class="heading">
+    <h2>who i checked out</h2>
+    <a href="#" class="opener">open/close</a>
+  </header>
+  <div class="slide">
+    <% if @profile_visitors.empty? %>
+      <div id="empty" align="center">
+        No users viewed by you
+      </div>
+    <% else %>
+      <div class="person-slider">
+        <div class="mask">
+          <ul>
+            <% for friend in @profile_visitors %>
+              <li>
+                <% if friend.facebook_id.present? %>
+      <%#= link_to image_tag(friend.profile ? friend.profile.avatar.url(:original) : "/assets/default_avatar.jpg", :width => 96,:height => 104, :title => "#{friend.display_name}(#{friend.age} years)"), user_path(friend) %>
+                  <%= link_to image_tag(friend.profile ? (friend.profile.avatar_file_name != "picture_type_large.jpg" ?  friend.profile.avatar.url(:original) : friend.fb_big_image) : friend.fb_big_image, :width => 96,:height => 104, :title => "#{friend.display_name}(#{friend.age} years)"), user_path(friend), "data-viewed_account_id_#{friend.id}" => friend.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "viewed_account_profile_#{friend.id}" : "" ) %>
+                <% else %>
+      <%#= link_to image_tag(friend.profile ? friend.profile.avatar.url(:original) : "/assets/default_avatar.jpg", :width => 96,:height => 104, :title => "#{friend.display_name}(#{friend.age} years)"), user_path(friend) %>
+                  <%= link_to image_tag(friend.profile ? friend.profile.avatar.url(:original)  : "/assets/default_avatar.jpg", :width => 96,:height => 104, :title => "#{friend.display_name}(#{friend.age} years)"), user_path(friend), "data-viewed_account_id_#{friend.id}" => friend.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "viewed_account_profile_#{friend.id}" : "" ) %>
+                <% end %>
+                <div class="row">
+                  <%= user_online_status_image(friend) %>
+                  <% if friend.available_today == true %>
+                    <span class='free'>free</span>
+                  <% else %>
+                  <% end %>
+                </div>
+                <div class="text">
+                  <span> <%=  friend.age %> - <%= friend.gender %></span>
+                  <span><%= friend.orientation %>,</span>
+                  <span><%= friend.profile.city rescue "" %></span>
+                </div>
+                <script type="text/javascript">
+                  $(function() {
+                    jQuery("#viewed_account_profile_<%= friend.id %>").bind("mousestop", function(event){
+                      if(event.type == "mousestop"){
+                        var account_id = $(this).data("viewed_account_id_<%= friend.id %>");
+                        $.ajax({
+                          url: "/users/"+account_id,
+                          type: 'get',
+                          success: function(resp){
+                            jQuery.fancybox({
+                              padding: 15,
+                              cyclic: false,
+                              overlayShow: true,
+                              transitionIn:'elastic',
+                              transitionOut:'elastic',
+                              speedIn:600,
+                              speedOut:600,
+                              overlayOpacity:0,
+                              titlePosition: 'inside',
+                              content : resp
+                            });
+                          }
+                        });
+                      }else{
+                      }
+                    });
+                  });
+                </script>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <a href="#" class="btn-prev">prev</a>
+        <a href="#" class="btn-next">next</a>
+      </div>
+    <% end %>
+  </div>
+</div>

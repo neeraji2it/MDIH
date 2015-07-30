@@ -1,0 +1,37 @@
+## YAML Template.
+
+message1:
+    id: 1
+    subject: Hi
+    body: How are you?
+    user_id: 1
+    message_type: sent
+    user_status: read
+    has_replies: 1
+
+message2:
+    id: 2
+    subject: Hi
+    body: How are you?
+    user_id: 1
+    message_type: sent
+    user_status: sent
+    has_replies: 0
+
+message3:
+    id: 3
+    subject: Hi
+    body: How are you?
+    user_id: 1
+    message_type: draft
+    user_status: sent
+    has_replies: 0
+
+message4:
+    id: 4
+    subject: Hi
+    body: How are you?
+    user_id: 1
+    message_type: draft
+    user_status: sent
+    has_replies: 0

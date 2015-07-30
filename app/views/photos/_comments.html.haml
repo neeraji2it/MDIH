@@ -1,0 +1,16 @@
+%table{ :width => "100%"}
+  - for comment in @photo.photo_comments
+    %tr{ :id => "comment_#{comment.id}"}
+      %td{ :valign => "top", :width => "10%" }
+        %div{:style => "width: 50px; height: 50px; overflow: hidden;"}
+          = link_to image_tag(comment.user.profile ? comment.user.profile.avatar.url(:other) : "default_avatar.jpg", :width => 50), user_path(comment.user)
+      %td{ :valign => "top", :style => "color: #000000;font-size: 12px;" }
+        %div
+          = link_to comment.user.display_name, user_path(comment.user), :style => "color: #588F50;"
+          = comment.comment
+        %div{ :style => "padding-top: 5px;" }
+          %div{ :style => "float:left;"}
+            = I18n.l comment.created_at.in_time_zone(user_time_zone),:format => :short3
+          - if @photo.user_id == current_user.id
+            %div{ :style => "float:right" }
+              = link_to I18n.t('links.delete'), delete_comment_user_album_photo_path(current_user, @photo.album, comment.id), :remote => true, :method => :delete, :confirm => "#{I18n.t('photo.label.are_you_sure')}"

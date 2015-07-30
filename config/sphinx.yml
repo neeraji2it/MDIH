@@ -1,0 +1,14 @@
+development:
+  port: 3314
+  address: localhost
+  max_matches: 10000
+  enable_star: true
+  min_infix_len: 1
+
+production:
+  port: 3315
+  address: localhost
+  max_matches: 10000
+  enable_star: true
+  min_infix_len: 1
+  bin_path: "/usr/local/bin"

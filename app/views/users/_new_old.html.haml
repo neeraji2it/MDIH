@@ -1,0 +1,47 @@
+#user_signup{:style => "#{request.xhr? ? 'height: 550px;overflow: auto;width: 780px;' : ''}"}
+  %table{ :width => "100%", :style => "padding-bottom: 20px;" }
+    %tr
+      %td{ :valign => "top" }
+        %p{ :style => "font-size: 17px;border-bottom: 1px solid #8DB986;" }
+          = I18n.t('user.label.sign_up_for_free')
+        - @user.password = @user.password_confirmation = nil
+        - remote_form_for @user, :url => {:controller => "users", :action => @user.new_record? ? "create" : "update" } , :html => { :method => @user.new_record? ? "post" : "put" } do |f|
+          = render :partial => "users/form", :locals =>{:f => f}
+      %td{ :align => "center", :valign => "top", :width => "20px" }
+        \&nbsp;
+        =# image_tag("button-dark.png", :width => 1, :height => 200)
+      %td{ :valign => "top" }
+        %p{ :style => "font-size: 17px;border-bottom: 1px solid #8DB986;" }
+          = I18n.t('user.label.already_a_member')
+        %br
+        - form_remote_tag :url => session_path do
+          %table{ :cellspacing => "0", :cellpadding => "2", :width => "100%" }
+            %tr
+              %td{ :align => "center", :colspan => "2" }
+                #login_flash.error
+                  = flash[:error]
+                #login__signup_flash.error
+            %tr
+              %td{:width => "50%"}
+                Login&nbsp;*:
+              %td
+                = text_field_tag 'login',"",:size=>25
+            %tr
+              %td
+                Password&nbsp;*:
+              %td
+                = password_field_tag 'password',"",:size=>25
+            %tr
+              %td{:colspan => "2" }
+                Stay logged in:
+                = check_box_tag 'remember_me', '',:checked , :value => 1
+                %input{ :name => "login_from_signup", :type => "hidden", :value => "yes" }
+            %tr
+              %td{:colspan =>"2", :height => "1px;",  :style => "font-size: 17px;border-bottom: 1px solid #8DB986;"}
+            %tr
+              %td
+                \&nbsp;
+              %td
+                = image_submit_tag("login.gif", :style => "width: 70px")
+                \&nbsp;&nbsp;&nbsp;&nbsp;
+

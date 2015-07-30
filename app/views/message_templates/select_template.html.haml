@@ -1,0 +1,17 @@
+%table{ :width => "100%" }
+  %tr
+    %td{ :valign => "top", :style => "font-size: 17px;border-bottom: 1px solid #8DB986;" }
+      %div{:style => "float:left;" }
+        = I18n.t('message_template.label.select_template')
+      %div{:style => "float:right;font-size:10px;" }
+        = link_to I18n.t('message_template.label.add_new_template'), new_user_message_template_path(current_user, :send_to => params[:send_to]), :class => "small_green"
+    %tr
+      %td
+        #templates{:style => "max-height: 300px;overflow:auto;width:600px"}
+          - if !@message_templates.empty?
+            - for message_template in @message_templates
+              .reademail{:style => "margin: 5px;"}
+                = link_to truncate(message_template.subject, :length => 90), params[:send_to] ? new_user_message_path(current_user, :send_to => params[:send_to], :template_id => message_template.id) : new_user_message_path(current_user, :send_to => params[:send_to], :template_id => message_template.id)
+          - else
+            %p{:style => "height: 50px;font-size: 13px;", :align => "center"}
+              = I18n.t('message_template.label.no_templates_created')#{link_to 'create', new_user_message_template_path(current_user, :send_to => params[:send_to])} I18n.t('message_template.label.now')

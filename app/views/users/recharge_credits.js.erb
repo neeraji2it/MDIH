@@ -1,0 +1,24 @@
+<% if @status %>
+  jQuery("#user_total_credits").html("<%= @message %>")
+  <% if @gift_to.present? %>
+    send_gifts("<%= @gift_to %>", '');
+  <%  else %>
+    jQuery.fancybox.close();
+    alert("<%= I18n.t('user.recharged')  %>")
+  <%end %>
+<% else %>
+  var  html = "<%= escape_javascript(render(:partial => 'recharge_credits')) %>"
+  jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content : html
+  });
+  jQuery("#payment_status").html("<%= @message %>")
+<% end %>

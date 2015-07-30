@@ -1,0 +1,65 @@
+<%= form_tag(update_free_today_users_path, :method => :put, :remote => true) do %>
+  <div style="float:left; width: 123px;">
+    <div class="settings-section">
+      <div class="today-item">
+  <%#*<label style="font-size:15px;">Free</label>%>
+        <a href="" title="This will be enable the Free status for some hours. Change the hours in the My Profile, Setting page"><%= check_box_tag 'available', user.available_today, user.available_today  %></a>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= form_tag(update_chat_status_users_path, :method => :put, :remote => true) do %>
+  <div style="float:left;">
+    <div class="settings-section">
+      <div class="today-item">
+  <%#*<label style="font-size:15px;">Free</label>%>
+        <a href="" title="Chat On/Off"><%= check_box_tag 'chat', user.chat_status, user.chat_status %></a>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript" >
+  $(document).ready(function(){
+    $("#available").prev('div').click(function(){
+      var status = $("#available").val();
+      if(status == 'true'){
+        var chat_st = 'false';
+      }else{
+        var st = "available"
+        var chat_st = 'true';
+      }
+      jQuery.ajax({
+        url: "/users/update_free_today",
+        type: "PUT",
+        data:{
+          available:st
+        },
+        success:function(data){
+          $("#available").replaceWith('<input id="available" class="jcf-hidden" type="checkbox" value="'+chat_st+'" name="available"/>')
+        }
+      });
+    });
+    $("#chat").prev('div').click(function(){
+      var status = $("#chat").val();
+      if(status == 'true'){
+        var chat_stu = 'false';
+        var st = "false"
+      }else{
+        var st = "true"
+        var chat_stu = 'true';
+      }
+      jQuery.ajax({
+        url: "/users/update_chat_status",
+        type: "PUT",
+        data:{
+          chat:st
+        },
+        success:function(data){
+          $("#chat").replaceWith('<input id="chat" class="jcf-hidden" type="checkbox" value="'+chat_stu+'" name="chat">')
+        }
+      });
+    });
+  });
+
+</script>

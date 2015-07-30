@@ -1,0 +1,7 @@
+<% if params[:action] == 'index' %>
+  <%= render :partial => "layouts/friend_layout", :locals => {:partial_file => "gifts/gifts"} %>
+<%  elsif params[:action] == 'send_gifts' %>
+  <%= render :partial => "layouts/friend_layout", :locals => {:partial_file => "gifts/send_gifts"}%>
+<% elsif params[:action] == 'send_gift' or params[:action] == 'send_to_friend' %>
+  <%= render :partial => "layouts/friend_layout", :locals => {:partial_file => "gifts/send_gift"}%>
+<% end %>

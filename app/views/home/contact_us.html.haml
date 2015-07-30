@@ -1,0 +1,11 @@
+-if current_user
+  = render :partial => "layouts/friend_layout", :locals => {:partial_file => "home/contact_us"}
+- else
+  #leftnav{:style => "width: 129px"}
+    %p{:class=>"lefttopper"}
+    %p{:class=>"leftbtm"}
+  #rtcontent
+    #toprtshdw
+    = render :partial => "contact_us"
+    #btmrtshdw
+  

@@ -1,0 +1,10 @@
+Dear site administrator,
+
+You're lucky today, you've got feedback from your users:
+
+Subject: <%=h @feedback.subject %>
+User's email: <%=h @feedback.email %>
+Sent at: <%= @feedback.created_at.strftime("%m/%d/%Y at %I:%M %p") %>
+
+Comment:
+<%=h @feedback.comment %>

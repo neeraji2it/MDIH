@@ -1,0 +1,21 @@
+jQuery("#ajax_loader_big").hide
+<% if @sent %>
+jQuery("#send_gift_status_<%=  @user.id.to_s %>").html("<%=  @flash_message %>");
+jQuery("#user_total_credits").html("<%=  current_user.credits.to_s %>");
+  jQuery.fancybox.close();
+<% else %>
+  var  html = "<%= escape_javascript(render(:partial => 'ajax_send_gift')) %>"
+  jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content : html
+  });
+  jQuery("#send_gift_to_friend_status_<%=  @user.id.to_s %>").html("<%=  @flash_message %>");
+<% end %>

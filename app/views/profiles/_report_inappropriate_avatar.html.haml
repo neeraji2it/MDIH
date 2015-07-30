@@ -1,0 +1,13 @@
+%p{ :style => "font-size: 17px;border-bottom: 1px solid #8DB986;" }
+  = I18n.t('profile.label.report_inappropriate')
+= form_for InappropriatePhoto.new, :url => report_inappropriate_avatar_user_profile_path(current_user, @profile) , :remote => true, :html => { :method => "post" } do |f|
+  %table{ :cellspacing => "0", :style => "padding-top: 5px;", :width => "100%", :cellpadding => "0" }
+    %tr
+      %td{:width => "160px", :valign => "top"}
+        = image_tag(@profile.avatar.url(:other))
+      %td{:valign => "top"}
+        = I18n.t('profile.label.comment')
+        %br
+        = f.text_area :comment, :rows => 10, :cols => 40
+        %br
+        = f.submit  I18n.t('links.submit.submit1')

@@ -1,0 +1,114 @@
+<% for gift in @gifts.compact %>
+  <div id="quick_message_status_#{gift.user.id}" style="font-size: 11px;">
+  </div>
+  <!-- chat item -->
+  <div class="chat-item">
+    <div class="visual">
+      <% if @gifts_type == "received" %>
+        <% if !gift.user.facebook_id.present? %>
+          <%= link_to image_tag(gift.user.profile ? gift.user.profile.avatar.url(:other) : "/assets/default_avatar.jpg", :width => 96, :height => 104, :title => "#{gift.user.display_name}(#{gift.user.age} years)"), user_path(gift.user), "data-user_id_#{gift.user.id}" => gift.user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{gift.user.id}" : "" ) %>
+        <% else %>
+          <%= link_to image_tag(gift.user.profile ? (gift.user.profile.avatar_file_name != "picture_type_large.jpg" ?  gift.user.profile.avatar.url(:other) : gift.user.fb_big_image) : gift.user.fb_big_image, :width => 96, :height => 104, :title => "#{gift.user.display_name}(#{gift.user.age} years)"), user_path(gift.user), "data-user_id_#{gift.user.id}" => gift.user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{gift.user.id}" : "" ) %>
+        <% end %>
+        <%= user_online_status_image(gift.user) %>
+        <% if gift.user.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% elsif @gifts_type == "sent"  %>
+        <% if !gift.receiver.facebook_id.present? %>
+          <%= link_to image_tag(gift.receiver.profile ? gift.receiver.profile.avatar.url(:other)  : "/assets/default_avatar.jpg", :width => 96, :height => 104, :title => "#{gift.receiver.display_name}(#{gift.receiver.age} years)"), user_path(gift.receiver), "data-user_id_#{gift.receiver.id}" => gift.receiver.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{gift.receiver.id}" : "" ) %>
+        <% else %>
+          <%= link_to image_tag(gift.receiver.profile ? (gift.receiver.profile.avatar_file_name != "picture_type_large.jpg" ?  gift.receiver.profile.avatar.url(:other) : gift.receiver.fb_big_image) : gift.receiver.fb_big_image, :width => 96, :height => 104, :title => "#{gift.receiver.display_name}(#{gift.receiver.age} years)"), user_path(gift.receiver), "data-user_id_#{gift.receiver.id}" => gift.receiver.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{gift.receiver.id}" : "" ) %>
+        <% end %>
+        <%= user_online_status_image(gift.receiver) %>
+        <% if gift.receiver.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="text-block">
+      <%= link_to image_tag(gift.product.photo.url(:default),:width=>"86", :height=>"99"), gift.product.photo.url(:original) , :class=>"alignright", :id => "single_image_#{gift.product.id}",:title => "#{gift.product.photo_file_name}"  %>
+      <script type="text/javascript">
+        jQuery(document).ready(function() {
+          jQuery("a#single_image_<%= gift.product.id %>").hoverIntent({
+            sensitivity: 7,
+            interval:500,
+            timeout:0,
+            over: openFancybox,
+            out: closeFancybox
+          }); // hoverIntent
+          jQuery('a#single_image_<%= gift.product.id %>').lightBox();
+        });
+        $(function() {
+          jQuery("#user_profile_<%= @gifts_type == "received" ? gift.user.id : gift.receiver.id %>").bind("mousestop", function(event){
+            if(event.type == "mousestop"){
+              var account_id = $(this).data("user_id_<%= @gifts_type == "received" ? gift.user.id : gift.receiver.id %>");
+              $.ajax({
+                url: "/users/"+account_id,
+                type: 'get',
+                success: function(resp){
+                  jQuery.fancybox({
+                    padding: 15,
+                    cyclic: false,
+                    overlayShow: true,
+                    transitionIn:'elastic',
+                    transitionOut:'elastic',
+                    speedIn:600,
+                    speedOut:600,
+                    overlayOpacity:0,
+                    titlePosition: 'inside',
+                    content : resp
+                  });
+                }
+              });
+            }else{
+            }
+          });
+        });
+      </script>
+      <ul class="message-info">
+        <li><% if @gifts_type == "received" %><%= gift.user.display_name %><% elsif @gifts_type == "sent" %><%= gift.receiver.display_name %><% end %></li>
+        <!--<li><%#= I18n.l gift.sent_on.in_time_zone(user_time_zone), :format => :short2 %></li>-->
+        <li><%= gift.sent_on.strftime("%d/%m/%y") %></li>
+        <li><%= gift.sent_on.strftime("%H:%M") %></li>
+      </ul>
+      <p><%= gift.message %></p>
+      <% if @gifts_type == "sent" %>
+        <%=   gift.receiver_status %>
+      <% end %>
+      <% if @gifts_type == "received" and current_user.id != gift.user.id %>
+        <%  @quick_message = Message.new %>
+        <%= form_for :quick_mesage, :as => @quick_message, :url => user_quick_messages_path(gift.user.id), :html => {:class => "reply-form", :method => :post} do |f|%>
+          <fieldset>
+            <%=  validation_error(@quick_message.errors["body"]) %>
+            <%= f.text_area :body , :size => "58x18" %>
+            <div class="row">
+              <%= f.submit "reply" %>
+      <%#= link_to_function I18n.t('links.reply'), "send_quick_gift(#{gift.user.id})", :class => 'reply_link', :style => 'width: 40px; padding:1px;' %>
+              <%= render :partial => "layouts/all_links", :locals => {:user => gift.user} %>
+            </div>
+          </fieldset>
+        <% end %>
+      <% elsif @gifts_type == "sent" %>
+        <div class="m-nav-holder" style="width: 358px;margin: 0;">
+          <%= render :partial => "layouts/all_links", :locals => {:user => gift.receiver} %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<% if @gifts.total_pages > @gifts.current_page %>
+  <div id="more_gifts_link">
+    <input type="hidden" value="<%= @gifts.current_page+1 %>" id="gifts_page" />
+    <% if @gifts_type == "received" %>
+      <%= link_to_function "more", "more_index_received_gifts(#{@user.id}, #{@gifts.current_page+1})",:class => "btn-more", :title => "click for more received gifts" %>
+    <% elsif @gifts_type == "sent" %>
+      <%= link_to_function "more", "more_index_sent_gifts(#{@user.id}, #{@gifts.current_page+1})",:class => "btn-more", :title => "click for more received gifts" %>
+    <% end %>
+  </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

@@ -1,0 +1,25 @@
+<div class="new-message-popup" style="width: 400px;">
+  <header class="heading">
+    <h3><%= I18n.t('album.label.new_album') %> </h3>
+    <a href="#" class="close" id="fancybox_close">close</a>
+  </header>
+  <%= form_for @album, :url => {:action => @album.new_record? ? "create" : "update" } , :remote => true, :html => { :method => @album.new_record? ? "post" : "put" , :class => 'album-form'} do |f|%>
+    <table cellpadding="1px" cellspacing="3px;">
+      <tr>
+        <td valign="top" align="left"><%= I18n.t('album.label.name') %></td>
+        <td>
+          <%= f.text_field :name %>
+          <%= validation_error(@album.errors["name"])  %>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" align="left"><%= I18n.t('album.label.description') %></td>
+        <td><%= f.text_area :description, :size => "34x5" %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= f.submit "#{@album.new_record? ? "Create" : "Update"}" %></td>
+      </tr>
+    </table>
+  <% end %>
+</div>

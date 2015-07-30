@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="item">
+    <label>I’m looking for</label>
+    <%= select_tag "looking_for", options_for_select(LOOKING_FOR, (params[:looking_for].to_s.blank? ? 'Female' : params[:looking_for])),:class => "select-2" %>
+    <!--<label><%#= I18n.t('search.label.I_m_a') %></label>-->
+<%#= select_tag "i_am_a", options_for_select(GENDERS, params[:i_am_a]),:class => "select-1" %>
+  </div>
+  <!--<div class="item">>-->
+    <!--<label><%#= I18n.t('search.label.looking_for_a') %></label>-->
+<%#= select_tag "looking_for", options_for_select(LOOKING_FOR, (params[:looking_for].to_s.blank? ? 'Female' : params[:looking_for])), :class => "select-2"%>
+    <!--<label>Orientation</label>-->
+    <%#=  select_tag "orientation", options_for_select(ORIENTATION, params[:orientation]), :class => "select-2"%>
+  <!--</div>-->
+  <div class="item">
+    <label>Within (miles)</label>
+    <%= select_tag "distance", options_for_select(['5', '10', '25', '50', '75', 'Unlimited'], (params[:distance])), :class => "select-2" %>
+  </div>
+  <div class="item">
+    <label for="id-71">Online</label>
+    <%= check_box_tag :online_only, params[:online_only], (!params[:online_only].nil?) %>
+  </div>
+  <div class="item">
+    <label for="id-72">Free</label>
+    <%= check_box_tag :free, params[:free], (!params[:free].nil?) %>
+  </div>
+  <div class="item">
+    <label for="id-73">Contacted</label>
+    <%= check_box_tag :has_contacted, params[:has_contacted], (!params[:has_contacted].nil?)%>
+  </div>
+</div>
+<div class="row">
+  <div class="item">
+    <label>Age</label>
+    <div class="slide-price slider-holder">
+      <div class="slider-box" id="slider">
+        <div class="slider-holder-box">
+          <div class="progress-bar">
+            <input type="hidden" class="max-val" value="99" />
+            <input type="hidden" class="min-val" value="18" />
+            <%= hidden_field_tag "", params[:age_to].to_s.blank? ? "35" : params[:age_to] , :class => "cur-val-max"  %>
+            <%= hidden_field_tag "", params[:age_from].to_s.blank? ? "18" : params[:age_from], :class => "cur-val-min"  %>
+<%#*<input type="hidden" class="cur-val-max" value="80" />%>
+<%#*<input type="hidden" class="cur-val-min" value="40" />%>
+          </div>
+        </div>
+      </div>
+      <div class="price-holder">
+        <span class="range-input to-price"><%= text_field_tag :age_from, "#{params[:age_from]}", :class => "range"  %><!--<input class="range" type="text" value="18" id="age_from" name="age_from"/>--></span>
+        <span class="range-input from-price right"><%= text_field_tag :age_to, "#{params[:age_to]}", :class => "range-max"  %><!--<input class="range-max" type="text" value="99" id="age_to" name="age_to"/>--></span>
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <label>Order by</label>
+    <%= select_tag :order, options_for_select(ORDER, (params[:order].to_s.blank? ? 'Closest' : params[:order])), :class => "select-2" %>
+  </div>
+  
+</div>

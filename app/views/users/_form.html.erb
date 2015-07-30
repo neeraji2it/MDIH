@@ -1,0 +1,88 @@
+<fieldset>
+  <header class="heading">
+    <h2>My Account</h2>
+    <button class="btn-save" type="submit"><span><%= 'save' %></span></button>
+  </header>
+  <div class="holder">
+    <% if params[:action] != "accept_invitation" %>
+      <%= render :partial => "users/submenu"%>
+    <% end %>
+    <div id="tab-1" class="tab">
+      <div class="my-profile-form">
+        <div class="col">
+          <% if  @user.new_record? or params[:action] == 'accept_invitation' %>
+            <%= f.label I18n.t('user.label.choose_user_name') %>
+            <%=  f.text_field :login %>
+          <% end %>
+          <%= I18n.t('user.label.email_address') %>
+          <%=  f.text_field :email  %>
+          <div class="sub-row"><%= validation_error(@user.errors["email"]) %></div>
+          <%= f.label I18n.t('user.field.password')  %>
+          <%= f.password_field :password  %>
+          <%= validation_error(@user.errors["password"]) %>
+          <%= f.label  I18n.t('user.field.confirm_password') %>
+          <%= f.password_field :password_confirmation  %>
+          <%= validation_errors(@user.errors["password_confirmation"])  %>
+<%#= I18n.t('user.field.first_name') %>
+<%#= f.text_field :first_name  %>
+<%#= validation_errors(@user.errors["first_name"])%>
+        </div>
+        <div class="col">
+          <%= f.label  I18n.t('user.gender') %>
+          <div class="select-holder">
+            <%= f.select :gender, GENDERS %>
+          </div>
+          <%= validation_errors(@user.errors["gender"])  %>
+          <div class="sub-row">
+            <%= f.check_box :dont_show_me_to_straight_users %>
+            <label for="id-5">Don’t show in straight searches</label>
+          </div>
+          <%= f.label I18n.t('user.label.looking_for') %>
+          <div class="select-holder">
+            <%= f.select :looking_for, LOOKING_FOR  %>
+          </div>
+          <%=  f.label I18n.t('user.label.DOB') %>
+          <div class="select-row">
+            <%= f.date_select("date_of_birth", {:end_year => Time.now.strftime('%Y').to_i - 100,  :start_year => Time.now.strftime('%Y').to_i - 18, :use_month_numbers => true}, {:style => "width: 45px;"})  %>
+          </div>
+          <%= validation_errors(@user.errors["date_of_birth"])  %>
+          <%= f.label  I18n.t('user.label.time_zone')  %>
+          <div class="select-holder">
+            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
+          </div>
+          <%= validation_errors(@user.errors["time_zone"]) %>
+        </div>
+        <div class="col">
+          <label>Orientation</label>
+          <div class="select-holder">
+            <%= f.select :orientation, ORIENTATION, {}, {:style => "font-size:11px;"}  %>
+          </div>
+          <%= validation_errors(@user.errors["orientation"])  %>
+          <div class="sub-row"></div>
+          <div style="margin-left: 30px;">
+            <%= f.label I18n.t('user.label.interested_in') %>
+            <ul class="check-list">
+              <% params[:interested] = params[:interested] || @user.interested_in.to_s.split(',') %>
+              <%  for interested in INTERESTED_IN %>
+                <li>
+                  <% if params[:interested] and params[:interested].include?(interested) %>
+                    <%= check_box_tag("interested[]", "#{interested}", true ) %>
+                  <% else %>
+                    <%= check_box_tag("interested[]", "#{interested}", false )  %>
+                  <% end %>
+                  <%= interested %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <% if params[:action] != "accept_invitation" %>
+      <%= link_to I18n.t('user.label.delete_profile'), delete_account_user_path(current_user), :method => :delete, :confirm => "#{I18n.t('user.show.delete_account_confirm_alert')}", :class => 'delete'%>
+    <% end %>
+    <button class="btn-save" type="submit"><span><%= 'save' %></span></button>
+  </div>
+</fieldset>

@@ -1,0 +1,26 @@
+<!-- content box -->
+<div class="content-box open-box <%= params[:action]=='simple_results' ? '' : "active" %>">
+  <header class="heading">
+    <h2>SEARCH</h2>
+    <a href="#" class="opener">open/close</a>
+  </header>
+  <div class="slide">
+    <!-- advanced search form -->
+    <%= form_tag simple_results_searches_path, :method => :get, :class=>"advanced-search" do %>
+      <fieldset>
+        <%= render :partial => "searches/basic_search_fields"  %>
+        <div class="adv-row">
+          <%= link_to I18n.t('search.label.advance_search') , advance_searches_path%>
+          <a href="#" class="link">Latino</a>
+          <a href="#" class="link">Athletic</a>
+          <a href="#" class="link">180cm High</a>
+        </div>
+        <input type="submit" value="Search"/>
+      </fieldset>
+    <% end %>
+  </div>
+</div>
+<br/>
+<% if @users %>
+  <%= render :partial => "results" %>
+<% end %>

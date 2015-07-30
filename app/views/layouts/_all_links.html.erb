@@ -1,0 +1,58 @@
+<% if !current_user.blocked_users.all(:select => "users.id").map{|u|  u.id}.include?(user.id) and !BlockedUser.exists?(:user_id => user.id, :blocked_user_id => current_user.id) %>
+  <nav class="message-nav">
+    <ul>
+      <% if (params[:controller] == 'chat' and (params[:action] == 'index' or params[:action] == 'new_chats')) %>
+        <li><%= link_to 'history', "/chat/#{user.id}", :class=>'item-1',  :title=>"History" %></li>
+      <% elsif params[:message_type] == "inbox" or params[:message_type] == "unread"  %>
+        <li><%= link_to 'history', conversation_user_message_path(current_user, user.id), :class=>'item-1',  :title=>"History" %></li>
+      <% elsif params[:message_type] == "sent" %>
+        <li><%= link_to 'history', sent_messages_user_message_path(current_user, user.id), :class=>'item-1',  :title=>"History" %></li>
+      <% elsif params[:type] == "received" %>
+        <li><%= link_to 'history', received_gifts_user_gift_path(current_user, user.id), :class=>'item-1',  :title=>"History" %></li>
+      <% elsif params[:type] == "sent" %>
+        <li><%= link_to 'history', sent_gifts_user_gift_path(current_user, user.id), :class=>'item-1',  :title=>"History" %></li>
+      <% end %>
+      <% unless params[:controller] == 'chat' and params[:action] == 'show' %>
+        <li><%= get_chat_link(user, "#{I18n.t('friend.index.chat_with_me')}", {:class => "item-2 chat_with_me",:title=>"Chat"  }) %></li>
+      <% end %>
+      <% if current_user and !HotVote.exists?(:user_id => current_user.id, :hoter_id => user.id) %>
+        <li><%= link_to "#{I18n.t('search.label.hot')}",  hot_vote_user_path(user.id), :class=>"item-3", :title => "Vote for Hot?", :remote => true , :method => :post, :id => "hot_vote_link_#{user.id}" %></li>
+      <% end %>
+      <% if params[:action] != "conversation" %>
+        <li><%= link_to_function I18n.t('search.label.send_message'), "clear_flash_messages_divs(#{user.id});send_quick_message(#{user.id})", :class=>"item-4", :title => "Send Message" %></li>
+      <% end %>
+      <% if (params[:controller] == "searches" or (params[:controller] == "users" and params[:action] == "show") ) and !current_user.friends.all(:select => "users.id").map{|myfriend| myfriend.id}.include?(user.id)  %>
+        <li> <%= link_to I18n.t('search.label.add_as_friend'), add_user_friend_path(current_user, user), :class=>"item-5", :id => "add_friend_link_#{user.id}", :title => "Add Favorite", :onclick => "clear_flash_messages_divs(#{user.id});"  %></li>
+      <% else %>
+        <li><%= link_to_function "profile", "profile(#{user.id})", :class=>"item-5", :title => "view Profile" %></li>
+      <% end %>
+      <li><%= link_to_function I18n.t('search.label.send_virtual_gift'), "clear_flash_messages_divs(#{user.id});send_gifts(#{user.id}, '')", :class=>"item-6", :title => "Send a Gift" %></li>
+      <% if params[:controller] == 'friends' %>
+        <li>
+          <%= link_to 'delete',  user_friend_path(current_user, user),:class =>  "item-7", :title => "#{I18n.t('friend.index.remove_from_friends_list')}" , :method => :delete, :confirm => "#{I18n.t('friend.index.remove_from_friends_list_confirm_alert', :name => user.display_name)}" %>
+        </li>
+      <% elsif (params[:message_type] == 'inbox' and params[:controller] == "messages") %>
+        <li>
+          <%= link_to_function 'block/hide',  "delete_all_messages(#{current_user.id},#{user.id},#{current_user.id})",:class =>  "item-7", :title => "Delete all messages or block this user" %>
+        </li>
+      <% elsif (params[:message_type] == 'sent' and params[:controller] == "messages") %>
+        <li>
+          <%= link_to_function 'block/hide',  "delete_all_messages(#{user.id},#{current_user.id},#{current_user.id})",:class =>  "item-7", :title => "Delete all messages or block this user" %>
+        </li>
+      <% else %>
+        <li>
+          <%= link_to 'block/hide',  block_user_search_path(user.id),:class =>  "item-7", :title => "#{I18n.t('friend.index.block_this_user')}" , :remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.block_this_user_confirm_alert', :name => user.display_name)}" %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% else %>
+  <%= link_to 'unblock/un-hide',  unblock_user_search_path(user.id),:class =>  "item-7", :title => "#{I18n.t('friend.index.unblock_this_user')}" , :remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.unblock_this_user_confirm_alert', :name => user.display_name)}", :style => "float: right;" %>
+<% end %>
+<div id='<%="quick_message_status_#{user.id}"%>' style="color:green;font-size: 11px;float: left;">
+</div>
+<div id='<%="add_friend_status_#{user.id}"%>' style="color:green;font-size: 11px;float: left;">
+</div>
+<div id='<%="blocked_error_#{ user.id }"%>' style="color:red;font-size: 11px;float: left;"></div>
+<div id='<%="hot_vote_status_#{user.id}"%>' style="color:green;font-size: 11px;float: left;"></div>
+<div id='<%="send_gift_status_#{user.id}"%>' style="color:green;font-size: 11px;float: left;"></div>

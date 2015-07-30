@@ -1,0 +1,25 @@
+ /* Tiny Carousel */
+#slider1 { height: 1%; overflow:hidden; padding: 0 0 10px;   }
+#slider1 .viewport { float: left;
+    height: 43px;
+    left: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+    top: 3px;
+    width: 355px; }
+#slider1 .buttons {display: block; margin: 5px 10px 0 0; background-position: 0 -38px; text-indent: -999em; float: left; width: 39px; height: 37px; overflow: hidden; position: relative; }
+#slider1 .prev {
+    background:url("/assets/gray_prev.png");
+    float: left; width: 30px; height: 30px; overflow: hidden; position: relative;left: 21px;top: 4px;
+}
+#slider1 .next {
+    background:url("/assets/gray_next.png");
+    background-position: 0 0; margin: 5px 0 0 10px;
+    width: 30px;
+    height: 30px;
+    top: 4px;
+    left: 17px;
+}
+#slider1 .overview { list-style: none; position: absolute; padding: 0; margin: 0; width: 240px; left: 0; top: 0; }
+#slider1 .overview li{ float: left; margin: 0 20px 0 0; padding: 1px; height: 40px;width: 40px;}

@@ -1,0 +1,11 @@
+## YAML Template.
+
+admin:
+    id: 1
+    name: admin
+    description: Admin of MDIH
+
+user:
+    id: 2
+    name: user
+    description: User of MDIH

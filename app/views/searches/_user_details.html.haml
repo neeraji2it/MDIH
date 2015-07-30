@@ -1,0 +1,20 @@
+%table{ :width => "100%", :border => "0", :style => "color: #000000;font-size: 13px;" }
+  %tr
+    %td{ :width => "170px", :valign => "top" }
+      = link_to image_tag(user.profile ? user.profile.avatar.url(:default) : "default_avatar.jpg", :width => 160), user_path(user)
+    %td{ :valign => "top" }
+      = user_online_status_image(user)
+      = link_to user.display_name, user_path(user), :style => "font-size: 16px;color: #588F50"
+      %div
+        = user.age
+        = I18n.t('search.label.year_old')
+        = user.humanized_gender
+        %br
+        - if !user.looking_for.to_s.blank?
+          = I18n.t('search.label.looking_for')
+          = user.looking_for
+        - if !user.orientation.to_s.blank?
+          = I18n.t('search.label.orientation')
+          = user.orientation
+        %br
+        = !user.profile_address.to_s.blank? ? I18n.t('friend.index.location', :location => user.profile_address.to_s) : ""

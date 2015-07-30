@@ -1,0 +1,85 @@
+<%  for message in @messages %>
+  <div class="chat-item" id="chat-item-<%= message.id %>">
+    <div class="visual">
+      <% if message.sender_id == current_user.id %>
+        <% if !message.reciever.facebook_id.present? %>
+          <%= link_to  image_tag(message.reciever.profile ? (message.reciever.profile.avatar_file_name != "picture_type_large.jpg" ?  message.reciever.profile.avatar.url(:default) : message.reciever.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.reciever.id), "data-user_id_#{message.reciever.id}" => message.reciever.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.reciever.id}" : "" )  %>
+        <% else %>
+          <%= link_to image_tag(message.reciever.fb_big_image, :width => 96, :height => 104), user_path(message.reciever.id), "data-user_id_#{message.reciever.id}" => user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.reciever.id}" : "" )  %>
+        <% end %>
+        <%= user_online_status_image(message.reciever) %>
+        <% if message.reciever.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% else %>
+        <% if !message.sender.facebook_id.present? %>
+          <%= link_to  image_tag(message.sender.profile ? (message.sender.profile.avatar_file_name != "picture_type_large.jpg" ?  message.sender.profile.avatar.url(:default) : message.sender.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.sender.id), "data-user_id_#{message.sender.id}" => message.sender.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.sender.id}" : "" )  %>
+        <% else %>
+          <%= link_to image_tag(message.sender.fb_big_image, :width => 96, :height => 104), user_path(message.sender.id), "data-user_id_#{message.sender.id}" => message.sender.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.sender.id}" : "" ) %>
+        <% end %>
+        <%= user_online_status_image(message.sender) %>
+        <% if message.sender.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="text-block">
+      <ul class="message-info">
+        <% if message.sender_id == current_user.id   %>
+          <li><%= message.reciever.display_name %></li>
+        <% else %>
+          <li><%= message.sender.display_name %></li>
+        <% end %>
+        <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+        <li><%= message.created_at.strftime("%H:%M") %></li>
+      </ul>
+      <p><% if message.sender_id == current_user.id  %><i class="mrs indicator img sp_8h63lg sx_84cb4b"></i><% end %><%= message.text %></p>
+    </div>
+    <div class="m-nav-holder">
+      <% if message.sender_id == current_user.id   %>
+        <%= render :partial => "layouts/all_links", :locals => {:user => message.reciever} %>
+      <% else %>
+        <%= render :partial => "layouts/all_links", :locals => {:user => message.sender} %>
+      <% end %>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function() {
+      jQuery("#user_profile_<%= message.sender_id == current_user.id ? message.reciever.id : message.sender.id %>").bind("mousestop", function(event){
+        if(event.type == "mousestop"){
+          var account_id = $(this).data("user_id_<%= message.sender_id == current_user.id ? message.reciever.id : message.sender.id %>");
+          $.ajax({
+            url: "/users/"+account_id,
+            type: 'get',
+            success: function(resp){
+              jQuery.fancybox({
+                padding: 15,
+                cyclic: false,
+                overlayShow: true,
+                transitionIn:'elastic',
+                transitionOut:'elastic',
+                speedIn:600,
+                speedOut:600,
+                overlayOpacity:0,
+                titlePosition: 'inside',
+                content : resp
+              });
+            }
+          });
+        }else{
+        }
+      });
+    });
+  </script>
+<% end %>
+<% if @messages.total_pages > @messages.current_page %>
+    <div id="more_index_chats_link">
+      <input type="hidden" value="<%= @messages.current_page+1 %>" id="more_index_chats_page" />
+      <%= link_to_function "more", "more_index_chats(#{@messages.current_page+1})",:class => "btn-more", :title => "click for more chats" %>
+    </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

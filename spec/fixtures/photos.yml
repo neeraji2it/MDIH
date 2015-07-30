@@ -1,0 +1,45 @@
+photo1:
+    id: 1
+    album_id: 1
+    user_id: 1
+
+photo2:
+    id: 2
+    album_id: 1
+    user_id: 1
+
+photo3:
+    id: 3
+    album_id: 1
+    user_id: 1
+
+photo4:
+    id: 4
+    album_id: 1
+    user_id: 1
+
+photo5:
+    id: 5
+    album_id: 2
+    user_id: 1
+
+photo6:
+    id: 6
+    album_id: 2
+    user_id: 1
+
+photo7:
+    id: 7
+    album_id: 2
+    user_id: 1
+
+photo8:
+    id: 8
+    album_id: 2
+    user_id: 1
+
+photo9:
+    id: 9
+    album_id: 2
+    user_id: 1
+

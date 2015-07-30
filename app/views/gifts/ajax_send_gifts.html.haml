@@ -1,0 +1,50 @@
+%table{ :width => "100%" }
+  %tr
+    %td{ :valign => "top", :style => "font-size: 17px;border-bottom: 1px solid #8DB986;width: 100%" }
+      %div{  }
+        %div{:style => "float:left;clear:both"}
+          = I18n.t('gift.label.send_virtual_gift_to') '#{@user.display_name}'
+  %tr
+    %td
+      %div{:style => "float:left;color:#000000"}
+        = #{I18n.t('gift.label.your_credits')} : <b>#{current_user.credits.to_f}</b>
+        = link_to_remote I18n.t('gift.label.recharge_now'), :url => recharge_credits_users_path(:gift_to => @user.login), :method => :get, :html =>  {:class => "small_green"}
+      %div{:style => "float:right;"}
+        = I18n.t('gift.label.filter_by_category')
+        = select_tag "pcategory_id", options_for_select([["Select", ""]]+Pcategory.all.map{|pc| [pc.name, pc.id]}, params[:pcategory_id].to_i), :onchange => "if(this.value != 0){send_gifts(#{@user.id}, this.value)}"
+    %tr
+      %td{:style => "padding-top: 10px"}
+        #templates{:style => "max-height: 350px;overflow:auto;"}
+          - if !@products.empty?
+            #outergrid
+              - i = 1
+              - for product in @products
+                - class_name = 'grid1and2'
+                - if i == 3
+                  - class_name = 'grid3'
+                %div{:class => class_name}
+                  =# link_to image_tag(product.photo.url(:default)), product.photo.url(:original), :id => "single_image"
+                  = link_to_function image_tag(product.photo.url(:default)), "window.open('#{product.photo.url(:original)}', 'name','height=500,width=500');"
+                  %br
+                  %strong
+                    = product.name
+                    %br
+                      = I18n.t('gift.label.credits')
+                    = product.credits
+                  %br
+                  =# link_to_remote image_tag('send_gift.gif'), :url => send_to_friend_user_gift_path(@user, product), :method => :post, :html => {:onclick => "jQuery('#ajax_loader_big').show()"}
+                  - if current_user.credits.to_f >= product.credits
+                    = link_to image_tag('send_gift.gif') send_gift_user_gift_path(@user, product), :method => :get , :remote => true, :onclick => "jQuery('#ajax_loader_big').show()"
+                  - else
+                    = link_to_function image_tag('send_gift.gif'), "alert('You do not have enough credits to send this gift. Please reacharge your credits')"
+                - if i == 3
+                  - i = 1
+                  %br{:clear => "all"}
+                  %br
+                - else
+                  - i += 1
+
+            %br{:clear => "all"}
+          - else
+            %p{:style => "height: 50px;font-size: 13px;", :align => "center"}
+              = I18n.t('gift.label.no_virtual_gifts_are_there_to_send')

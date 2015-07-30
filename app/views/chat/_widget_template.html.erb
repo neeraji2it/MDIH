@@ -1,0 +1,98 @@
+<%= hidden_field_tag "authenticity-token", form_authenticity_token %>
+
+<script id="widgetTemplate" type="text/x-jquery-tmpl">
+  <div id="${id}" class="widget-outer hidden">
+    <div class="widget-inner">
+      <!-- chat popup -->
+      <div class="chat-popup-2 popup-personal1 collapseblock video-open" id="popup2">
+        <header class="heading">
+          <strong class="user chat-user ${friendStatus} chat-user-${friendId}">${friendName}</strong>
+<%#*<strong class="user">${friendName}</strong>%>
+          <% unless params[:action] == 'new_window'  %>
+            <nav class="window-nav">
+              <ul>
+                <li><div class="item-1 widget-header-container widget-min" title="Minimiz">item-1</div></li>
+                <li><div class="item-2 widget-header-container widget-max" title="Maximiz">item-2</div></li>
+                <li><div class="item-3 close widget-close" title="Close" onclick="Widgets.close('${friendId}')">item-3</div></li>
+              </ul>
+            </nav>
+          <% end %>
+        </header>
+        <div class="popup-content-area">
+          <nav class="chat-nav chat-nav-2">
+            <ul>
+              <li><%= link_to "", "/chat/${friendId}",  :class=>"item-1", :title=>"History" %></li>
+              <li><a href="/video_chat/${friendId}" data-remote="true" class="item-2" title="Click here to videochat">item-2</a></li>
+              <% unless params[:action] == 'new_window'  %>
+                <li><a href="#" onclick="javascript:window.open('/chat/${friendId}/new_window', '_blank', 'location=1,status=1,scrollbars=yes, width=400,height=600'); Widgets.find('${friendId}').hide(); return false;" class="item-3" title="pop-out">item-3</a></li>
+              <% else %>
+                <li><a href="#" onclick="javascript: window.opener.Widgets.find('${friendId}').show(); window.close(); return false;" class="item-3" title="pop-in">item-3</a></li>
+              <% end %>
+              <li><%= link_to 'block/hide',  "/searches/${friendId}/block_user" ,:class =>  "item-4", :title => "#{I18n.t('friend.index.block_this_user')}" , :remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.block_this_user_confirm_alert')}" %></li>
+            </ul>
+          </nav>
+          <div class="popup-main">
+            <div class="bubbles-col">
+              <div class="messages">
+              </div>
+            </div>
+            <div class="info-col">
+              <img src="${friendPhoto}" width="82" alt="image description"/>
+              <span>${friendName}</span>
+              <span>${friendAge}-${friendGender}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-container send-form">
+          <%= hidden_field_tag "friend_id", "${friendId}" %>
+          <%= text_area_tag "message" %>
+          <div id="smilies" style="margin-right: -3px; padding-top: 1px;">
+            <span><%= image_tag("/assets/chat/smile.png", :alt => ":)", :title => "Smile :)", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/grin.png", :alt => ":D", :title => "Grin :D", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/wink.png", :alt => ";)", :title => "Wink ;)", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/cry.png", :alt => ":'(", :title => "Cry :'(", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/shocked.png", :alt => ":-o",:title => "Shocked :-o", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/slant.png", :alt => ":-/", :title => "Slant :-/", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/angry.png", :alt => "x-(", :title => "Angry x-(", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/frown.png", :alt => ":(", :title => "Frown :(", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/cool.png", :alt => "B-)", :title => "Cool B-)", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/tongue.png", :alt => ":P", :title => "Tongue :P", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/heart.png", :alt => "<3", :title => "Heart <3", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+            <span><%= image_tag("/assets/chat/straightface.png", :alt => ":-|", :title => "StraightFace :-|", :onclick => "Chat.insertEmotions('${friendId}',this)") %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script id="messageTemplateWithSender" type="text/x-jquery-tmpl">
+  <div class="left-bubble">
+    <div class="t">
+      <div class="b">
+        <div><b>${sender.name}:</b> ${text}</div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="messageTemplateWithoutSender" type="text/x-jquery-tmpl">
+  <div class="right-bubble">
+    <div class="t">
+      <div class="b">
+        <div><b>${sender.name}:</b> ${text}</div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="user-template" type="text/x-jquery-tmpl">
+  <div id="chat-user-${id}" class="chat-user chat-user-${id} ${status}">
+    ${name}
+  </div>
+</script>
+
+<script type="text/javascript">
+  var thisUser = <%= current_user.json_data.to_json.html_safe %>;
+</script>

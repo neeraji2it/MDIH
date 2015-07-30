@@ -1,0 +1,72 @@
+<div class="new-message-popup">
+  <header class="heading">
+    <h3><%= "#{I18n.t('user.label.you_have')} <b>#{current_user.credits.to_f} </b>#{I18n.t('user.label.credits')}".html_safe %> </h3>
+    <a href="#" class="close" id="fancybox_close">close</a>
+  </header>
+  <div class="gifts-form recharge-form">
+    <%= form_tag(recharge_credits_users_path(:gift_to => params[:gift_to]), :remote => true, :method => :post) do %>
+      <table width="100%">
+        <tr>
+          <td valign="top" colspan="2"><b><%= I18n.t('user.label.payment_details') %></b><div id="payment_status" class="error"></div></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.first_name')%></td>
+          <td><%= text_field_tag 'paypal[first_name]', (params[:paypal] ? params[:paypal][:first_name] : '') %></td>
+        </tr>
+        <tr>
+          <td> <%= I18n.t('user.label.last_name') %> </td>
+          <td><%= text_field_tag 'paypal[last_name]', (params[:paypal] ? params[:paypal][:last_name] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.no_of_credits') %></td>
+          <td><%= select_tag 'credits', options_for_select([["$ 9.99 = 20 credits", 20], ["$ 19.99 = 50 credits", 50], ["$ 29.99 = 80 credits", 80], ["$ 39.99 = 120 credits", 120], ["$ 49.99 = 200 credits", 200]]) %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.card_type') %></td>
+          <td><%= select_tag 'paypal[card_type]', options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] , (params[:paypal] ? params[:paypal][:card_type] : '')) %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.card_number') %></td>
+          <td><%= text_field_tag 'paypal[card_number]',  (params[:paypal] ? params[:paypal][:card_number] : '')  %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.card_verification') %></td>
+          <td><%= text_field_tag 'paypal[card_verification]', (params[:paypal] ? params[:paypal][:card_verification] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.expiration_date') %></td>
+          <td><%= date_select 'card_expires_on', '', :discard_day => true, :start_year => Date.today.year, :end_year => (Date.today.year+10), :use_month_numbers => true %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.billing_address') %></td>
+          <td><%= text_field_tag 'paypal[address]', (params[:paypal] ? params[:paypal][:address] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.city') %></td>
+          <td><%= text_field_tag 'paypal[city]', (params[:paypal] ? params[:paypal][:city] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.state_province') %></td>
+          <td><%= text_field_tag 'paypal[state]', (params[:paypal] ? params[:paypal][:state] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.zip') %></td>
+          <td><%= text_field_tag 'paypal[zip]', (params[:paypal] ? params[:paypal][:zip] : '') %></td>
+        </tr>
+        <tr>
+          <td><%= I18n.t('user.label.country') %></td>
+          <td><%= select_tag 'paypal[country]', options_for_select(COUNTRIES_WITH_CODES, ((params[:paypal] and params[:paypal][:country]) ? params[:paypal][:country] : 'us')), :style => "width: 296px;" %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <%= submit_tag "#{I18n.t('links.submit.recharge')}", :onclick => "jQuery('#payment_status').html('')", :class => "send-btn", :style => "width: 80px;" %>
+            <% if !params[:gift_to].to_s.blank? %>
+              <%= button_to_function "#{I18n.t('links.back')}", "send_gifts('#{params[:gift_to]}', '')", :class => "send-btn", :style => "margin-left: 10px;" %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+</div>

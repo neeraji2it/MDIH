@@ -1,0 +1,12 @@
+## YAML Template.
+
+friend1:
+    id: 1
+    user_id: 1
+    friend_id: 2
+    status: accepted
+friend2:
+    id: 2
+    user_id: 1
+    friend_id: 3
+    status: pending

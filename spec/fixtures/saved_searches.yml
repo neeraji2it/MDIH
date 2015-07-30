@@ -1,0 +1,12 @@
+
+saved_search1:
+    id: 1
+    user_id: 1
+    name: Search1
+    url: /searches/simple_results?user_name=boss&commit=Go
+
+saved_search2:
+    id: 2
+    user_id: 1
+    name: Search2
+    url: /searches/simple_results?user_name=dsdgdsg&commit=Go

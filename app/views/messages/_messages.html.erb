@@ -1,0 +1,18 @@
+<div id="popup-4" class="lightbox popup-box chat-popup">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3>new messages</h3>
+      <a href="#" class="close" id="fancybox_close" title="close">close</a>
+    </header>
+    <% if @messages.empty? %>
+      <div id="empty"  align="center">
+        No New Messages
+      </div>
+    <% else %>
+    <div id="more_messages">
+      <%= render :partial => "ajax_messages" %>
+    </div>
+    <% end %>
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+<%= form_tag(email_settings_user_path(current_user), :method => :post,:class=>"content-box account-tabs") do %>
+  <fieldset>
+    <header class="heading">
+      <h2><%= I18n.t('user.label.email_alert_settings') %></h2>
+      <button class="btn-save" type="submit"><span>save</span></button>
+    </header>
+    <div class="holder">
+      <%= render :partial => "users/submenu"%>
+      <div id="tab-3" class="tab">
+        <div class="settings-section">
+          <div class="column">
+            <h3>Email Notifications</h3>
+            <div class="box">
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'messages', !@alert_types.include?('messages')%>
+                <label for="id-62"><%= I18n.t('user.field.message_alert_email') %></label>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'chats', !@alert_types.include?('chats')%>
+                <label for="id-63">Chat alert emails</label>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'gifts', !@alert_types.include?('gifts')%>
+                <label for="id-64"><%= I18n.t('user.field.virtual_gift_alert_email')%></label>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'hot_votes', !@alert_types.include?('hot_votes')%>
+                <label for="id-65"><%= I18n.t('user.field.hot_votes_alert_email')%></label>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <h3>Interface</h3>
+            <div class="box">
+              <div class="row">
+                 <%= check_box_tag 'alert_types[]', 'animations', !@alert_types.include?('animations')%>
+                <label for="id-66">Animations</label>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'popups', !@alert_types.include?('popups')%>
+                <label for="id-67">Popup Windows</label>
+              </div>
+              <div class="row">
+                 <%= check_box_tag 'alert_types[]', 'advertisements', !@alert_types.include?('advertisements')%>
+                <label for="id-68">Advertisement</label>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <h3>Interface</h3>
+            <div class="box">
+              <div class="row">
+                 <%= check_box_tag 'available', 'available', current_user.available_today %>
+                <label for="id-69">Available Today</label>
+              </div>
+              <div class="inner-row">
+                <label>Available today rest time:</label>
+                <div class="select-holder">
+                 <%= select_tag "time", options_for_select([4,6,12,24], current_user.rest_time_hours) %>
+                  <span>Hours</span>
+                </div>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'chat', !@alert_types.include?('chat')%>
+                <label for="id-70">Chat</label>
+              </div>
+              <div class="row">
+                <%= check_box_tag 'alert_types[]', 'push_notifications', !@alert_types.include?('push_notifications')%>
+                <label for="id-71">Push Notifications</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-save"><span>save</span></button>
+    </div>
+  </fieldset>
+<% end %>

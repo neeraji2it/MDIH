@@ -1,0 +1,6 @@
+<% if @saved %>
+jQuery("#hot_vote_link_<%=  @user.id %>").hide();
+jQuery("#hot_vote_status_<%=  @user.id %>").html("<%= @message.html_safe %>");
+<% else %>
+jQuery("#hot_vote_status_<%=  @user.id %>").html("<%= @message.html_safe %>");
+<% end %>

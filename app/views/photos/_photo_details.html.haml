@@ -1,0 +1,42 @@
+%table{ :style => "font-size: 12px;",:width => "100%" }
+  %tr
+    %td
+      %div
+        %div{:style => "float:left"}
+          #inappropriate_photo
+            - if @photo.user_id != current_user.id
+              = link_to_function I18n.t('photo.label.report_as_inappropriate'), "show_photo_inappropriate_form(#{@photo.album.user.id}, #{@photo.album.id}, #{@photo.id})", :html => { :class => "small_green"}
+            - if @photo.user_id == current_user.id
+              = link_to I18n.t('photo.label.make_as'), make_profile_photo_user_album_photo_path(@photo.album.user, @photo.album, @photo), :method => :post, :class => "small_green"
+        %div{:style => "float:right"}
+          - if @previous
+            = link_to_function I18n.t('photo.label.previous'), "show_user_album_photo(#{@photo.album.user.id}, #{@photo.album.id}, #{@previous})", :html => { :class => "small_green"}
+          - else
+            =  I18n.t('photo.label.previous')
+          &nbsp;
+          - if @next
+            = link_to_function I18n.t('photo.label.next'), "show_user_album_photo(#{@photo.album.user.id}, #{@photo.album.id}, #{@next})", :html => { :class => "small_green"}
+          - else
+            = I18n.t('photo.label.next')
+      %br
+      %div{:style => "width:700px;text-align:center;"}
+        = image_tag(@photo.image.url(:original))
+  %tr
+    %td
+      = I18n.t('photo.label.comment1')
+  %tr
+    %td
+      #comment_status
+      #photo_comments
+        = render :partial => "comments"
+  %tr
+    %td{ :valign => "bottom"}
+      #photo_comment_status
+      = form_for(PhotoComment.new, :url => create_comment_user_album_photo_path(current_user, @photo.album, @photo), :remote => true) do |f|
+        %div
+          %div{:style => "float:left;width: 50px; height: 50px; overflow: hidden;padding-right: 10px;padding-left: 5px;"}
+            = image_tag(current_user.profile ? current_user.profile.avatar.url(:other) : "default_avatar.jpg", :width => 50)
+          %div{:style => "float:left;"}
+            = f.text_area :comment, :cols => "50", :rows => "2"
+          %div{:style => "float:left;"}
+            = f.submit "Post"

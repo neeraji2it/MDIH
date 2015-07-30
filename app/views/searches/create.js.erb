@@ -1,0 +1,19 @@
+<% if @saved_search.save %>
+jQuery.fancybox.close();
+  jQuery("#save_search_link").html('');
+  jQuery("#saved_flash_message").html("<div style='color:green;'><%= I18n.t('search.create.search_save') %></div>")
+<% else %>
+  var html="<%= escape_javascript(render(:partial => '/searches/new')) %>"
+  jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content: html
+  });
+<% end %>

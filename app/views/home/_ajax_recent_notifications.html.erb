@@ -1,0 +1,73 @@
+<% for notification in @notifications %>
+  <div class="chat-item">
+    <div class="chat-item-frame">
+      <div class="visual">
+        <% if !notification.profile_avatar_tumbnail.to_s.blank? %>
+          <%= link_to image_tag(notification.profile_avatar_tumbnail.to_s, :width => 96, :height => 104, :title => "#{notification.display_name}(#{notification.age} years)"), user_path(notification.login) %>
+        <% end %>
+        <%= "<span class='status_online'>#{notification.online_status}</span>".html_safe %>
+        <%#=  (notification.is_online == true and notification.chat_status == true and notification.last_accessed_at > 5.minutes.ago) ? "<span class='status_online'>online</span>".html_safe : "<span class='status_online'>offline</span>".html_safe  %>
+        <%=  notification.available_today == true ? "<span class='free'>free</span>".html_safe : ""  %>
+      </div>
+      <div class="text-block">
+        <ul class="message-info">
+          <li><%= notification.login %></li>
+          <li> <%= I18n.l notification.time_on.to_time.in_time_zone(user_time_zone), :format => :on_month %></li>
+          <li><%= I18n.l notification.time_on.to_time.in_time_zone(user_time_zone), :format => :at_time %> </li>
+        </ul>
+        <p>
+          <% if notification.notification_type == 'message'  %>
+            <%= link_to truncate(notification.message, :length => 75),  conversation_user_message_path(current_user, notification.user_id)   %>
+          <% elsif notification.notification_type == 'photo_comment' %>
+            <%= link_to truncate(notification.message, :length => 75), user_album_photo_path(current_user, notification.parent_id, notification.id)  %>
+          <% elsif notification.notification_type == 'gift' %>
+            <%= link_to truncate(notification.message, :length => 75), my_gifts_path(current_user, 'received') %>
+          <% elsif notification.notification_type == 'hot_vote' %>
+            <%= link_to truncate(notification.message, :length => 75), user_path(notification.login)  %>
+          <% else %>
+            <%= truncate(notification.message, :length => 75) %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+    <div class="m-nav-holder">
+      <nav class="message-nav">
+        <ul>
+          <% if !current_user.blocked_users.all(:select => "users.id").map{|u|  u.id}.include?(notification.user_id) and !BlockedUser.exists?(:user_id => notification.user_id, :blocked_user_id => current_user.id) %>
+            <li>
+              <%  if notification.is_online == true and notification.chat_status == true and notification.last_accessed_at > 5.minutes.ago %>
+                <%= link_to_function "title", "(Widgets.open(#{notification.user_id}) || (Widgets.find(#{notification.user_id})) || Widgets.create(#{notification.user_id}, '#{notification.user_name}', #{notification.age}, '#{!notification.profile_avatar_tumbnail.to_s.blank? ? "#{notification.profile_avatar_tumbnail.to_s}" : ""}', '#{notification.gender}', '#{notification.online_status}')).show().focus();", {:class=>'item-2', :title=>"Chat"} %>
+      <%#= link_to 'chat', chat_path(notification.user_id), :class=>'item-2', :title=>"Chat" %>
+              <% end %>
+            </li>
+            <% if current_user and !HotVote.exists?(:user_id => current_user.id, :hoter_id => notification.user_id) %>
+              <li><%= link_to "#{I18n.t('search.label.hot')}",  hot_vote_user_path(notification.user_id), :class=>"item-3", :title => "Vote for Hot?", :remote => true , :method => :post, :id => "hot_vote_link_#{notification.user_id}" %></li>
+            <% end %>
+            <li><%= link_to_function I18n.t('search.label.send_message'), "send_quick_message(#{notification.user_id})", :class=>"item-4", :title => "Send Message" %></li>
+            <li><%= link_to_function I18n.t('search.label.send_virtual_gift'), "send_gifts(#{notification.user_id}, '')", :class=>"item-6", :title => "Send a Gift" %></li>
+            <li>
+              <%= link_to 'delete',  block_user_search_path(notification.user_id),:class =>  "item-7", :title => "#{I18n.t('friend.index.block_this_user')}" , :remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.block_this_user_confirm_alert', :name => notification.user_name)}" %>
+            </li>
+          <% else %>
+            <li><%= link_to 'delete',  unblock_user_search_path(notification.user_id),:class =>  "item-7", :title => "#{I18n.t('friend.index.unblock_this_user')}" , :remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.unblock_this_user_confirm_alert', :name => notification.user_name)}" %></li>
+          <% end %>
+        </ul>
+      </nav>
+      <div id='<%="quick_message_status_#{notification.user_id}"%>' style="color:green;font-size: 11px;float: left;">
+      </div>
+      <div id='<%="blocked_error_#{ notification.user_id}"%>' style="color:red;font-size: 11px;float: left;"></div>
+      <div id='<%="hot_vote_status_#{notification.user_id}"%>' style="color:green;font-size: 11px;float: left;"></div>
+      <div id='<%="send_gift_status_#{notification.user_id}"%>' style="color:green;font-size: 11px;float: left;"></div>
+    </div>
+  </div>
+<% end %>
+<%#= link_to I18n.t('home.label.see_all_actions'), all_notifications_path, :class => "small_green"%>
+<% if @notifications.total_pages > @notifications.current_page %>
+  <div id="more_notifications_link">
+    <input type="hidden" value="<%= @notifications.current_page+1 %>" id="notifications_page" />
+    <%= link_to_function "more", "more_notifications(#{@notifications.current_page+1})",:class => "btn-more", :title => "click for more notifications" %>
+  </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

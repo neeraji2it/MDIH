@@ -1,0 +1,32 @@
+
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; background-color:#f5f0de; color:#6a5f39;" id="wrap">
+  <a href="http://www.mydateishere.com">
+    <div style="font-family:Arial, Helvetica, sans-serif; height:155px;" id="toparea1">
+      <img border="0" width="815px" src="<%= @base_url %>/assets/topbg.jpg" alt="">
+    </div>
+  </a>
+  <div  style="font-family:Arial, Helvetica, sans-serif;font-size:12px; line-height:20px; padding:30px;" class="textarea">
+    <p style="margin:0 0 20px 0;">
+
+      Dear <%= @user.full_name %>,
+      <br /><br />
+      Thank you for joining mydateishere.com . Use the link below to activate your account with us.
+      <br /><br />
+      Username: <%= @user.login %>
+      <br /><br />
+      <%= @url %>
+      <br />
+      (If you cannot click the link above, please copy and paste it into your browser's address bar).
+      <br /><br /><br /><br />
+
+    </p>
+    <hr style="font-family:Arial, Helvetica, sans-serif;height: 1px; background: #ccc4aa; border: 0; margin:0 0 20px 0;" class="dark" />
+  </div>
+  <div  style="font-family:Arial, Helvetica, sans-serif;background-color:#1f4f7b; color:#fff; font-size:12px; padding:20px; text-align:center;" class="footer"></div>
+</div>
+<br />
+<div  style="font-family:Arial, Helvetica, sans-serif; width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer"></div><br />
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer">
+  This email was sent to <%= @user.email %>.<br />
+  Please add donotreply@mail.mydateishere.com  to your address book to ensure our emails reach your inbox!
+</div><br />

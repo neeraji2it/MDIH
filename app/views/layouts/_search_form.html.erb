@@ -1,0 +1,13 @@
+<%= form_tag simple_results_searches_path, :method => :get, :class=>"search-panel", :remote => true do  %>
+  <fieldset>
+    <h2>search</h2>
+    <a href="#" class="opener">open</a>
+    <div class="search">
+      <%= text_field_tag "user_name" , (params[:user_name].to_s != '') ? params[:user_name] : 'Username search', :onfocus => "zip_hint('user_name', 'Username search')", :onblur => "zip_hint('user_name', 'Username search')", :style => "color: #{(params[:user_name].to_s != '' and params[:user_name] != 'Username search') ? '#626262' : '#626262'};font-size: 10px;" %>
+      <%= submit_tag ""  %>
+    </div>
+  </fieldset>
+<% end %>
+<div id="search_result">
+  
+</div>

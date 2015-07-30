@@ -1,0 +1,47 @@
+<%= javascript_include_tag 'application','jquery-ui-1.8.9.custom.min.js' %>
+<%= stylesheet_link_tag "chat/base", "chat/layout", "chat/users", "chat/widget","all", "chat/gemoticons" %>
+
+<%= javascript_include_tag "jquery.tmpl.min", "chat/chat", "chat/messages", "chat/users", "chat/widgets", "chat/jquery.gemoticons", "chat/jquery.titlealert.js" %>
+<%= javascript_include_tag 'juggernaut'%>
+<script>
+   var opened_chat_windows =  new Array();
+  $(document).ready(function(){
+    (Widgets.find(<%= @user.id %>) || Widgets.create(<%= @user.id %>, '<%= @user.display_name %>', <%= @user.age %>, '<%=(@user.facebook_id.present? ? (@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ? @user.profile.avatar.url(:original) : @user.fb_big_image) : @user.fb_big_image) : (@user.profile ? @user.profile.avatar.url(:original)  : "/assets/default_avatar.jpg"))%>', '<%= @user.gender %>')).show().focus();
+  });
+</script>
+<div id="layout-footer">
+  <div id="layout-footer-left-contents" class="left-contents">
+<%#*<div id="chat-users-container" class="minimized">%>
+<%#*<div id="chat-users-header"> Friends to chat </div>%>
+<%#*<div id="chat-users-body">%>
+<%#*</div>%>
+<%#*</div>%>
+  </div>
+  <div id="layout-footer-middle-contents" class="middle-contents"></div>
+  <div id="layout-footer-right-contents" class="right-contents">
+    <%= render :partial => "chat/widget_template" %>
+    <div id="chat-widgets-container"></div>
+  </div>
+</div>
+
+<style>
+  #chat-widgets-container .messages {
+    max-height: 450px;
+    min-height: 450px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 3px;
+  }
+  .chat-popup-2 .send-form textarea {
+    max-height: 350px;
+    min-height: 50px;
+    min-width: 260px;
+    max-width: 260px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  body{
+     overflow-x: hidden;
+    overflow-y: auto;
+  }
+</style>

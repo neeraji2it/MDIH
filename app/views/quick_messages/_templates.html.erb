@@ -1,0 +1,10 @@
+<ul>
+  <%  if @message_templates.empty? %>
+    <span id="user_template" style="color:red;">No templates</span>
+  <% else %>
+    <% for template in @message_templates %>
+      <li id="user_template"><%= link_to_function template.subject.slice(0..10),'',:onclick => "insertTemplate(this)" %>..<div id="template-body" style="display:none;"><%= template.body.html_safe %></div></li>
+    <% end %>
+  <% end %>
+</ul>
+<%= will_paginate @message_templates, :param_name => 'template_page', :page_links => false, :style => "color: #FFFFFF;    left: 78px;    position: relative;    top: -4px;" %>

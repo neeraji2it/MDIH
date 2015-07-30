@@ -1,0 +1,28 @@
+<div class="new-message-popup" style="width:350px;">
+  <header class="heading">
+    <a href="#" class="close" id="fancybox_close">close</a>
+  </header>
+  <div style="padding: 3px;">
+    <%= form_for :saved_search, :as => @saved_search, :remote => true, :url => {:action => "create"} do |f| %>
+      <table width="100%">
+        <tr>
+          <td valign="top">
+            <%= I18n.t('search.label.name*') %>
+          </td>
+          <td>
+            <%= f.text_field :name %>
+            <%= validation_errors(@saved_search.errors[:name]) %>
+            <p><%= I18n.t('search.label.give_name') %></p>
+          </td>
+          <%= f.hidden_field :url, :value => @saved_search.url.blank? ? request.url : @saved_search.url %>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <%= f.submit I18n.t('links.submit.save'), :onclik => "return validate_search_form()", :class => "save_search_btn", :style => "margin:0" %><br/>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+</div>

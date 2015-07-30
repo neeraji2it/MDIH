@@ -1,0 +1,28 @@
+%table{ :align => "center", :width => "100%", :style => "padding: 20px 20px 20px 20px;" }
+  - form_tag simple_results_searches_path, :method => :get do
+    %tr
+      %td
+        = I18n.t('search.label.i_m_a')
+        %br
+        = select_tag "i_am_a", options_for_select(["Male", "Female"], params[:i_am_a])
+      %td
+        = I18n.t('search.label.looking_for_a')
+        %br
+        = select_tag "looking_for", options_for_select(LOOKING_FOR, (params[:looking_for].to_s.blank? ? 'Female' : params[:looking_for]))
+      %td
+        = I18n.t('search.label.between_the_ages')
+        %br
+        = select_tag "age_from", options_for_select((18..100), params[:age_from].to_i)
+        and
+        = select_tag "age_to", options_for_select((18..100), (params[:age_to].to_i == 0 ? 35 : params[:age_to].to_i))
+    %tr
+      %td{ :colspan => "2" }
+        = text_field_tag "distance", params[:distance], :size => "3"
+        = I18n.t('search.label.miles_of')
+        = text_field_tag "zip_code", (params[:zip_code].to_s != '') ? params[:zip_code] : 'Zip/postal code', :size => "7", :onfocus => "zip_hint('zip_code', 'Zip/postal code')", :onblur => "zip_hint('zip_code', 'Zip/postal code')", :style => "color: #{(params[:zip_code].to_s != '' and params[:zip_code] != 'Zip/postal code') ? '#000000' : '#CFCFCF'};"
+      %td
+        %br
+        = image_submit_tag "search-yellow.png"
+        -if params[:controller] == "searches"
+          \&nbsp;&nbsp;&nbsp;  | &nbsp;&nbsp;
+          = link_to I18n.t('search.label.advance_search') , advance_searches_path , :style => "color: #FFFFFF; text-decoration: none;"

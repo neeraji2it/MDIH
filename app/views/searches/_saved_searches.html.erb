@@ -1,0 +1,5 @@
+<% if current_user %>
+  <% for saved_search in current_user.saved_searches %>
+    <%= link_to saved_search.name, saved_search.url  %>
+  <% end %>
+<% end %>

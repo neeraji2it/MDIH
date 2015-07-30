@@ -1,0 +1,42 @@
+%div{:style => "border-bottom:1px solid #8DB986;"}
+  %h2{:class=>"sub", :style => "color:#258216;"}
+    = I18n.t('general_home.contact_us')
+= form_tag(:action => 'contact_us') do
+  %table{ :cellspacing => "5", :style => "padding-top: 50px;", :width => "60%", :cellpadding => "0", :align=>"center" }
+    %tr
+      %td{:width => "30%", :valign => "top"}
+        = I18n.t('general_home.full_name*')
+      %td
+        - if params[:full_name_error]
+          %span{:style => "color:red; font-size: 11px;"}
+            = params[:full_name_error]
+        = text_field_tag :full_name, params[:full_name], :size => "30"
+    %tr
+      %td{:valign => "top"}
+        = I18n.t('general_home.email_address')
+      %td
+        - if params[:email_error]
+          %span{:style => "color:red; font-size: 11px;"}
+            = params[:email_error]
+        = text_field_tag :email, params[:email], :size => "30"
+    %tr
+      %td{:valign => "top"}
+        = I18n.t('general_home.subject')
+      %td
+        - if params[:subject_error]
+          %span{:style => "color:red; font-size: 11px;"}
+            = params[:subject_error]
+        = text_field_tag :subject, params[:subject], :size => "30"
+    %tr
+      %td{:valign => "top"}
+        = I18n.t('general_home.your_message')
+      %td
+        - if params[:message_error]
+          %span{:style => "color:red; font-size: 11px;"}
+            = params[:message_error]
+        = text_area_tag :message, params[:message], :size => "35x8"
+    %tr
+      %td
+        &nbsp;
+      %td
+        = submit_tag I18n.t('general_home.submit_form')

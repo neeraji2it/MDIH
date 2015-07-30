@@ -1,0 +1,73 @@
+- for user in @users
+  - is_blocked_user = (current_user.blocked_users.all(:select => "users.id").map{|u|  u.id}.include?(user.id) or BlockedUser.exists?(:user_id => user.id, :blocked_user_id => current_user.id))
+  .friendsgrid
+    .f_box{ :style => "width: 85px; height: 80px; overflow: hidden;border:1px solid #258216" }
+      = link_to image_tag(user.profile ? user.profile.avatar.url(:default) : "default_avatar.jpg", :width => 85, :style => "border: 0px;"), user_path(user)
+    .listlong
+      = user_online_status_image(user)
+      = ("#{link_to user.display_name, user_path(user), :class => 'small_green'}").html_safe
+      = get_chat_link(user, "#{I18n.t('friend.index.chat_with_me')}", {:class => "chat_with_me", :style => "float:right"})
+      %br
+      = user.age
+      = I18n.t('search.label.year_old')
+      = user.humanized_gender
+      - if !user.looking_for.to_s.blank?
+        = I18n.t('search.label.looking_for')
+        = user.looking_for
+      - if !user.orientation.to_s.blank?
+        = I18n.t('search.label.orientation')
+        = user.orientation
+      %br
+      - if @profile = user.profile
+        - location = [user.zip_code_city.to_s, @profile.city, @profile.state, @profile.country].delete_if{|location| location.to_s.blank?}
+        - if !location.empty?
+          = I18n.t('friend.index.location', :location => location.join(', '))
+      - elsif !user.zip_code_city.to_s.blank?
+        = I18n.t('friend.index.location', :location => user.zip_code_city.to_s)
+      %br
+      - if user.profile
+        - if !user.profile.headline.to_s.blank?
+          %br
+          = I18n.t('search.label.headline')
+          = truncate(user.profile.headline, :length => 80)
+        - if !user.profile.description.to_s.blank?
+          %br
+          = I18n.t('search.label.description')
+          = user.profile.description
+      %div
+        %p
+          = link_to I18n.t('links.remove'),  block_user_search_path(user.id),:remote => true, :method => :get, :confirm => "#{I18n.t('friend.index.block_this_user_confirm_alert', :name => user.display_name)}",  :class => "rmv_fr"
+          - if current_user and !HotVote.exists?(:user_id => current_user.id, :hoter_id => user.id)
+            = link_to (" &nbsp;| #{I18n.t('search.label.hot')}").html_safe, hot_vote_user_path(user.id), :remote => true, :method => :post, :class => "small_green", :id => "hot_vote_link_#{user.id}"
+          - if !current_user.my_match_users.all(:select => "matcher_id").map{|match| match.matcher_id}.include?(user.id)
+            = link_to_function " | #{I18n.t('search.label.add_to_my_match')}", "jQuery('#add_my_match_#{user.id}').show()", :class => "small_green", :id => "add_my_match_link_#{user.id}"
+
+      %div
+        %div{:id => "hot_vote_status_#{user.id}", :style => "color:red;font-size: 11px;"}
+        %div{:id => "quick_message_status_#{user.id}", :style => "color:red;font-size: 11px;"}
+        %div{:id => "send_gift_status_#{user.id}", :style => "color:red;font-size: 11px;"}
+        %div{:id => "add_my_match_status_#{user.id}", :style => "color:red;font-size: 11px;"}
+        %div{:id => "add_my_match_#{user.id}", :style => "display:none;clear:both;width: 350px;font-size:12px;" }
+          = form_tag :url => add_my_match_user_path(user.id), :remote => true do
+            = I18n.t('search.label.match_percent')
+            = select_tag "match_percent", options_for_select((1..20).map.collect{|n| n*5})
+            = submit_tag I18n.t('links.submit.add')
+            = button_to_function I18n.t('links.cancel'), "jQuery('#add_my_match_#{user.id}').hide();jQuery('#add_my_match_status_#{user.id}').html('');"
+
+    .f_right
+      - if !is_blocked_user
+        %p.srchlinks
+          = image_tag "mail-icon.gif"
+          = link_to_function I18n.t('search.label.send_message'), "send_quick_message(#{user.id})", :class => "small_green"
+          %br
+          = link_to_function I18n.t('search.label.send_virtual_gift'), "send_gifts(#{user.id}, '')", :class => "small_green"
+          - if user.photos.count > 0
+            %br
+            = link_to I18n.t('search.label.view_photos'), user_albums_path(user), :class => "small_green"
+          %div{:style => "clear:both"}
+          = get_chat_link(user, "#{I18n.t('friend.index.chat_with_me')}", { :class => "small_green"})
+      - else
+        = I18n.t('search.label.you_cannot_send')
+    %br{ :clear => "all" }
+    %br
+    %hr.brown

@@ -1,0 +1,135 @@
+<!-- content box -->
+<div class="content-box open-box active">
+  <header class="heading">
+    <h2><%= I18n.t('search.label.advance_search')%></h2>
+    <a href="#" class="opener">open/close</a>
+  </header>
+  <div class="slide">
+    <!-- advanced search form -->
+    <%= form_tag advance_results_searches_path, :method => :get, :class=>"advanced-search" do %>
+      <fieldset>
+        <%= render :partial => "searches/basic_search_fields"  %>
+        <div class="my-profile-form-2">
+          <div class="detail-box">
+            <%= link_to_function I18n.t('search.label.expand_all'), "expan_all_search_options()", :class => "whiteLink link-expand", :id => "expand_all" %>
+            <div class="column">
+              <h3>Personal</h3>
+              <div class="box">
+                <%= link_to_function "[+] #{I18n.t('profile.label.height')}", "expan_search_options('height', '#{I18n.t('profile.label.height')}')", :id => "height_link"%>
+                <div class="select-holder">
+                  <div id="height" class="search_options">
+                    <br/><%= check_box_tag "height_any", 1, :checked => true%>
+                    <%= I18n.t('search.label.any')%><br/><br/>
+                    <%= select_tag "height_in", options_for_select(["Inches", "Centimeters"], "Inches"), :class => "style01", :onchange => "if(this.value == 'Inches'){jQuery('#height_in_cm').hide();jQuery('#height_in_inches').show();}else{jQuery('#height_in_inches').hide();jQuery('#height_in_cm').show()}",:class => "select-2"%>
+                    <br/>
+                    <%= I18n.t('search.label.between')%>
+                    <br/>
+                    <div id="height_in_inches">
+                      <%= select_tag "height_feets_from", options_for_select([2, 3, 4, 5, 6], (params[:height_feets_from] ? params[:height_feets_from] : 4)),:class => "select-3" %>
+  <%#= I18n.t('search.label.feets') %>
+                      <%= select_tag "height_inches_from", options_for_select([1,2, 3, 4, 5, 6, 7, 8, 9, 10, 11], (params[:height_inches_from] ? params[:height_inches_from] : 1)),:class => "select-3" %>
+  <%#= I18n.t('search.label.inches')%>
+                      <br/>
+                      <%= I18n.t('general_word.to')  %>
+                      <br/>
+                      <%= select_tag "height_feets_to", options_for_select([2, 3, 4, 5, 6], (params[:height_feets_to] ? params[:height_feets_to] : 6)),:class => "select-3" %>
+  <%#= I18n.t('search.label.feets')%>
+                      <%= select_tag "height_inches_to", options_for_select([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], (params[:height_inches_to] ? params[:height_inches_to] : 11)),:class => "select-3" %>
+  <%#= I18n.t('search.label.inches')%>
+                    </div>
+                    <div id="height_in_cm" style="display:none;">
+                      <%= text_field_tag "height_cm_from", '',  :style => 'width: 18px;float:none'%>
+                      <%= I18n.t('search.label.cm_to') %>
+                      <%= text_field_tag "height_cm_to", '',  :style => 'width: 18px;float:none'%>
+                      <%= I18n.t('search.label.cm')%>
+                    </div>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.ethnic_origin')}", "expan_search_options('ethnicity', '#{I18n.t('profile.label.ethnic_origin')}')", :id => "ethnicity_link"%>
+                <div class="select-holder">
+                  <div id="ethnicity" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later" , "Asian", "Black",  "Caucasian/White", "Hispanic/Latino", "Middle Eastern" , "Mixed Race", "Pacific Islander", "Other"], :field_name => "ethnicity[]", :field_type => "check_box"}%>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.body_type')}", "expan_search_options('personality', '#{I18n.t('profile.label.body_type')}')", :id => "personality_link"%>
+                <div class="select-holder">
+                  <div id="personality" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later", "Slim", "Average", "Athletic",  "Muscular", "Bodybuilder", "Large", "Stocky", "Swimmer", "Runner", "Other"], :field_name => "body_type[]", :field_type => "check_box"}%>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.languages')}", "expan_search_options('languages', '#{I18n.t('profile.label.languages')}')", :id => "languages_link"%>
+                <div class="select-holder">
+                  <div id="languages" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Arms", "Belly button", "Butt", "Calves", "Chest", "Eyes", "Smile", "Feet", "Hands", "Hair", "Legs", "Lips", "Neck", "You will find out later"], :field_name => "best_feature[]", :field_type => "check_box"} %>
+                    <% langs = PROFILE_LANGUAGES  %>
+                    <%= render :partial => "option_values", :locals => { :options => langs, :field_name => "languages_spoken[]", :field_type => "check_box"}%>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.marital_status')}", "expan_search_options('marital_status', '#{I18n.t('profile.label.marital_status')}')", :id => "marital_status_link"%>
+                <div class="select-holder">
+                  <div id="marital_status" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later",  "Single", "Married", "In a relationship", "Divorced", "Widowed", "Swinger", "Engaged", "Just living together", "Other"], :field_name => "marital_status[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.want_children')}", "expan_search_options('want_kids', '#{I18n.t('profile.label.want_children')}')", :id => "want_kids_link"%>
+                <div class="select-holder">
+                  <div id="want_kids" class="search_options">
+                    <%=  render :partial => "option_values", :locals => { :options => ["Yes", "No",  "Haven't decided", "Will tell you later"], :field_name => "want_kids[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.religion')}", "expan_search_options('religion', '#{I18n.t('profile.label.religion')}')", :id => "religion_link"%>
+                <div class="select-holder">
+                  <div id="religion" class="search_options">
+                    <%=  render :partial => "option_values", :locals => { :options => ["Will tell you later",  "Catholic", "Buddhist", "Hindu", "Lutheran", "Atheist", "Muslim", "Spritual", "Jewish", "Other"], :field_name => "religion[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.smoke')}", "expan_search_options('smoke', '#{I18n.t('profile.label.smoke')}')", :id => "smoke_link"%>
+                <div class="select-holder">
+                  <div id="smoke" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later", "Yes", "No", "Occasionally", "Never"], :field_name => "smoke[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.drink')}", "expan_search_options('drink', '#{I18n.t('profile.label.drink')}')", :id => "drink_link"%>
+                <div class="select-holder">
+                  <div id="drink" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later", "Yes", "No", "Occasionally", "Never"], :field_name => "drink[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.drugs')}", "expan_search_options('drugs', '#{I18n.t('profile.label.drugs')}')", :id => "drugs_link"%>
+                <div class="select-holder">
+                  <div id="drugs" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later", "Yes", "No", "Occasionally", "Never"], :field_name => "drugs[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <h3><%= I18n.t('profile.label.professional')%></h3>
+              <div class="box">
+                <%= link_to_function "[+] #{I18n.t('profile.label.education_level')}", "expan_search_options('education_level', '#{I18n.t('profile.label.education_level')}')", :id => "education_level_link"%>
+                <div class="select-holder">
+                  <div id="education_level" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["Will tell you later", "High school", "College", "Master", "PHD", "Apprenticeship", "Other"], :field_name => "education_level[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.profession')}", "expan_search_options('profession', '#{I18n.t('profile.label.profession')}')", :id => "profession_link"%>
+                <div class="select-holder">
+                  <div id="profession" class="search_options">
+                    <%= text_field_tag "profession",'', :size => "20"%>
+                  </div>
+                </div>
+                <%= link_to_function "[+] #{I18n.t('profile.label.income_level')}", "expan_search_options('income_level', 'Income Level')", :id => "income_level_link"%>
+                <div class="select-holder">
+                  <div id="income_level" class="search_options">
+                    <%= render :partial => "option_values", :locals => { :options => ["15k-30k", "30k-45k", "45k-60k", "60k-75k", "75k-100k", "Over 100k", "Will tell you later"], :field_name => "income_level[]", :field_type => "check_box"} %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="submit" value="Search"/>
+      </fieldset>
+    <% end %>
+  </div>
+</div>

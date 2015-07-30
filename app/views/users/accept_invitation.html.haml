@@ -1,0 +1,12 @@
+%p
+
+  = I18n.t('user.label.please_signup')
+  - if @inviter
+    = I18n.t('user.label.to_accept_invitation') #{@inviter.display_name}
+%hr.brown
+- @user.password = @user.password_confirmation = nil
+- @user.password = @user.password_confirmation = nil
+= form_for @user, :url => {:controller => "users", :action => "accept_invitation" } , :html => { :method => "put" } do |f|
+  = hidden_field_tag 'activation_code', params[:activation_code]
+  = hidden_field_tag 'email', params[:email]
+  = render :partial => "form", :locals =>{:f => f}

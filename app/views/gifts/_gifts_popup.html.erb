@@ -1,0 +1,79 @@
+<div id="popup-5" class="lightbox popup-box chat-popup gift-popup">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3>new gifts</h3>
+      <a href="#" class="close" id="fancybox_close" title="close">close</a>
+    </header>
+    <% if @gifts.empty? %>
+      <div id="empty" align="center">
+        You don't have new gifts
+      </div>
+    <% else %>
+      <% for gift in @gifts %>
+        <!-- chat item -->
+        <div class="chat-item">
+          <div class="visual">
+            <% if !gift.user.facebook_id.present? %>
+              <%= link_to image_tag(gift.user.profile ? (gift.user.profile.avatar_file_name != "picture_type_large.jpg" ?  gift.user.profile.avatar.url(:default) : gift.user.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104, :title => "#{gift.user.display_name}(#{gift.user.age} years)"), user_path(gift.user) %>
+            <% else %>
+              <%= link_to  image_tag(gift.user.fb_big_image, :width => 96,:height => 104, :title => "#{gift.user.display_name}(#{gift.user.age} years)"), user_path(gift.user) %>
+            <% end %>
+            <%= user_online_status_image(gift.user) %>
+            <% if gift.user.available_today == true %>
+              <span class='free'>free</span>
+            <% else %>
+            <% end %>
+          </div>
+          <div class="text-block">
+            <ul class="message-info">
+              <li><%= gift.user.display_name %></li>
+              <li><%= gift.sent_on.strftime("%d/%m/%y") %></li>
+              <li><%= gift.sent_on.strftime("%H:%M") %></li>
+            </ul>
+            <p><%= gift.message %></p>
+            <%  @quick_message = Message.new %>
+            <%= form_for :quick_mesage, :as => @quick_message, :url => user_quick_messages_path(gift.user.id), :html => {:class => "reply-form", :method => :post} do |f|%>
+              <fieldset>
+                <%= f.text_area :body , :size => "58x18" %>
+                <div class="row">
+                  <%= f.submit "reply" %>
+      <%#= link_to_function I18n.t('links.reply'), "send_quick_message(#{gift.user.id})", :class => 'reply_link', :style => 'width: 40px; padding:1px;' %>
+                  <nav class="message-nav">
+                    <ul>
+                      <li><%= link_to "", user_gift_path(current_user, gift.id, :type => @gifts_type), :method => :delete,:class => "item-7", :confirm =>  I18n.t('gift.label.are_you_sure'), :title => "Delete gift"  %></li>
+                    </ul>
+                  </nav>
+                </div>
+              </fieldset>
+            <% end %>
+
+            <!--<%#= form_for(MessagesReply.new, :url => reply_user_message_path(current_user, gift.message), :html=>{:class => "reply-form"}) do |f| %>
+                    <fieldset>
+    <%#= f.text_area :body,:cols=>"30", :rows=>"10" %>
+                      <div class="row">
+                        <nav class="message-nav">
+                          <ul>
+                            <li><a href="#" class="item-1">item-1</a></li>
+                            <li><%#= link_to 'chat', chat_path(gift.user.id), :class=>'item-2', :title=>"Chat" %></li>
+    <%# if current_user and !HotVote.exists?(:user_id => current_user.id, :hoter_id => gift.user.id) %>
+                              <li><%#= link_to "#{I18n.t('search.label.hot')}",  hot_vote_user_path(gift.user.id), :class=>"item-3", :title => "Vote for Hot?", :remote => true , :method => :post %></li>
+    <%# end %>
+                            <li><%#= link_to_function I18n.t('search.label.send_message'), "send_quick_message(#{gift.user.id})", :class=>"item-4", :title => "Send Message" %></li>
+                            <li><%#= link_to_function I18n.t('search.label.send_virtual_gift'), "send_gifts(#{gift.user.id}, '')", :class=>"item-6", :title => "Send a Gift" %></li>
+                            <li><%#= link_to "", user_gift_path(current_user, gift.id, :type => @gifts_type), :method => :delete,:class => "item-7", :confirm =>  I18n.t('gift.label.are_you_sure'), :title => "Delete gift"  %></li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </fieldset>
+    <%# end %>-->
+          </div>
+          <div id='<%="quick_message_status_#{gift.user.id}"%>' style="color:green;font-size: 11px;float: left;">
+          </div>
+          <div id='<%="hot_vote_status_#{gift.user.id}"%>' style="color:green;font-size: 11px;float: left;"></div>
+          <div id='<%="send_gift_status_#{gift.user.id}"%>' style="color:green;font-size: 11px;float: left;"></div>
+          <%= link_to_function image_tag(gift.product.photo.url(:default),:width=>"86", :height=>"99"), "window.open('#{gift.product.photo.url(:original)}', 'name','height=500,width=500');" , :class=>"alignright" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

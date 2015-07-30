@@ -1,0 +1,62 @@
+%p
+  = I18n.t('gift.label.send_a_virtual_gift')
+.whitehr
+  %p.greenhdrsm
+    = I18n.t('gift.label.filter_by_category')
+    = select_tag "pcategory_id", options_for_select([["Select", ""]]+Pcategory.all.map{|pc| [pc.name, pc.id]}, params[:pcategory_id].to_i), :onchange => "if(this.value != 0){window.location = '/users/#{@user.login}/gifts/send_gifts?pcategory_id='+this.value}", :style => "width: 150px;"
+  %p.plainrt{:style => "padding: 0px;"}
+    = will_paginate @products
+#msginbox
+  .cartleftnav
+    %p.greencart{:align => "right"}
+      = I18n.t('gift.label.cart')
+    %p{:align => "center"}
+      = link_to image_tag(@user.profile ? @user.profile.avatar.url(:default) : "default_avatar.jpg", :height => 120), user_path(@user)
+    %h1
+      = @user.display_name
+    %p
+      = @user.age
+      = I18n.t('gift.label.year_old')
+      = @user.humanized_gender
+      %br
+      - if @profile = @user.profile
+        = I18n.t('general_word.from')
+        = @profile.city
+        = @profile.state
+        = @profile.country
+        %br
+
+  %div
+    %div{:align => "center"}
+      = I18n.t('gift.label.show_virtual_gift').html_safe
+    %br
+    #outergrid
+      - i = 1
+      - for product in @products
+        - class_name = 'grid1and2'
+        - if i == 3
+          - class_name = 'grid3'
+        %div{:class => class_name}
+          = link_to image_tag(product.photo.url(:default)), product.photo.url(:original), :id => "single_image"
+          %br
+          %strong
+            = product.name
+            %br
+            = I18n.t('gift.label.credits')
+            = product.credits
+          %br
+          =# link_to image_tag('send_gift.gif'), send_to_friend_user_gift_path(@user, product), :method => :post
+          = link_to image_tag('send_gift.gif'), send_gift_user_gift_path(@user, product, :page => params[:page])
+          - if i == 3
+            - i = 1
+            %br{:clear => "all"}
+            %br
+          - else
+            - i += 1
+
+    %br{:clear => "all"}
+.whitehr
+  %p.greenhdrsm
+  %p.plainrt{:style => "padding: 0px;"}
+    = will_paginate @products
+

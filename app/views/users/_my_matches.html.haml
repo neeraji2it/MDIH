@@ -1,0 +1,83 @@
+%p.greensh
+  %div{:style => "float:left", :class => "greensh"}
+    = I18n.t('user.label.my_matches')
+  %div{:style => "float:right"}
+    = I18n.t('general_word.display_per_page')
+    = select_tag :per_page, options_for_select([10,20,50],params[:per_page].to_i), :onchange => "if(this.value){window.location='?per_page='+this.value;}"
+%br{:style => "clear:both"}
+.whitehr{:style => "padding:6px 24px 0 0;"}
+  %p.plainhdrsm
+    - if !@matched_users.empty?
+      =# image_tag("icons/filter.png", :title => "Sort by",:width => "25px")
+      = I18n.t('user.label.added_time')
+      - if @sort == 'created_at' and @by == 'DESC'
+        = link_to image_tag("icons/asc.png", :title => "Filter by added time asc"), my_matches_user_path(current_user, :sort => 'created_at', :by => 'ASC')
+      - else
+        = link_to image_tag("icons/desc.png", :title => "Filter by added time desc"), my_matches_user_path(current_user, :sort => 'created_at', :by => 'DESC')
+      = I18n.t('user.label.match_percent')
+      - if @sort == 'match_percent' and @by == 'DESC'
+        = link_to image_tag("icons/asc.png", :title => "Filter by matche percent asc"), my_matches_user_path(current_user, :sort => 'match_percent', :by => 'ASC')
+      - else
+        = link_to image_tag("icons/desc.png", :title => "Filter by matche percent desc"), my_matches_user_path(current_user, :sort => 'match_percent', :by => 'DESC')
+  %p.plainrt{:style => "padding: 0px;"}
+    = will_paginate @matched_users
+- if !@matched_users.empty?
+  - i = 0
+  - for matched_user in @matched_users
+    - i += 1
+    - user = matched_user.matcher
+    - class_name = i%2 != 0 ? "person1" : "person2"
+    %div{:class => class_name, :style => "width:350px;margin:0 10px 0 0;" }
+      %div{ :style => "width: 350px;" }
+        %div{:style => "float:left;width: 85px; height: 85px; overflow: hidden;border:1px solid #258216"}
+          = link_to image_tag(user.profile ? user.profile.avatar.url(:default) : "default_avatar.jpg", :width => 85), user_path(user)
+        .sr_info{ :style => "width:256px;" }
+          %p
+            %strong
+              = user_online_status_image(user)
+              - user_link_text = truncate(user.display_name, :length => 25)
+              = ("#{link_to user_link_text, user_path(user)} (#{user.gender})").html_safe
+              = get_chat_link(user, "#{I18n.t('friend.index.chat_with_me')}", {:class => "chat_with_me", :style => "float:right"})
+              %br
+              = I18n.t('friend.index.age', :age => user.age)
+            - if !user.profile_address.to_s.blank?
+              = I18n.t('friend.index.location', :location => user.profile_address.to_s)
+              %br
+          %p
+            #{ I18n.t('user.label.match_percent')} <b>#{matched_user.match_percent.to_s+"%"}</b>
+          %p
+            = I18n.t('user.label.last_viewed_me_at')
+            - if viewed_me = ProfileViewer.find(:first, :conditions => ["user_id = #{current_user.id} AND viewed_by = #{user.id}"]) and  !viewed_me.viewed_at.nil?
+              = I18n.l viewed_me.viewed_at.to_time.in_time_zone(user_time_zone), :format => :short4
+            - else
+              = I18n.t('user.label.not_yet')
+      %br{ :clear => "all" }
+      %div{ :style => "width: 350px;font-size:12px;" }
+        = link_to image_tag('greenx.gif'), delete_my_match_user_path(matched_user.matcher_id), :method => :delete, :confirm => I18n.t("user.my_match.remove_confirm"), :style => "float:right;margin: -10px;", :title => I18n.t("user.my_match.remove_link_title")
+
+    - if i%2 == 0
+      %br{ :clear => "all" }
+      .20spacer
+        \&nbsp;
+  %br{ :clear => "all" }
+
+- else
+  %div{ :style => "background:#FFFFFF;height: 40px;padding-top:20px;width:98%", :align => "center"}
+    %span{:style => "font-size: 14px;color:red;"}
+      = I18n.t('user.label.no_matches_added') #{link_to 'find', searches_path } I18n.t('users.your_matches_now')
+.whitehr{:style => "padding:6px 24px 0 0;"}
+  %p.plainhdrsm
+    - if !@matched_users.empty?
+      =# image_tag("icons/filter.png", :title => "Sort by",:width => "25px")
+      = I18n.t('user.label.added_time')
+      - if @sort == 'created_at' and @by == 'DESC'
+        = link_to image_tag("icons/asc.png", :title => "Filter by added time asc"), my_matches_user_path(current_user, :sort => 'created_at', :by => 'ASC')
+      - else
+        = link_to image_tag("icons/desc.png", :title => "Filter by added time desc"), my_matches_user_path(current_user, :sort => 'created_at', :by => 'DESC')
+      = I18n.t('user.label.match_percent')
+      - if @sort == 'match_percent' and @by == 'DESC'
+        = link_to image_tag("icons/asc.png", :title => "Filter by matche percent asc"), my_matches_user_path(current_user, :sort => 'match_percent', :by => 'ASC')
+      - else
+        = link_to image_tag("icons/desc.png", :title => "Filter by matche percent desc"), my_matches_user_path(current_user, :sort => 'match_percent', :by => 'DESC')
+  %p.plainrt{:style => "padding: 0px;"}
+    = will_paginate @matched_users

@@ -1,0 +1,34 @@
+<div class="holder">
+  <% @photos.each do |photo| %>
+    <div class="photo-item">
+      <%= link_to "<span class='visual-holder'>#{image_tag(photo.image.url(:medium), :width=>"96", :height=>"104", :alt=>"image", :id => "image_#{photo.id}")}</span>".html_safe, user_album_photo_path(@album.user, @album, photo), :class=>"visual"%>
+      <% if photo.user_id == current_user.id %>
+        <nav class="photo-nav-2">
+          <ul>
+            <% if @album.cover_photo_id != photo.id %> <li><%= link_to "",make_album_cover_user_album_photo_path(current_user, @album, photo),:class=>"item-1", :title => "#{I18n.t('album.label.make_album_cover')}"  %></li><% end %>
+            <li><%= link_to "person",make_profile_photo_user_album_photo_path(photo.album.user, photo.album, photo), :method => :post, :class => "item-2", :title => "#{I18n.t('photo.label.make_as')}" %></li>
+            <li><%= link_to_function "rotate", "", :class => "item-3", :id => "rotate_#{photo.id}", :title => 'rotate' %></li>
+            <li> <%= link_to "delete", user_album_photo_path(current_user, @album, photo), :class=>"item-4", :method => :delete, :confirm => "Are you sure you want to use?", :remote => true, :title => "Delete photo" %></li>
+          </ul>
+        </nav>
+        <script>
+          var value_<%= photo.id %> = 0
+          $("#rotate_<%= photo.id %>").click(function(){
+            value_<%= photo.id %> +=90;
+            $("#image_<%= photo.id %>").rotate({ animateTo:value_<%= photo.id %>})
+          });
+        </script>
+      <% end %>
+      <span class="date"><%= photo.created_at.strftime("%d/%m/%y") %></span>
+    </div>
+  <% end %>
+</div>
+<% if @photos.total_pages > @photos.current_page %>
+  <div id="more_photos_link">
+    <input type="hidden" value="<%= @photos.current_page+1 %>" id="photos_page" />
+    <%= link_to_function "more", "more_photos(#{@user.id}, #{@photos.current_page+1})",:class => "btn-more", :title => "click for more photos" %>
+  </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

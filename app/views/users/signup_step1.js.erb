@@ -1,0 +1,14 @@
+var html = "<%= escape_javascript(render :partial => "users/new") %>"
+jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content : html
+});
+

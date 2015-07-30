@@ -1,0 +1,10 @@
+<% if @status %>
+  hide_popup();
+  alert("<%= I18n.t('profile.report_inappropriate_avatar.alert') %>")
+  $("#inappropriate_profile_photo a").html("");
+<%  else %>
+<%  @inappropriate_photo_error = I18n.t('profile.report_inappropriate_avatar.error') %>
+  $("#popup_body").html("<%= escape_javascript(render(:partial => 'report_inappropriate_avatar', :layout => false)) %>");
+  $("#overlay").show();
+  $("#popup_box").show();
+<%  end %>

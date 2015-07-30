@@ -1,0 +1,36 @@
+<% if @messages.empty? %>
+  <div id="empty" align="center">
+    No Conversion history
+  </div>
+<% else %>
+  <% for message in @messages %>
+    <!-- message item -->
+    <!--<div class="<%#= cycle('message-item', 'my-message') %>">-->
+    <div id="message_<%= message.id %>" class="message-item">
+      <article class="message-item-holder">
+        <div class="gifts-message-holder">
+          <ul class="message-info">
+            <li><%= message.receiver.display_name %></li>
+            <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+            <li><%= message.created_at.strftime("%H:%M") %></li>
+          </ul>
+          <p><%= message.body %></p>
+          <div class="status-links">
+            <%= message.receiver_status %><% if message.receiver_status == 'unread' and message.message_type != "recalled" %><%= link_to "Recall",recall_user_message_path(current_user.id, message.id), :remote => true, :class=>"rec" %><% elsif message.receiver_status == 'unread' and message.message_type == "recalled" %><span style="color: red;">&nbsp;&nbsp;Recalled</span> <% else %><% end %>
+          </div>
+        </div>
+      </article>
+    <%#= link_to "delete",user_message_path(current_user.id, message), :method => :delete, :remote => true, :confirm => I18n.t('user.block.confirm_alert'), :class=>"delete-link", :title => 'delete' %>
+      <%= link_to_function "delete", "delete_message(#{current_user.id},#{message.id})", :class=>"delete-link", :title => 'delete' %>
+    </div>
+  <% end %>
+  <% if @messages.total_pages > @messages.current_page %>
+    <div id="more_sent_messages_link">
+      <input type="hidden" value="<%= @messages.current_page+1 %>" id="more_sent_messages_page" />
+      <%= link_to_function "more", "more_sent_messages(#{current_user.id},#{@user.id}, #{@messages.current_page+1})",:class => "btn-more", :title => "click for more sent messages" %>
+    </div>
+  <% end %>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

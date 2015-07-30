@@ -1,0 +1,50 @@
+<div class="content-box">
+  <header class="heading">
+    <% if params[:controller] == 'friends' and params[:action] == 'index' %>
+      <h2>favorites</h2>
+    <% elsif  params[:action] == 'blocked_users' %>
+      <h2>Hidden Users</h2>
+    <% end %>
+    <% if (params[:controller] == 'friends' and params[:action] == 'index')  %>
+      <div class="order-form">
+        <fieldset>
+          <h2>order by:</h2>
+          <%= select_tag "sort", options_for_select([["Newest", "Newest"],["Oldest", "Oldest"], ["Last on line", "Lastonline"], ["Online", "online"]], params[:sort]), {:onchange => "reload_with_new_param('sort', this.value)"}%>
+        </fieldset>
+      </div>
+    <% end %>
+  </header>
+  <% if !@users.empty? %>
+    <div id="more_friends">
+      <%= render :partial => "/friends/ajax_friends" %>
+      <% if params[:action] != 'blocked_users' %>
+        <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+      <% end %>
+    </div>
+  <%  else %>
+    <div style ="background:#FFFFFF;height: 40px;padding-top:20px;" align="center">
+      <span style ="font-size: 14px;color:red;">
+        <% if params[:action] == 'blocked_users' %>
+          <%= I18n.t('friend.label.no_blocked_users') %>
+        <%  else %>
+          "No Friends"
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+</div>
+<script type="text/javascript" >
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#friends_page').val() > 0)
+      {
+<% if params[:action] == 'blocked_users' %>
+          more_blocked_users(jQuery('#friends_page').val())
+<% else %>
+          more_friends(jQuery('#current_user_id').val(), jQuery('#friends_page').val())
+<% end %>
+      }
+    });
+  });
+</script>

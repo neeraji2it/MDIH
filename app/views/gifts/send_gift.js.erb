@@ -1,0 +1,14 @@
+var html = "<%= escape_javascript(render :partial => "gifts/ajax_send_gift") %>"
+jQuery.fancybox({
+padding: 15,
+cyclic: false,
+overlayShow: true,
+transitionIn:'elastic',
+transitionOut:'elastic',
+speedIn:600,
+speedOut:600,
+overlayOpacity:0,
+titlePosition: 'inside',
+content : html
+});
+jQuery("#ajax_loader_big").hide();

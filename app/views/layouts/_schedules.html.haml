@@ -1,0 +1,34 @@
+#leftnav
+  %p.lefttopper
+  %p.lefthdr
+    = I18n.t('layout.my_calender')
+  %ul
+    %li
+      - if params[:action] == 'my_dates'
+        = link_to ("<strong>#{I18n.t('layout.my_dates')}(#{DateSchedule.accepted_dates(current_user.id)})</strong>").html_safe , my_dates_user_schedules_path(current_user)
+      - else
+        = link_to "#{I18n.t('layout.my_dates')}(#{DateSchedule.accepted_dates(current_user.id)})", my_dates_user_schedules_path(current_user)
+    %li
+      - if params[:action] == 'index' or (@date_schedule and @date_schedule.dater_id == current_user.id and params[:action] == 'show')
+        = link_to ("<strong>#{I18n.t('layout.who_d_date_me')}</strong>").html_safe , user_schedules_path(current_user)
+      - else
+        = link_to I18n.t('layout.who_d_date_me'), user_schedules_path(current_user)
+    %li
+      - if params[:action] == 'whom_i_requested' or (@date_schedule and @date_schedule.user_id == current_user.id and params[:action] == 'show')
+        = link_to ("<strong>#{I18n.t('layout.who_i_d_date')}</strong>").html_safe, whom_i_requested_user_schedules_path(current_user)
+      - else
+        = link_to I18n.t('layout.who_i_d_date'),whom_i_requested_user_schedules_path(current_user)
+    %li
+      - if params[:action] == 'new' or params[:action] == 'edit'
+        = link_to ("<strong>#{I18n.t('layout.user_menu.ask_for_date')}</strong>").html_safe, new_user_schedule_path(current_user)
+      - else
+        = link_to I18n.t('layout.user_menu.ask_for_date'), new_user_schedule_path(current_user)
+
+  %br{ :clear => "all" }
+  =# render :partial => "layouts/left_menu_adds"
+  %p.leftbtm
+#rtcontent
+  #toprtshdw
+  = render :partial => partial_file
+  #btmrtshdw
+%br{ :clear => "all" }

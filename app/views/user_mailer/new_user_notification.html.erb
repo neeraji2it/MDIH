@@ -1,0 +1,46 @@
+
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; background-color:#f5f0de; color:#6a5f39;" id="wrap">
+  <a href="http://www.mydateishere.com">
+    <div style="font-family:Arial, Helvetica, sans-serif;background: url(<%= @url %>/assets/topbg.jpg) no-repeat; height:155px;" id="toparea1">
+      <img border="0" width="815px" src="<%= @url %>/assets/topbg.jpg" alt="">
+    </div>
+  </a>
+  <div  style="font-family:Arial, Helvetica, sans-serif;font-size:12px; line-height:20px; padding:30px;" class="textarea">
+    <p style="margin:0 0 20px 0;">
+
+
+
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="2" height="50px"> <b><%= @new_user.full_name %></b> has a new user </td>
+      </tr>
+      <tr>
+        <td width="170px" align="left" valign="top">
+          <%= link_to image_tag((@new_user.profile ? @new_user.profile.avatar.url(:default) : "#{@url}/assets/default_avatar.jpg"), :width => "150px"), @url+"/users/#{@new_user.id}", :style => "border: 0px;color:#FFFFFF;text-decoration:none;" %>
+        </td>
+        <td align="left" valign="top">
+          <div style="padding-left: 10px;">
+            <%= link_to @new_user.full_name+" (#{@new_user.gender})", @url+"/users/#{@new_user.id}", :style => "text-decoration: none;color:#258216" %> <br />
+            <span style="font-size: 12px;">
+              <%= "#{@new_user.age} years  #{@new_user.humanized_gender.to_s.downcase} #{(@new_user.profile and !(@new_user.profile.city.to_s+@new_user.profile.state.to_s+@new_user.profile.country.to_s).blank?) ? "from "+@new_user.profile.city.to_s+" "+@new_user.profile.state.to_s+" "+@new_user.profile.country.to_s : ''}"%>
+            </span>
+            <span style="font-size: 12px;">
+              <%=  "#{@new_user.full_name} is looking for #{@new_user.looking_for}"  %>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+
+    </p>
+    <hr style="clear:both;font-family:Arial, Helvetica, sans-serif;height: 1px; background: #ccc4aa; border: 0; margin:0 0 20px 0;" class="dark" />
+  </div>
+  <div  style="font-family:Arial, Helvetica, sans-serif;background-color:#1f4f7b; color:#fff; font-size:12px; padding:20px; text-align:center;" class="footer"></div>
+</div>
+<br />
+<div  style="font-family:Arial, Helvetica, sans-serif; width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer"></div><br />
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer">
+  This email was sent to <%= @user.email %>.<br />
+  Please add donotreply@mail.mydateishere.com  to your address book to ensure our emails reach your inbox!
+</div><br />

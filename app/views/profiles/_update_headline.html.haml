@@ -1,0 +1,13 @@
+= form_for @profile, :url => update_headline_user_profiles_path(current_user),:html => {:method => :post, :id => 'profile_photo', :name => "profile_photo", :remote => true} do |f|
+  %table{:width => "100%", :cellspacing => "0", :cellpadding => "0"}
+    %tr
+      %td{:style => "font-size: 16px;font-weight: bold;"}
+        = I18n.t('profile.label.enter_ur_profile_headline')
+        <hr class="brown">
+    %tr
+      %td
+        = validation_error(@profile.errors["headline"])
+        = f.text_field :headline
+    %tr
+      %td
+        = submit_tag I18n.t('links.submit.submit1')

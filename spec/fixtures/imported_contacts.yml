@@ -1,0 +1,25 @@
+## YAML Template.
+
+imported_contact1:
+    id: 1
+    user_id: 1
+    name: Imported Contact 1
+    email: contact1@example.com
+
+imported_contact2:
+    id: 2
+    user_id: 1
+    name: Imported Contact 1
+    email: contact2@example.com
+
+imported_contact3:
+    id: 3
+    user_id: 1
+    name: Imported Contact 1
+    email: contact3@example.com
+    
+imported_contact4:
+    id: 4
+    user_id: 1
+    name: Imported Contact 1
+    email: contact4@example.com

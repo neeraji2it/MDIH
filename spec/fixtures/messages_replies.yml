@@ -1,0 +1,13 @@
+## YAML Template.
+
+reply1:
+    id: 1
+    message_id: 1
+    body: Good and you?
+    user_id: 2
+
+reply2:
+    id: 2
+    message_id: 1
+    body: I am also good.
+    user_id: 1

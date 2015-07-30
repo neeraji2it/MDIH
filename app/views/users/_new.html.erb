@@ -1,0 +1,54 @@
+<%#= javascript_include_tag  'jquery-1.7.2.min.js', 'jquery.main.js', 'jquery.notifyBar.js' %>
+<div id="popup-1" class="lightbox popup-box sign-popup">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3>STEP 1 of 2</h3>
+      <a href="#" class="close" id="fancybox_close">close</a>
+    </header>
+    <%= form_for @user, :remote => true, :url => {:controller => "users", :action => "create" } , :html => { :method => "post", :class=> "step-form-1"} do |form| %>
+      <fieldset>
+        <div class="col-holder">
+          <div class="col">
+            <div class="row">
+              <label for="id-41">Choose a username:</label>
+              <%= form.text_field :login, :id=>"id-41"%>
+            </div>
+            <div class="row">
+              <label for="id-42">Email address:</label>
+              <%= form.text_field :email, :id=> "id-42" %>
+            </div>
+            <div class="row">
+              <label for="id-43">Password:</label>
+              <%= form.password_field :password, :id => "id-43" %>
+            </div>
+            <div class="row">
+              <label for="id-44">Confirm password:</label>
+              <%= form.password_field :password_confirmation, :id=> "id-44" %>
+            </div>
+            <div class="row">
+              <label for="id-45">Zip:</label>
+              <%= form.text_field :zip, :id=> "id-45"  %>
+            </div>
+            <div class="row">
+              <label>Country:</label>
+              <%= select_tag :country, country_options_for_select("United States").html_safe %>
+            </div>
+            <div class="row" style="width:109%">
+              <label>Date of birth:</label>
+              <div class="select-holder">
+                <%= form.date_select("date_of_birth", {:end_year => (Date.today.year - 100),  :start_year => (Date.today.year.to_i - 18)} , :style => 'width: 55px; margin:1px;', :class=>"short-select short-select-2") %>
+              </div>
+            </div>
+          </div>
+          <div class="text-col">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ut turpis sed massa posuere pharetra.</p>
+            <p>Curabitur interdum ornare vehicula. Vivamus orci enim, viverra vitae vehicula quis, molestie sit amet nibh.</p>
+            <p>Vivamus viverra porta fringilla. Vivamus vel leo lorem, a laoreet dui. In nisl ipsum, interdum vel egestas ac, tincidunt et tortor.</p>
+            <p>Nam sodales tincidunt aliquet. Sed eget mauris nec sem varius dictum in a nulla.</p>
+          </div>
+        </div>
+        <%= submit_tag  "", :value => "next" %>
+      </fieldset>
+    <% end %>
+  </div>
+</div>

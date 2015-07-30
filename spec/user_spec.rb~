@@ -1,0 +1,30 @@
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+describe User do
+  fixtures :users
+  def user
+    User.new
+  end
+
+  def user_attributes
+    {
+      :login => "boss",
+      :email => "boss@mdih.com", 
+      :first_name =>"Mdih",
+      :last_name => "Boss",
+      :password => "bangalore",
+      :password_confirmation => "bangalore",
+      :role_id => 1,
+      :status => true
+    }
+  end
+
+  before(:each) do
+    @user = user
+  end
+
+  it "should be valid" do
+    @user.attributes = user_attributes
+    @user.should be_valid
+  end
+end

@@ -1,0 +1,63 @@
+<%  for message in @messages %>
+  <div class="chat-item" id="chat-item-<%= message.id %>">
+    <div class="visual">
+      <% if message.sender_id == current_user.id   %>
+        <% if !message.reciever.facebook_id.present? %>
+          <%= link_to  image_tag(message.reciever.profile ?  message.reciever.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.reciever.id) %>
+        <% else %>
+          <%= link_to  image_tag(message.reciever.profile ? (message.reciever.profile.avatar_file_name != "picture_type_large.jpg" ?  message.reciever.profile.avatar.url(:default) : message.reciever.fb_big_image) : message.reciever.fb_big_image, :width => 96, :height => 104), user_path(message.reciever.id) %>
+        <% end %>
+        <%= user_online_status_image(message.reciever) %>
+        <% if message.reciever.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% else %>
+        <% if !message.sender.facebook_id.present? %>
+          <%= link_to  image_tag(message.sender.profile ?  message.sender.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.sender.id) %>
+        <% else %>
+          <%= link_to  image_tag(message.sender.profile ? (message.sender.profile.avatar_file_name != "picture_type_large.jpg" ?  message.sender.profile.avatar.url(:default) : message.sender.fb_big_image) : message.sender.fb_big_image, :width => 96, :height => 104), user_path(message.sender.id) %>
+        <% end %>
+        <%= user_online_status_image(message.sender) %>
+        <% if message.sender.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      <% end %>
+  <%#= link_to image_tag(friend[:profile_images][:default] ? friend[:profile_images][:default] : "/assets/default_avatar.jpg", :width => 96, :height => 104), chat_path(friend[:id])  %>
+  <%# if friend[:status] == 'offline' %>
+      <!--<span class="free">free</span>-->
+  <%# else %>
+      <!--<span class="online">online</span>-->
+  <%# end %>
+    </div>
+    <div class="text-block">
+      <ul class="message-info">
+        <% if message.sender_id == current_user.id   %>
+          <li><%= message.reciever.display_name %></li>
+        <% else %>
+          <li><%= message.sender.display_name %></li>
+        <% end %>
+        <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+        <li><%= message.created_at.strftime("%H:%M") %></li>
+      </ul>
+      <p><% if message.sender_id == current_user.id  %><i class="mrs indicator img sp_8h63lg sx_84cb4b"></i><% end %><%= message.text %></p>
+    </div>
+    <div class="m-nav-holder" style="width: 380px;">
+      <% if message.sender_id == current_user.id   %>
+        <%= render :partial => "layouts/all_links", :locals => {:user => message.reciever} %>
+      <% else %>
+        <%= render :partial => "layouts/all_links", :locals => {:user => message.sender} %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<% if @messages.total_pages > @messages.current_page %>
+    <div id="more_new_chats_link">
+      <input type="hidden" value="<%= @messages.current_page+1 %>" id="more_new_chats_page" />
+      <%= link_to_function "more", "more_new_chats(#{@messages.current_page+1})",:class => "btn-more-2", :title => "click for more new chats" %>
+    </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

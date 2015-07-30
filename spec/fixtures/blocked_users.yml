@@ -1,0 +1,9 @@
+blocked_user1:
+    id: 1
+    user_id: 1
+    blocked_user_id: 2
+
+blocked_user2:
+    id: 2
+    user_id: 1
+    blocked_user_id: 3

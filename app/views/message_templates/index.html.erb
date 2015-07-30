@@ -1,0 +1,77 @@
+<!-- search panel -->
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>Messages</h2>
+    <%=  will_paginate @message_templates %>
+  </header>
+  <div class="holder">
+    <!-- tabset -->
+    <ul class="box-tabs1">
+       <% msgcount = current_user.received_messages.where("receiver_status = 'unread'").count %>
+      <li><%= link_to "Inbox #{msgcount > 0 ? "(#{msgcount})" : "" }", messages_box_path(current_user, "inbox"), :class => @message_type == 'inbox' ? "active" : "" %></li>
+      <li><%= link_to "Sent", messages_box_path(current_user, "sent"), :class => @message_type == 'sent' ? "active" : "" %></li>
+      <li><%= link_to  "Template", user_message_templates_path(current_user), :class => controller_path == "message_templates" ? "active" : "" %></li>
+    </ul>
+    <div id="tab-3" class="tab">
+      <% if @message_templates.empty? %>
+        <div style="color:red; font-size:20px;padding: 10px;" align="center">
+          No Templates
+        </div>
+      <% else %>
+        <% @message_templates.each do |template| %>
+          <div class="template-item">
+            <header class="temp-heading">
+              <strong><%= template.subject %></strong>
+              <nav class="template-nav">
+                <ul>
+                  <li><%= link_to "edit", edit_user_message_template_path(current_user, template.id), :class => "edit" %></li>
+                  <li><%= link_to "delete", user_message_template_path(current_user, template), :method => :delete, :confirm => I18n.t('message_template.label.are_you_sure'), :class=>"delete"%></li>
+                </ul>
+              </nav>
+            </header>
+            <div class="template-content">
+              <p><%= template.body.html_safe %></p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <div class="tmp-row">
+        <%= link_to "NEW TEMPLATE", new_user_message_template_path(current_user), :id => 'new_tmp' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

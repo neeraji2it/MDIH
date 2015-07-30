@@ -1,0 +1,19 @@
+<%if @saved %>
+  jQuery("#quick_message_status_<%=  @user.id.to_s %>").html("<%=  @flash_message %>")
+  jQuery.fancybox.close();
+<%  else %>
+  var  html = "<%= escape_javascript(render(:partial => 'ajax_new')) %>"
+  jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content : html
+  });
+  $('#template').html("<%= escape_javascript(render(:partial => '/quick_messages/templates')) %> ");
+<%  end %>

@@ -1,0 +1,14 @@
+%br
+%br
+%br
+%div{ :align => "center", :style => "color:red;" }
+  - if params[:id] == "404"
+    %h1
+      = I18n.t('general_home.general_error')
+    %p
+      = I18n.t('general_home.general_error1')
+  - else
+    %h1
+      = I18n.t('general_home.general_error2')
+    %p
+      = I18n.t('general_home.general_error3')

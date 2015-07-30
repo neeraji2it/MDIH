@@ -1,0 +1,12 @@
+production:
+    app_id: ####
+    secret: #####
+    aki_key: #####
+development:
+    app_id: 365492663501151
+    secret: 6c1d03aa136b9cce94a082293ec923a3
+    aki_key: 365492663501151
+staging:
+    app_id: 365492663501151
+    secret: 6c1d03aa136b9cce94a082293ec923a3
+    aki_key: 365492663501151

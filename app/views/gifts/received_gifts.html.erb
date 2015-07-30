@@ -1,0 +1,79 @@
+<div class="content-box">
+  <header class="heading">
+    <h2><%= I18n.t('gift.label.my_virtual_gifts') %></h2>
+  </header>
+  <div class="holder">
+    <!-- tabset -->
+    <ul class="box-tabs1">
+      <li><%= link_to "Received", my_gifts_path(current_user, 'received'), :class=> @gifts_type == "received" ? "active" : '' %></li>
+      <li><%= link_to "Sent",   my_gifts_path(current_user, 'sent'), :class=> @gifts_type == "sent" ? "active" : '' %></li>
+    </ul>
+    <div id="tab-1" class="tab">
+     <!-- <div class="new-chat gifts-reply">
+        <%#  @quick_message = Message.new %>
+        <%#= form_for :quick_mesage, :as => @quick_message, :url => user_quick_messages_path(@user.id), :html => {:class => "reply-form", :method => :post} do |f| %>
+          <fieldset>
+            <%#= validation_error(@quick_message.errors["body"]) %>
+            <%#= f.text_area :body, :rows => '10', :cols => '30' %>
+            <nav class="message-panel">
+              <ul>
+                <li><%#= link_to_function "Templates", "show_templates()",:class=>"temp"  %></li>
+                <li><a href="#" class="smile">Smiles</a></li>
+              </ul>
+            </nav>
+            <div class="row">
+              <%#= f.submit "Reply" %>
+              <%#= render :partial => "layouts/all_links", :locals => {:user => @user} %>
+            </div>
+            <div id="message_templates" style="display:none;z-index: 2">
+              <div id="templates-bg">
+                <ul>
+                  <%#  if @message_templates.empty? %>
+                    <span id="user_template" style="color:red;">No templates</span>
+                  <%# else %>
+                    <%# for template in @message_templates %>
+                      <li id="user_template"><%#= link_to_function template.subject.slice(0..10),'',:onclick => "call(this)" %>..<div id="template-body" style="display:none;"><%#= template.body.html_safe %></div></li>
+                    <%# end %>
+                  <%# end %>
+                </ul>
+              </div>
+            </div>
+          </fieldset>
+        <%# end %>
+      </div>-->
+      <!-- chat item -->
+      <div class="chat-item chat-history">
+        <div class="visual">
+          <% if !@user.facebook_id.present? %>
+            <%= link_to  image_tag(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ? @user.profile.avatar.url(:default) : @user.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(@user.id) %>
+          <% else %>
+            <%= link_to image_tag(@user.fb_big_image, :width => 96, :height => 104), user_path(@user.id) %>
+          <% end %>
+          <%= user_online_status_image(@user) %>
+          <% if @user.available_today == true %>
+            <span class='free'>free</span>
+          <% else %>
+          <% end %>
+        </div>
+        <div class="text-block">
+          <div id="more_received_gifts">
+            <%= render :partial => "gifts/ajax_received_gifts" %>
+            <input type="hidden" value="<%= current_user.id %>" id="current_user_id" />
+             <input type="hidden" value="<%= @user.id %>" id="user_id" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#received_gifts_page').val() > 0)
+      {
+        more_received_gifts(jQuery('#current_user_id').val(),jQuery('#user_id').val(), jQuery('#received_gifts_page').val())
+      }
+    });
+  });
+</script>

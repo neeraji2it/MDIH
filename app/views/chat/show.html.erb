@@ -1,0 +1,78 @@
+<!-- search panel -->
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box new-chat">
+  <header class="heading">
+    <h2>New chat</h2>
+  </header>
+  <div class="holder">
+    <%= form_tag("/chat", {:method => :post, :remote => true, :class => "reply-form"}) do %>
+      <fieldset>
+        <%= text_area_tag 'text', nil, :class => "", :id => "reply_text"%>
+         <%= render :partial => "layouts/all_links", :locals => {:user => @reciever} %>
+        <%= hidden_field_tag "reciever_id", @reciever.id %>
+        <div class="row">
+          <%= submit_tag "reply" %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+</div>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>chat history - <span><%= @reciever.display_name %></span></h2>
+    <div class="order-form">
+        <fieldset>
+          <%= select_tag "sort", options_for_select([["Select", ""], ["Yesterday", "yesterday"],["7 days", "7days"], ["1 month", "1month"], ["3 months", "3months"], ["6 months", "6months"], ["1 year", "1year"], ["All", "all"]], params[:sort]), {:onchange => "reload_with_new_param('sort', this.value)"}%>
+        </fieldset>
+      </div>
+  </header>
+  <div class="holder">
+    <!-- chat item -->
+    <div class="chat-item chat-history">
+      <div class="visual">
+        <% if !@reciever.facebook_id.present? %>
+          <%= link_to  image_tag(@reciever.profile ? (@reciever.profile.avatar_file_name != "picture_type_large.jpg" ? @reciever.profile.avatar.url(:default) : @reciever.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(@reciever.id) %>
+        <% else %>
+          <%= link_to image_tag(@reciever.fb_big_image, :width => 96, :height => 104), user_path(@reciever.id) %>
+        <% end %>
+        <%= user_online_status_image(@reciever) %>
+        <% if @reciever.available_today == true %>
+          <span class='free'>free</span>
+        <% else %>
+        <% end %>
+      </div>
+      <div class="text-block">
+        <div id="more_chats">
+          <%= render :partial => "ajax_show" %>
+          <input type="hidden" value="<%= @reciever.id %>" id="current_user_id" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%= javascript_tag do %>
+  var jug =new Juggernaut;
+  jug.subscribe("users:"+<%= current_user.id %>+":"+<%= @reciever.id %>, function(data){
+  var obj = JSON.parse(data);
+  var date = jQuery("#date").val();
+  var time = jQuery("#time").val();
+  var html = "<div class='message-item'><article class='message-item-holder'><ul class='message-info'><li>"+obj.sender_name+"</li><li>"+date+"</li><li>"+time+"</li></ul><p>"+obj.text+"</p></article></div>"
+  jQuery("#more_chats").prepend(html).gemoticon();
+  jQuery(html).gemoticon();
+  });
+
+  jQuery(function() {
+  jQuery(window).scroll(
+  function() {
+  if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#chats_page').val() > 0)
+  {
+  more_chats(jQuery('#current_user_id').val(), jQuery('#chats_page').val())
+  }
+  });
+  });
+
+<% end %>

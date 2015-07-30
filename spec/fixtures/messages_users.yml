@@ -1,0 +1,19 @@
+## YAML Template.
+
+messages_users1:
+    id: 1
+    message_id: 1
+    to_id: 2
+    to_status: read
+
+messages_users2:
+    id: 2
+    message_id: 1
+    to_id: 3
+    to_status: unread
+
+messages_users3:
+    id: 3
+    message_id: 2
+    to_id: 2
+    to_status: read

@@ -1,0 +1,13 @@
+<div class="message-item my-message">
+  <article class="message-item-holder">
+    <ul class="message-info">
+      <li>Me</li>
+      <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+      <li><%= message.created_at.strftime("%I:%M")%></li>
+    </ul>
+    <p><%= message.text %></p>
+  </article>
+  <% if message.sender_id == current_user.id %>
+    <%= link_to "delete", chat_path(message.id), :class=>"delete-link"%>
+  <% end %>
+</div>

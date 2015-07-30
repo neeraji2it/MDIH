@@ -1,0 +1,84 @@
+<!-- search panel -->
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>Messages</h2>
+<%#= will_paginate @messages %>
+  </header>
+  <div class="holder">
+    <!-- tabset -->
+    <ul class="box-tabs1">
+      <% msgcount = current_user.received_messages.where("receiver_status = 'unread'").count %>
+      <li><%= link_to "Inbox #{msgcount > 0 ? "(#{msgcount})" : "" }", messages_box_path(current_user, "inbox"), :class => @message_type == 'inbox' ? "active" : "" %></li>
+      <li><%= link_to "Sent", messages_box_path(current_user, "sent"), :class => @message_type == 'sent' ? "active" : "" %></li>
+      <li><%= link_to  "Template", user_message_templates_path(current_user), :class => controller_path == "message_templates" ? "active" : "" %></li>
+    </ul>
+    <div id="tab-1" class="tab">
+      <div class="new-chat gifts-reply">
+        <%= form_for :messages_reply , :as => @messages_reply, :url => reply_user_message_path(current_user, @user),:html => {:method => 'post', :class=>"reply-form"} do |f| %>
+          <fieldset>
+            <%= validation_error(@messages_reply.errors["body"]) %>
+            <%= f.text_area :body, :rows => '10', :cols => '30' %>
+            <nav class="message-panel">
+              <ul>
+                <li><%= link_to_function "Templates", "show_templates()",:class=>"temp"  %></li>
+                <li><%= link_to_function "Smile", "show_smilies()",:class=>"smile1" %></li>
+              </ul>
+            </nav>
+            <div class="row">
+              <%= f.submit "Reply" %>
+              <%= render :partial => "layouts/all_links", :locals => {:user => @user} %>
+            </div>
+            <%= render :partial => "/messages/templates_smilies" %>
+          </fieldset>
+        <% end %>
+      </div>
+      <!-- chat item -->
+      <div class="chat-item chat-history">
+        <div class="visual">
+          <% if !@user.facebook_id.present? %>
+            <%= link_to  image_tag(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ? @user.profile.avatar.url(:default) : @user.fb_big_image) : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(@user.id) %>
+          <% else %>
+            <%= link_to image_tag(@user.fb_big_image, :width => 96, :height => 104), user_path(@user.id) %>
+          <% end %>
+          <%= user_online_status_image(@user) %>
+          <% if @user.available_today == true %>
+            <span class='free'>free</span>
+          <% else %>
+          <% end %>
+        </div>
+        <div class="text-block">
+          <div id="more_conversations">
+            <%= render :partial => "messages/ajax_conversation" %>
+            <input type="hidden" value="<%= current_user.id %>" id="current_user_id" />
+            <input type="hidden" value="<%= @user.id %>" id="user_id" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#more_conversations_page').val() > 0)
+      {
+        more_conversations(jQuery('#current_user_id').val(),jQuery('#user_id').val(), jQuery('#more_conversations_page').val())
+      }
+    });
+  });
+
+  function insertTemplate(message){
+    var message_template = $(message).next('div').text();
+    jQuery("#messages_reply_body").insertAtCaret(message_template);
+    jQuery('#message_templates').slideToggle('slow');
+  }
+
+  function insertEmotions(emotions){
+    var emotions_val = emotions.alt
+    jQuery("#messages_reply_body").insertAtCaret(emotions_val);
+    jQuery('#message_smilies').slideToggle('slow');
+}
+</script>

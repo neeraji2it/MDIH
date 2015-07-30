@@ -1,0 +1,59 @@
+<%#= javascript_include_tag  'jquery-1.7.2.min.js', 'jquery.main.js', "user_nav" %>
+<div id="popup-2" class="lightbox popup-box sign-popup">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3>STEP 2 of 2</h3>
+      <a href="#" class="close" id="fancybox_close">close</a>
+    </header>
+    <%= form_for @profile, :url => signup_step2_users_path , :remote => true, :html => {:class=>"step-form-2", :id=>"signup_step2", :multipart => true, :method => "post" } do |f| %>
+      <fieldset>
+        <div class="col-holder">
+          <div class="col">
+            <header class="avatar-block">
+              <%= image_tag("img-default.gif",  :width=>"57", :alt=>"image description", :id => "default" ) %>
+               <img id="PreviewImage" src="" alt="" style="width:57px; display: none;"  />
+              <strong>Add a profile image</strong>
+              <%= f.file_field :avatar, :onChange => 'readURL(this)' %>
+            </header>
+            <div class="terms-box">
+              <p>Curabitur interdum ornare vehicula. Vivamus orci enim, viverra vitae vehicula quis, molestie sit amet nibh. Vivamus viverra porta fringilla. Vivamus vel leo lorem, a laoreet dui. In nisl ipsum, interdum vel egestas ac, tincidunt et tortor.</p>
+              <div class="row">
+                <% if params[:action] == 'signup_step2'%>
+                  <input type="checkbox" id="agree" name="accept" checked="checked" value="yes">
+                <%  else %>
+                  <input type="checkbox" id="agree" name="accept" value="yes">
+                <% end %>
+                <label for="agree">I agree with the terms &amp; conditions</label>
+              </div>
+            </div>
+            <div class="cap-block">
+              <strong>Type the characters in the image below</strong>
+              <%= yacaph_block %>
+            </div>
+          </div>
+          <div class="text-block">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Curabitur interdum ornare vehicula. Vivamus orci enim, viverra vitae vehicula quis, molestie sit amet nibh.</p>
+            <p>Vivamus viverra porta fringilla. Vivamus vel leo lorem.</p>
+            <p>Nam sodales tincidun.</p>
+            <%= submit_tag "submit"%>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+</div>
+<script>
+  function readURL(input) {
+    if (input.files && input.files[0]) {//Check if input has files.
+      var reader = new FileReader();//Initialize FileReader.
+
+      reader.onload = function (e) {
+        $('#PreviewImage').attr('src', e.target.result);
+         $('#default').hide();
+      };
+      reader.readAsDataURL(input.files[0]);
+      $('#PreviewImage').show();
+    }
+  }
+</script>

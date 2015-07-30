@@ -1,0 +1,26 @@
+<div id="message_templates" style="display:none;z-index: 2">
+  <div id="templates-bg">
+    <div id="template">
+      <%= render :partial => "/quick_messages/templates" %>
+    </div>
+  </div>
+</div>
+<div id="message_smilies" style="display:none;z-index: 2;">
+  <div id="smilies-bg" style="width: 54%;  left: 105px; padding: 0">
+    <div id="smilies" style="padding: 10px;">
+      <span><%= image_tag("/assets/chat/smile.png", :alt => ":)", :title => "Smile :)", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/grin.png", :alt => ":D", :title => "Grin :D", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/wink.png", :alt => ";)", :title => "Wink ;)", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/cry.png", :alt => ":'(", :title => "Cry :'(", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/shocked.png", :alt => ":-o",:title => "Shocked :-o", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/slant.png", :alt => ":-/", :title => "Slant :-/", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/angry.png", :alt => "x-(", :title => "Angry x-(", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/frown.png", :alt => ":(", :title => "Frown :(", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/cool.png", :alt => "B-)", :title => "Cool B-)", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/tongue.png", :alt => ":P", :title => "Tongue :P", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/heart.png", :alt => "<3", :title => "Heart <3", :onclick => "insertEmotions(this)") %></span>
+      <span><%= image_tag("/assets/chat/straightface.png", :alt => ":-|", :title => "Straightface :-|", :onclick => "insertEmotions(this)") %></span>
+    </div>
+  </div>
+</div>
+

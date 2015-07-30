@@ -1,0 +1,9 @@
+%table{ :width => "100%" }
+  %tr
+    %td
+      %div
+        = render :partial => "friends/friend", :collection => @profile_visitors
+  %tr
+    %td{ :align => "center" }
+      %div
+        = will_paginate @profile_visitors

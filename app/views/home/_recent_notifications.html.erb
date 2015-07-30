@@ -1,0 +1,32 @@
+<div class="content-box open-box active">
+  <header class="heading">
+    <h2>what’s new?</h2>
+    <a href="#" class="opener">open/close</a>
+  </header>
+  <div class="slide">
+    <div class="holder">
+      <!-- chat item -->
+      <% if !@notifications.empty? %>
+      <div id="more_notifications">
+        <%= render :partial => "ajax_recent_notifications" %>
+      </div>
+      <% else %>
+        <div id="empty" align="center">
+          <%= I18n.t('general_home.no_messages')  %>
+        </div>
+      <%end%>
+    </div>
+  </div>
+</div>
+
+<script>
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#notifications_page').val() > 0)
+      {
+       more_notifications(jQuery('#notifications_page').val())
+      }
+    });
+  });
+</script>

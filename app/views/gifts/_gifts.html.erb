@@ -1,0 +1,41 @@
+<div class="content-box">
+  <header class="heading">
+    <h2><%= I18n.t('gift.label.my_virtual_gifts') %></h2>
+  </header>
+  <div class="holder">
+    <!-- tabset -->
+    <ul class="box-tabs1">
+      <li><%= link_to "Received", my_gifts_path(current_user, 'received'), :class=> @gifts_type == "received" ? "active" : '' %></li>
+      <li><%= link_to "Sent",   my_gifts_path(current_user, 'sent'), :class=> @gifts_type == "sent" ? "active" : '' %></li>
+    </ul>
+    <div id="tab-1" class="tab">
+      <% if @gifts.empty? %>
+        <div style="font-size: 12px;text-align: center;padding: 10px; color: green;">
+          <%= I18n.t('gift.label.no_virtual_gifts') %>
+        </div>
+      <% else %>
+        <div id="more_gifts">
+          <%= render :partial => "ajax_gifts" %>
+          <input type="hidden" value="<%= @gifts_type %>" id="gift_type" />
+          <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+        </div>
+      <%end%>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#gifts_page').val() > 0)
+      {
+        if (jQuery("#gift_type").val() == 'received') {
+          more_index_received_gifts(jQuery('#current_user_id').val(), jQuery('#gifts_page').val())
+        }
+        else{
+           more_index_sent_gifts(jQuery('#current_user_id').val(), jQuery('#gifts_page').val())
+        }
+      }
+    });
+  });
+</script>

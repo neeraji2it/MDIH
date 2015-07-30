@@ -1,0 +1,37 @@
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>CHATS</h2>
+  </header>
+  <div class="holder">
+    <% if @messages.empty? %>
+      <div id="empty" align="center">
+        No chat messages
+      </div>
+    <% else %>
+    <div id="more_index_chats">
+      <%= render :partial => "ajax_chat" %>
+    </div>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#more_index_chats_page').val() > 0)
+      {
+        more_index_chats(jQuery('#more_new_chats_page').val())
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+

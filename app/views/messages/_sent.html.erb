@@ -1,0 +1,72 @@
+<div class="tab" id="tab-2">
+  <% if @messages.compact.empty? %>
+    <div style="color:red; font-size:20px;padding: 10px;" align="center">
+      No Messages
+    </div>
+  <% else %>
+    <%  for message in @messages.compact %>
+      <div class="chat-item">
+        <div class="visual">
+          <% if !message.receiver.facebook_id.present? %>
+            <%= link_to image_tag(message.receiver.profile ?  message.receiver.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.receiver.id), "data-user_id_#{message.receiver.id}" => message.receiver.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.receiver.id}" : "" ) %>
+          <% else %>
+            <%= link_to image_tag(message.receiver.profile ? (message.receiver.profile.avatar_file_name != "picture_type_large.jpg" ?  message.receiver.profile.avatar.url(:default) : message.receiver.fb_big_image) : message.receiver.fb_big_image, :width => 96, :height => 104), user_path(message.receiver.id), "data-user_id_#{message.receiver.id}" => message.receiver.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.receiver.id}" : "" ) %>
+          <% end %>
+          <%= user_online_status_image(message.receiver) %>
+          <% if message.user.available_today == true %>
+            <span class='free'>free</span>
+          <% else %>
+          <% end %>
+        </div>
+        <div class="text-block">
+          <ul class="message-info">
+            <li><%= message.receiver.display_name %></li>
+            <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+            <li><%= message.created_at.strftime("%H:%M") %></li>
+          </ul>
+          <p><%= truncate(message.body.html_safe, :length => 200)  %></p>
+        </div>
+        <div class="m-nav-holder">
+          <%= render :partial => "layouts/all_links", :locals => {:user => message.receiver} %>
+        </div>
+      </div>
+      <script type="text/javascript">
+        jQuery(function() {
+          jQuery("#user_profile_<%= message.receiver.id %>").bind("mousestop", function(event){
+            if(event.type == "mousestop"){
+              var account_id = jQuery(this).data("user_id_<%= message.receiver.id %>");
+              jQuery.ajax({
+                url: "/users/"+account_id,
+                type: 'get',
+                success: function(resp){
+                  jQuery.fancybox({
+                    padding: 15,
+                    cyclic: false,
+                    overlayShow: true,
+                    transitionIn:'elastic',
+                    transitionOut:'elastic',
+                    speedIn:600,
+                    speedOut:600,
+                    overlayOpacity:0,
+                    titlePosition: 'inside',
+                    content : resp
+                  });
+                }
+              });
+            }else{
+            }
+          });
+        });
+      </script>
+    <% end %>
+    <% if @messages.total_pages > @messages.current_page %>
+      <div id="more_sent_messages_link">
+        <input type="hidden" value="<%= @messages.current_page+1 %>" id="message_inbox_page" />
+        <%= link_to_function "more", "more_index_sent_messages(#{@user.id}, #{@messages.current_page+1})",:class => "btn-more", :title => "click for more messages" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

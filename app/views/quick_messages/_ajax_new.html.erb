@@ -1,0 +1,37 @@
+<div class="new-message-popup">
+  <header class="heading">
+    <h3><%= I18n.t('quick_message.label.send_message_to') +' '+ "#{@user.display_name}" %> </h3>
+    <a href="#" class="close" id="fancybox_close">close</a>
+  </header>
+  <div id="quick_message_error"></div>
+  <%= @flash_message %>
+  <%= form_for :quick_mesage, :as => @quick_message, :url => user_quick_messages_path(@user), :html => {:method => :post, :class => 'send-form-2'}, :remote => true do |f| %>
+    <fieldset>
+      <%=  validation_error(@quick_message.errors["body"]) %>
+      <%= f.text_area :body %>
+      <nav>
+        <ul>
+          <li><%= link_to_function "Templates", "show_templates()",:class=>"temp"  %></li>
+          <li><%= link_to_function "Smile", "show_smilies()",:class=>"smile1" %></li>
+        </ul>
+      </nav>
+      <div class="btn-holder">
+        <input type="submit" value="send"/>
+        <%= link_to "Show History", conversation_user_message_path(current_user, @user.id) ,:class => "show" %>
+      </div>
+      <%= render :partial => "/messages/templates_smilies" %>
+    </fieldset>
+  <% end %>
+</div>
+<script type="text/javascript">
+  function insertTemplate(message){
+    var good = $(message).next('div').text();
+    jQuery("#quick_mesage_body").insertAtCaret(good);
+    jQuery('#message_templates').slideToggle('slow');
+  }
+  function insertEmotions(emotions){
+    var emotions_val = emotions.alt
+    jQuery("#quick_mesage_body").insertAtCaret(emotions_val);
+    jQuery('#message_smilies').slideToggle('slow');
+  }
+</script>

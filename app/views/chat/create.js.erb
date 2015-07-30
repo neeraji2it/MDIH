@@ -1,0 +1,10 @@
+<% if @offline %>
+  jQuery(".heading").html("User went offline, message is delived to his inbox.")
+  jQuery("#reply_text").val("");
+<% elsif @sent_message.present? %>
+  jQuery("#more_chats").prepend("<%= escape_javascript(render(:partial => 'chat/message', :locals => {:message => @sent_message})) %>");
+  jQuery("#reply_text").val("");
+<% end %>
+
+
+

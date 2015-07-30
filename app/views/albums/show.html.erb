@@ -1,0 +1,26 @@
+<!-- search panel -->
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <%= link_to "back", user_albums_path(:user_id => @user.id), :class => "back-link" %>
+    <h2>photo album - <%= @album.name %></h2>
+    <%= link_to "<span>add pic</span>".html_safe, new_user_album_photo_path(:user_id => current_user.id, :album_id => @album.id), :class => "new" %>
+  </header>
+  <div id="more_photos">
+    <%= render :partial => "show" %>
+    <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+     <input type="hidden" value="<%= @album.id %>" id="album_id" />
+  </div>
+</div>
+<script>
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#photos_page').val() > 0)
+      {
+          more_photos(jQuery('#current_user_id').val(), jQuery('#album_id').val(), jQuery('#photos_page').val())
+      }
+    });
+  });
+</script>

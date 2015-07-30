@@ -1,0 +1,137 @@
+<div class="content-box">
+  <header class="heading">
+    <h2>Results</h2>
+    <% if !@users.empty? %>
+      <div id="saved_flash_message" style="float: left; color: green; font-size: 11px;">
+
+      </div>
+      <% if current_user and !SavedSearch.exists?(:user_id => current_user.id, :url => request.fullpath) %>
+        <div id="save_search_link" style="float:left;">
+          <%= button_to_function I18n.t('search.results.save_this_search'), "save_search()" , :id => 'save_search_bt', :class=>"save_search_btn", :style => "width: 123px;margin:0;" %>
+        </div>
+      <% end %>
+      <div class="order-form">
+        <fieldset>
+          <h2>order by:</h2>
+          <%= select_tag "sort", options_for_select(["Age","Location", "Last login"], params[:sort]), {:onchange => "reload_with_new_param('sort', this.value)"} %>
+        </fieldset>
+      </div>
+    <% end %>
+  </header>
+  <% if !@users.empty? %>
+    <div class="holder">
+      <% for user in @users  %>
+        <div class="chat-item">
+          <div class="chat-item-frame">
+            <div class="visual">
+              <% if !user.facebook_id.present? %>
+                <%= link_to image_tag(user.profile ? user.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(user), :title => "#{user.display_name}(#{user.gender})", "data-user_id_#{user.id}" => user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{user.id}" : "" ) %>
+              <% else %>
+                <%= link_to image_tag(user.profile ? (user.profile.avatar_file_name != "picture_type_large.jpg" ?  user.profile.avatar.url(:default) : user.fb_big_image) : user.fb_big_image, :width => 96, :height => 104), user_path(user), :title => "#{user.display_name}(#{user.gender})", "data-user_id_#{user.id}" => user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{user.id}" : "" ) %>
+              <% end %>
+              <%= user_online_status_image(user) %>
+              <% if user.available_today == true %>
+                <span class='free'>free</span>
+              <% else %>
+              <% end %>
+            </div>
+            <div class="text-block">
+              <ul class="message-info">
+                <li> <%= user.display_name %></li>
+                <% if params[:action] == 'visitors' or params[:action] == 'visited' %>
+                  <li><%= I18n.l user.viewed_at.to_time.in_time_zone(user_time_zone), :format => :short4 %></li>
+                <% elsif (params[:controller] == 'friends' and params[:action] == 'index') %>
+                  <% if viewed_me = ProfileViewer.find(:first, :conditions => ["user_id = #{current_user.id} AND viewed_by = #{user.id}"]) and  !viewed_me.viewed_at.nil? %>
+                    <li><%= I18n.l viewed_me.viewed_at.to_time.in_time_zone(user_time_zone),:format => :short4 %></li>
+                  <%else%>
+                    <li><%= I18n.t('search.label.not_yet')%></li>
+                  <%end%>
+                <% end %>
+              </ul>
+              <p>
+                <%= I18n.t('friend.index.age', :age => user.age)  %>
+                <%=  (!user.profile_address.to_s.blank? ? I18n.t('friend.index.location', :location => user.profile_address.to_s) : "") %>
+                <% if !user.looking_for.to_s.blank? %>
+                  <%= I18n.t('search.label.looking_for') %>
+                  <%= user.looking_for  %>
+                <% end %>
+                <% if !user.orientation.to_s.blank? %>
+                  <%= I18n.t('search.label.orientation')  %>
+                  <%= user.orientation %>
+                <% end %>
+              </p>
+              <p>
+                <% if user.photos.count > 0 %>
+                  <br/>
+                  <%= "#{user.photos.count} #{I18n.t('friend.index.more_pictures')}"  %>
+                <% else %>
+                  &nbsp;
+                <% end %>
+                <%  if user.profile %>
+                  <%= !user.profile.headline.to_s.blank? ? truncate(user.profile.headline, :length => 150) : '&nbsp;' %>
+                <% else %>
+                  &nbsp;
+                <% end %>
+                <% if params[:action] == 'visitors' or params[:action] == 'visited' %>
+                  <br/>
+                  <%= I18n.t('search.label.viewed_at')  %>
+                  <%= I18n.l user.viewed_at.to_time.in_time_zone(user_time_zone), :format => :short4%>
+                <% elsif (params[:controller] == 'friends' and params[:action] == 'index') %>
+                  <br/>
+                  <%=  I18n.t('search.label.last_viewed_me_at') %>
+                  <% if viewed_me = ProfileViewer.find(:first, :conditions => ["user_id = #{current_user.id} AND viewed_by = #{user.id}"]) and  !viewed_me.viewed_at.nil? %>
+                    <%= I18n.l viewed_me.viewed_at.to_time.in_time_zone(user_time_zone),:format => :short4  %>
+                  <% else %>
+                    <%= I18n.t('search.label.not_yet')%>
+                  <% end %>
+                <% end %>
+              </p>
+            </div>
+          </div>
+          <div class="m-nav-holder">
+            <%= render :partial => "layouts/all_links", :locals => {:user => user} %>
+          </div>
+        </div>
+      <% end %>
+  <%#*<a href="#" class="btn-more">more</a>%>
+    </div>
+   <script type="text/javascript">
+            jQuery(function() {
+              jQuery("#user_profile_<%= user.id %>").bind("mousestop", function(event){
+                if(event.type == "mousestop"){
+                  var account_id = jQuery(this).data("user_id_<%= user.id %>");
+                  jQuery.ajax({
+                    url: "/users/"+account_id,
+                    type: 'get',
+                    success: function(resp){
+                      jQuery.fancybox({
+                        padding: 15,
+                        cyclic: false,
+                        overlayShow: true,
+                        transitionIn:'elastic',
+                        transitionOut:'elastic',
+                        speedIn:600,
+                        speedOut:600,
+                        overlayOpacity:0,
+                        titlePosition: 'inside',
+                        content : resp
+                      });
+                    }
+                  });
+                }else{
+                }
+              });
+            });
+          </script>
+  <% else %>
+    <div style="background:#FFFFFF;height: 50px;padding-top:50px;width:98%">
+      <span style="font-size: 20px;color:red;">
+        <%= I18n.t('search.label.no_results_found') %>
+      </span>
+      <span>
+        <%= link_to I18n.t('links.click'), advance_searches_path %>
+        <%= I18n.t('search.label.to_search_again') %>
+      </span>
+    </div>
+  <% end %>
+</div>

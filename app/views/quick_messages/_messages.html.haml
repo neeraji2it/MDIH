@@ -1,0 +1,30 @@
+#messagebox
+  %p.header
+    = I18n.t('quick_message.label.my_messages') #{ params[:controller] == 'home' ? '(most recent)' : ''}
+  %div
+    - if !@quick_messages.empty?
+      - for quick_message in @quick_messages
+        .imessages
+          %p.date
+            = I18n.l quick_message.sent_on.in_time_zone(user_time_zone), :format => :on_month
+          %p.msg
+            = quick_message.message
+          %div{ :style => "float:right;padding-top:3px;"}
+            = I18n.t('quick_message.label.by')
+            = quick_message.sender.id == current_user.id ? "me" : link_to(quick_message.sender.display_name, user_path(quick_message.sender))
+            - if quick_message.to_id == current_user.id
+              = link_to " | Reply", new_user_quick_message_path(quick_message.from_id)
+              = link_to " | Delete", user_quick_message_path(current_user, quick_message), :method => :delete, :confirm => "Are you sure?"
+        %br{ :clear => "all" }
+      - if params[:controller] == 'home' and current_user.quick_messages.count > 5
+        .imessages
+          %p.seemsgs
+            = link_to I18n.t('quick_message.label.see_all_messages'), user_quick_messages_path(current_user), :style => "color: #258216;"
+    - else
+      %div{ :style => "padding: 10px;text-align: center" }
+        = I18n.t('quick_message.label.no_messages')
+- if params[:controller] != "home"
+  %div{ :style => "padding-top: 10px;text-align: center" }
+    = will_paginate @quick_messages
+
+

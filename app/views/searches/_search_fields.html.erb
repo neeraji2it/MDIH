@@ -1,0 +1,14 @@
+<span><%= "#{humanized_gender(params[:looking_for])} #{params[:age_from]} to #{params[:age_to]}" %></span>
+<span>
+  <% if params[:distance] %>
+    <%= "#{params[:distance]} miles" %>
+  <% end %>
+</span>
+<span>
+  <%=  "#{params[:orientation]} " %>
+</span>
+<span>
+  <% if params[:has_contacted] %>
+    <%= I18n.t('search.label.show_people_not_contacted') %>
+  <% end %>
+</span>

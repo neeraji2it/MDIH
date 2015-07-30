@@ -1,0 +1,14 @@
+<% @profile = @user.profile %>
+<ul class="box-tabs1">
+  <li><%= link_to "My Account", edit_user_path(current_user), :class => (params[:controller] == 'users' and params[:action] == 'edit') ? "active" : ''  %></li>
+  <li>
+    <% if @profile %>
+    <%= link_to "My Profile", edit_user_profile_path(current_user, @profile), :class => (params[:controller] == 'profiles' and params[:action] == 'edit') ? "active" : ''  %>
+    <% else %>
+    <%= link_to "My Profile", new_user_profile_path(current_user), :class => (params[:controller] == 'profiles' and params[:action] == 'edit') ? "active" : ''  %>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to "Settings", email_settings_user_path(current_user), :class => (params[:controller] == 'users' and params[:action] == 'email_settings') ? "active" : ''%>
+  </li>
+</ul>

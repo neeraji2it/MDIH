@@ -1,0 +1,109 @@
+<div id="popup-7" class="lightbox popup-box popup-profile popup-profile-v2">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3><%=  current_user.id == @user.id ? "my profile" : "#{@user.display_name}" %></h3>
+      <a href="#" class="close" id="fancybox_close" title="close">close</a>
+    </header>
+    <div class="profile-top">
+      <div class="visual">
+        <%  if @user.facebook_id.present? %>
+          <%= link_to image_tag(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ? @user.profile.avatar.url(:default) : @user.fb_big_image) : @user.fb_big_image, :width => 96) ,(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ? @user.profile.avatar.url(:default) : @user.fb_big_image) : @user.fb_big_image), :rel => "lightbox", :id => "single_image_#{@user.id}"%>
+        <% else %>
+          <%= link_to image_tag(@user.profile ? @user.profile.avatar.url(:default) : "/assets/default_avatar.jpg", :width => 96), @user.profile ? @user.profile.avatar.url(:original) : "/assets/default_avatar.jpg", :rel => "lightbox", :id => "single_image_#{@user.id}"  %>
+        <%  end %>
+        <% if current_user.id != @user.id %>
+          <div class="status-row">
+            <%= user_online_status_image(@user) %>
+            <% if @user.available_today == true %>
+              <span class='free'>free</span>
+            <% else %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <script>
+        jQuery("a#single_image_<%= @user.id %>").hoverIntent({
+          sensitivity: 7,
+          interval:500,
+          timeout:0,
+          over: openFancybox
+        });
+        $('a#single_image_<%= @user.id %>').lightBox();
+      </script>
+      <div class="profile-top-holder">
+        <h3>Basic Information</h3>
+        <p><%= !@user.age.blank? ? "#{@user.age} yr old /" : "" %>  <%= @user.gender %> / <%= @user.orientation %> <% if @user.profile  %><%= !@user.profile.marital_status.to_s.blank? ?  "/ #{@user.profile.marital_status}" : "" %> <%= !@user.profile_address.to_s.blank? ? "/ #{@user.profile_address.to_s}" : "" %><% end %></p>
+        <% if  !@user.looking_for.to_s.blank? %>
+          <h3>Looking For...</h3>
+          <p><%= !@user.looking_for.to_s.blank? ? "#{@user.looking_for.split(',').join(', ')}" : "" %></p>
+        <% end %>
+        <% if  !@user.interested_in.to_s.blank? %>
+          <h3><%= "#{I18n.t('user.label.interested_in')}..." %></h3>
+          <p><%= ("#{@user.interested_in.split(',').map{|inter| inter.capitalize}.join(', ')}").html_safe if !@user.interested_in.to_s.blank? %></p>
+        <% end %>
+        <% if @user.profile %>
+          <% if !@user.profile.i_am_up_to.blank? %>
+            <h3>I am up to</h3>
+            <p><%= @user.profile.i_am_up_to rescue ""%></p>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <% if @user.albums.present? %>
+      <div class="profile-slider">
+        <div id="slider1" class="mask">
+          <a class="buttons prev" href="#">left</a>
+          <div class="viewport">
+            <ul class="overview">
+              <% if  @user.albums.where("status = true").present? %>
+                <% @user.albums.where("status = true").first.photos.each do |photo| %>
+                  <li>
+                    <%= link_to image_tag(photo.image.url(:original), :width => "40", :height => "40", :alt => "#{photo.image_file_name}"),"#{photo.image.url(:original)}", :id => "gallery" %>
+                  </li>
+                <% end %>
+              <% else %>
+                <% @user.albums.first.photos.each do |photo| %>
+                  <li>
+                    <%= link_to image_tag(photo.image.url(:original), :width => "40", :height => "40", :alt => "#{photo.image_file_name}"),"#{photo.image.url(:original)}", :id => "gallery" %>
+                  </li>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
+          <a class="buttons next" href="#">right</a>
+        </div>
+      </div>
+    <% end %>
+    <% @profile = @user.profile %>
+    <% if @profile %>
+      <% if can_display_profile_quations_info?(@profile) %>
+        <div class="text-block">
+          <% if !@profile.who_am_i.to_s.blank? %>
+            <h3>A teaser about myself in one sentence...</h3>
+            <p><%= @profile.who_am_i %></p>
+          <% end %>
+          <% if !@profile.important_things.to_s.blank? %>
+            <h3>The most important things in my life are...</h3>
+            <p><%= @profile.important_things  %></p>
+          <% end %>
+          <% if !@profile.embarrassing_thing.to_s.blank? %>
+            <h3>The most embarrassing thing that happened to me is...</h3>
+            <p><%= @profile.embarrassing_thing %></p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+    <div class="bottom-row">
+      <% if current_user.id != @user.id  %>
+        <%= render :partial => "layouts/all_links", :locals => {:user => @user} %>
+        <%= link_to "See Full Profile", user_path(@user), :class => "btn-full" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" >
+  jQuery(document).ready(function() {
+    $('.mask').tinycarousel({ pager: true });
+    $('a#gallery').lightBox();
+  });
+</script>

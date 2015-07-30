@@ -1,0 +1,99 @@
+<div class="holder">
+  <% for user in @users  %>
+    <div class="chat-item">
+      <div class="chat-item-frame">
+        <div class="visual" id='user_visual_<%=  user.id %>'>
+          <% if !user.facebook_id.present? %>
+            <%= link_to image_tag(user.profile ? user.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104, :id=>"dragble_image_#{user.id}", "data-user_id" => (user.name.nil? ? user.id : user.login)), user_path(user), :title => "#{user.display_name}(#{user.gender})", "data-friend_id_#{user.id}" => user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "friend_profile_#{user.id}" : "" ) %>
+          <% else %>
+            <%= link_to image_tag(user.profile ? (user.profile.avatar_file_name != "picture_type_large.jpg" ?  user.profile.avatar.url(:default) : user.fb_big_image) : user.fb_big_image, :width => 96, :height => 104, :id=>"dragble_image_#{user.id}", "data-user_id" => (user.name.nil? ? user.id : user.login)), user_path(user), :title => "#{user.display_name}(#{user.gender})", "data-friend_id_#{user.id}" => user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "friend_profile_#{user.id}" : "" ) %>
+          <% end %>
+          <%= user_online_status_image(user) %>
+          <% if user.available_today == true %>
+            <span class='free'>free</span>
+          <% else %>
+          <% end %>
+        </div>
+        <script type="text/javascript">
+          $(function() {
+            $("#dragble_image_<%= user.id %>").hover(function(){
+              var user_id = $(this).data("user_id");
+              $("#user_visual_<%= user.id %>").accordion();
+              $("#dragble_image_<%= user.id %>").draggable({
+                appendTo: "body",
+                helper: "clone"
+              });
+              $( ".fav-block" ).droppable({
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-hover",
+                drop: function( event, ui ) {
+                  window.location.href = "/users/"+user_id
+                }
+              });
+            });
+          });
+
+      $(function() {
+        jQuery("#friend_profile_<%= user.id %>").bind("mousestop", function(event){
+          if(event.type == "mousestop"){
+            var account_id = $(this).data("friend_id_<%= user.id %>");
+            $.ajax({
+              url: "/users/"+account_id,
+              type: 'get',
+              success: function(resp){
+                jQuery.fancybox({
+                  padding: 15,
+                  cyclic: false,
+                  overlayShow: true,
+                  transitionIn:'elastic',
+                  transitionOut:'elastic',
+                  speedIn:600,
+                  speedOut:600,
+                  overlayOpacity:0,
+                  titlePosition: 'inside',
+                  content : resp
+                });
+              }
+            });
+          }else{
+          }
+        });
+      });
+        </script>
+        <div class="text-block">
+          <ul class="message-info">
+            <li> <%= user.display_name %></li>
+            <% if params[:action] == 'visitors' or params[:action] == 'visited' %>
+              <li><%= I18n.l user.viewed_at.to_time.in_time_zone(user_time_zone), :format => :short4 %></li>
+            <% elsif (params[:controller] == 'friends' and params[:action] == 'index') %>
+              <% if viewed_me = ProfileViewer.find(:first, :conditions => ["user_id = #{current_user.id} AND viewed_by = #{user.id}"]) and  !viewed_me.viewed_at.nil? %>
+                <li><%= I18n.l viewed_me.viewed_at.to_time.in_time_zone(user_time_zone),:format => :short4 %></li>
+              <%else%>
+                <li><%= I18n.t('search.label.not_yet')%></li>
+              <%end%>
+            <% end %>
+          </ul>
+          <p>
+            <% if !user.age.blank? %> <%= user.age %> | <% end %> <% if !user.gender.blank? %><%= user.gender %> | <% end %> <% if !user.orientation.blank? %> <%= user.orientation %> | <% end %> <% if user.profile %> <% if !user.profile.marital_status.blank? %> <%= user.profile.marital_status %> | <% end %> <% end %> <% user.profile.city rescue ""  %>
+          </p>
+        </div>
+      </div>
+      <div class="m-nav-holder">
+        <%= render :partial => "layouts/all_links", :locals => {:user => user} %>
+      </div>
+    </div>
+  <% end %>
+  <% if @users.total_pages > @users.current_page %>
+    <div id="more_friends_link">
+      <input type="hidden" value="<%= @users.current_page+1 %>" id="friends_page" />
+      <% if params[:action] == 'blocked_users' %>
+        <%= link_to_function "more", "more_blocked_users(#{@users.current_page+1})",:class => "btn-more", :title => "click for blocked users" %>
+      <% else %>
+        <%= link_to_function "more", "more_friends(#{@user.id}, #{@users.current_page+1})",:class => "btn-more", :title => "click for more friends" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

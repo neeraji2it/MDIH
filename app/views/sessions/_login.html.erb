@@ -1,0 +1,77 @@
+<div class="user-drop">
+  <div class="arrow"></div>
+  <div id="user_login_form">
+    <div class="top-row">
+      <span>login with facebook:</span>
+      <div class="facebook-placeholder">
+        <% if current_facebook_user != nil %>
+        <% else %>
+          <%= fb_login_and_redirect '/facebook', :perms=>"email,publish_stream" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <%= form_tag   session_path, :remote => true,:class=>"user-login-form" do %>
+      <fieldset>
+        <div id="login_flash" class="error">
+          <%= flash[:error] %>
+        </div>
+        <div class="form-row">
+          <label for="id-login">Login:</label>
+          <%= text_field_tag 'login',"",:id=>"id-login" %>
+        </div>
+        <div class="form-row">
+          <label for="id-pass">Password:</label>
+          <%= password_field_tag 'password',"", :id=>"id-pass" %>
+        </div>
+        <div class="btn-holder">
+          <%= submit_tag("LOGIN")  %>
+          <%#= link_to_function "cancel", "hide_login()", :class => 'cancel_link'  %>
+        </div>
+        <div class="check-row">
+          <%= check_box_tag 'remember_me', '',:checked , :value => 1, :style => "width:15px;" %>
+          <label for="log"><%= I18n.t('session.label.stay_logged_in')%></label>
+        </div>
+        <div class="links-row">
+          <%= link_to_function I18n.t('session.label.forgot_password') , "show_forgot_password_form()" %>
+          |
+          <%= link_to_function I18n.t('session.label.not_received_activation_mail') , "show_reactivation_form()"%>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+  <div id="forgot_password_form" style="margin-top: 5px;">
+    <%= form_tag({:controller => "users", :action => "forgot_password"},  :remote => true,:class=>"user-login-form") do %>
+      <p style="font-size: 17px;border-bottom: 1px solid black;"><%= I18n.t('session.label.reset_password') %></p>
+      <fieldset>
+        <div id="forgot_password_flash">
+        </div>
+        <div class="form-row">
+          <label for="id-login"> <%= I18n.t('session.label.email')%></label>
+          <%= text_field_tag 'email', '', :size=>25 %>
+        </div>
+        <div class="btn-holder">
+          <%= submit_tag(I18n.t('session.label.reset'))  %>
+          <%= link_to_function "cancel", "hide_forgot()", :class => 'cancel_link' %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+  <div id="resend_activation_email" style="margin-top: 5px;">
+    <%= form_tag({:controller => "users", :action => "resend_activation_email"}, :remote => true,:class=>"user-login-form") do %>
+      <p style="font-size: 17px;border-bottom: 1px solid black;"><%= I18n.t('session.label.resend_activation_email') %></p>
+      <fieldset>
+        <div id="resend_activation_flash" class="error">
+        </div>
+        <div class="form-row">
+          <label for="id-login"> <%= I18n.t('session.label.email')%></label>
+          <%= text_field_tag 'email', '', :size=>25, :id => "reactivation_email" %>
+        </div>
+        <div class="btn-holder">
+          <%= submit_tag(I18n.t('session.label.resend'))  %>
+          <%= link_to_function "cancel", "hide_forgot()", :class => 'cancel_link' %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+</div>

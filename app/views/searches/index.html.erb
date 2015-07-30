@@ -1,0 +1,5 @@
+<% if params[:action] == "advance" %>
+  <%= render :partial => "layouts/search", :locals => {:partial_file => "searches/advance"} %>
+<% else %>
+  <%= render :partial => "layouts/search", :locals => {:partial_file => "searches/search_form"}%>
+<% end %>

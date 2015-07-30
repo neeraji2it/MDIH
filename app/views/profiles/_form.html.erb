@@ -1,0 +1,310 @@
+<% if @profile.chinese_zodiac_sign.to_s.blank? %>
+  <% @profile.chinese_zodiac_sign = current_user.chinese_zodiac_sign %>
+<% end %>
+
+<%= form_for [current_user, @profile], :html => {:multipart => true,:class=>"content-box account-tabs my-form"} do |f|  %>
+  <fieldset>
+    <header class="heading">
+      <h2>Profile</h2>
+      <button class="btn-save" type="submit"><span>save</span></button>
+    </header>
+    <div class="holder">
+      <%= render :partial => "users/submenu"%>
+    </div>
+
+    <div class="box">
+      <label for="up-to">I am up to</label>
+      <div class="text">
+        <%= f.text_field :i_am_up_to, :placeholder=>"Grab drinks, go to the movies, etc." %>
+      </div>
+    </div>
+    <div class="row">
+      <label for="id-n1">City, State,  ZIP</label>
+      <%= f.text_field :city, :id=>"id-n1" %>
+      <%= f.text_field :state, :id=>"id-n1" %>
+      <%= f.text_field :zip, :value => current_user.zip, :class=>"short" %>
+    </div>
+    <div class="row">
+      <label>Country</label>
+      <%= f.select :country, country_options_for_select("United States").html_safe,{},:style=>"width: 250px; background: #fff;"  %>
+    </div>
+    <% if @user.albums.where("status = true").present? %>
+      <div class="profile-slider profile-slider-2">
+        <div class="mask" style="width: 435px;">
+          <ul>
+            <% @user.albums.where("status = true").first.photos.each do |photo| %>
+              <li><%= link_to image_tag(photo.image.url(:original), :width => "40", :height => "40", :alt => "#{photo.image_file_name}"),"#{photo.image.url(:original)}", :id => "gallery1" %></li>
+            <% end %>
+          </ul>
+        </div>
+        <a href="#" class="btn-prev">prev</a>
+        <a href="#" class="btn-next">next</a>
+        <div class="link-holder">
+          <%= link_to  "#{@user.albums.where("status = true").first.photos.count} pics", "" %> 
+        </div>
+      </div>
+    <% end %>
+    <!-- content box -->
+    <div class="content-box open-box active">
+      <header class="heading">
+        <h2>questions -click to edit <%= link_to_function I18n.t('profile.label.expand_all'), "expan_all_profile_options()", :class => "whiteLink link-expand edit", :id => "expand_all"  %></h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <ul class="questions-list detail-box">
+          <li>
+            <span class="num">1.</span>
+            <%= link_to_function "[+] A teaser about myself in one sentence...", "expan_search_options('who_am_i', 'A teaser about myself in one sentence...')", :id => "who_am_i_link", :class => "whiteLink"  %>
+            <div id="who_am_i" style="display:none">
+              <%= f.text_area :who_am_i, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">2.</span>
+            <%= link_to_function "[+] My passion is...", "expan_search_options('what_is_my_passion', 'My passion is...')", :id => "what_is_my_passion_link", :class => "whiteLink"  %>
+            <div id="what_is_my_passion" style="display:none">
+              <%= f.text_area :what_is_my_passion, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">3.</span>
+            <%= link_to_function "[+] The most important things in my life are...", "expan_search_options('important_things', 'The most important things in my life are...')", :id => "important_things_link", :class => "whiteLink"  %>
+            <div id="important_things" style="display:none">
+              <%= f.text_area :important_things, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">4.</span>
+            <%= link_to_function "[+] Remind me to tell you this funny story when we meet...", "expan_search_options('funny_story_when_we_meet', 'Remind me to tell you this funny story when we meet...')", :id => "funny_story_when_we_meet_link", :class => "whiteLink"  %>
+            <div id="funny_story_when_we_meet" style="display:none">
+              <%= f.text_area :funny_story_when_we_meet, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">5.</span>
+            <%= link_to_function "[+] My pet peeves are...", "expan_search_options('my_pet_peeves_are', 'My pet peeves are...')", :id => "my_pet_peeves_are_link", :class => "whiteLink"  %>
+            <div id="my_pet_peeves_are" style="display:none">
+              <%= f.text_area :my_pet_peeves_are, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">6.</span>
+            <%= link_to_function "[+] I am really good at...", "expan_search_options('i_am_really_good_at', 'I am really good at...')", :id => "i_am_really_good_at_link", :class => "whiteLink"  %>
+            <div id="i_am_really_good_at" style="display:none">
+              <%= f.text_area :i_am_really_good_at, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">7.</span>
+            <%= link_to_function "[+] My Favorite books, music and movies are...", "expan_search_options('favorite_books_music_movies', 'My Favorite books, music and movies are...')", :id => "favorite_books_music_movies_link", :class => "whiteLink"  %>
+            <div id="favorite_books_music_movies" style="display:none">
+              <%= f.text_area :favorite_books_music_movies, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">8.</span>
+            <%= link_to_function "[+] The most embarrassing thing that happened to me is...", "expan_search_options('embarrassing_thing', 'The most embarrassing thing that happened to me is...')", :id => "embarrassing_thing_link", :class => "whiteLink"  %>
+            <div id="embarrassing_thing" style="display:none">
+              <%= f.text_area :embarrassing_thing, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">9.</span>
+            <%= link_to_function "[+] If I could be anything I want, I would be...", "expan_search_options('anything_i_want', 'If I could be anything I want, I would be...')", :id => "anything_i_want_link", :class => "whiteLink"  %>
+            <div id="anything_i_want" style="display:none">
+              <%= f.text_area :anything_i_want, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">10.</span>
+            <%= link_to_function "[+] Things I would never do or tell on the first date...", "expan_search_options('things_i_would_never_do', 'Things I would never do or tell on the first date...')", :id => "things_i_would_never_do_link", :class => "whiteLink"  %>
+            <div id="things_i_would_never_do" style="display:none">
+              <%= f.text_area :things_i_would_never_do, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">11.</span>
+            <%= link_to_function "[+] My friends tell me that I am...", "expan_search_options('my_friends_tell_me_that_i_am', 'My friends tell me that I am...')", :id => "my_friends_tell_me_that_i_am_link", :class => "whiteLink"  %>
+            <div id="my_friends_tell_me_that_i_am" style="display:none">
+              <%= f.text_area :my_friends_tell_me_that_i_am, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">12.</span>
+            <%= link_to_function "[+] Something private about me that you'd never think to ask...", "expan_search_options('private_about_me', 'Something private about me that you did never think to ask...')", :id => "private_about_me_link", :class => "whiteLink"  %>
+            <div id="private_about_me" style="display:none">
+              <%= f.text_area :private_about_me, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">13.</span>
+            <%= link_to_function "[+] 5 Things in my bucket list...", "expan_search_options('my_bucket_list', '5 Things in my bucket list...')", :id => "my_bucket_list_link", :class => "whiteLink"  %>
+            <div id="my_bucket_list" style="display:none">
+              <%= f.text_area :my_bucket_list, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">14.</span>
+            <%= link_to_function "[+] On a normal weekend I...", "expan_search_options('on_a_normal_weekend_i', 'On a normal weekend I...')", :id => "on_a_normal_weekend_i_link", :class => "whiteLink"  %>
+            <div id="on_a_normal_weekend_i" style="display:none">
+              <%= f.text_area :on_a_normal_weekend_i, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">15.</span>
+            <%= link_to_function "[+] The most interesting place I have been to...", "expan_search_options('most_interesting_place', 'The most interesting place I have been to...')", :id => "most_interesting_place_link", :class => "whiteLink"  %>
+            <div id="most_interesting_place" style="display:none">
+              <%= f.text_area :most_interesting_place, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">16.</span>
+            <%= link_to_function "[+] The weirdest thing that I know...", "expan_search_options('weirdest_thing_that_i_know', 'The weirdest thing that I know...')", :id => "weirdest_thing_that_i_know_link", :class => "whiteLink"  %>
+            <div id="weirdest_thing_that_i_know" style="display:none">
+              <%= f.text_area :weirdest_thing_that_i_know, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">17.</span>
+            <%= link_to_function "[+] I fear the most...", "expan_search_options('i_fear_the_most', 'I fear the most...')", :id => "i_fear_the_most_link", :class => "whiteLink"  %>
+            <div id="i_fear_the_most" style="display:none">
+              <%= f.text_area :i_fear_the_most, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+          <li>
+            <span class="num">18.</span>
+            <%= link_to_function "[+] My best feature is...", "expan_search_options('my_best_feature_is', 'My best feature is...')", :id => "my_best_feature_is_link", :class => "whiteLink"  %>
+            <div id="my_best_feature_is" style="display:none">
+              <%= f.text_area :my_best_feature_is, :cols=>"30" ,:rows=>"10" %>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- content box -->
+    <div class="content-box open-box  active">
+      <header class="heading">
+        <h2>personal</h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <div class="new-form1">
+          <div class="col">
+            <div class="row">
+              <label>Height</label>
+              <div class="select-holder">
+                <% params[:height_in] = params[:height_in] || (@profile.height_units.to_s.blank? ? 'Inches' : @profile.height_units.to_s) %>
+                <% if params[:height_in] == 'Centimeters' %>
+                  <% params[:height_cm] = params[:height_cm] || @profile.height.to_s %>
+                <% else %>
+                  <% params[:height_feets] = params[:height_feets] || cm_to_inches(@profile.height).to_s.split('.')[0] %>
+                  <% params[:height_inches] = params[:height_inches] || cm_to_inches(@profile.height).to_s.split('.')[1] %>
+                <% end %>
+                <%= select_tag "height_in", options_for_select([["In", "Inches"], ["Cm", "Centimeters"]], params[:height_in]), :onchange => "if(this.value == 'Inches'){jQuery('#height_in_cm').hide();jQuery('#height_in_inches').show();}else{jQuery('#height_in_inches').hide();jQuery('#height_in_cm').show()}", :class => "select-2", :style => 'width: 110px;'%>
+                <div id="height_in_inches"  style=<%="display:#{params[:height_in] == 'Inches' ? 'block' : 'none'} "%>>
+                  <%= select_tag "height_feets", options_for_select([2, 3, 4, 5, 6, 7], params[:height_feets].to_i), :class => "select-1" %>
+                  <%= select_tag "height_inches", options_for_select([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], params[:height_inches].to_i), :class => "select-1"%>
+                </div>
+                <div id="height_in_cm" style=<%="display:#{params[:height_in] == 'Centimeters' ? 'block' : 'none'}"%>>
+                  <%= text_field_tag "height_cm", params[:height_cm], :style => 'width: 60px;margin: 0 0 0 3px;'  %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label>Ethnicity</label>
+              <%= f.select :ethnicity, ["Will tell you later" , "Asian", "Black",  "Caucasian/White", "Hispanic/Latino", "Indian", "Middle Eastern" , "Mixed Race", "Native American", "Pacific Islander", "Other"], {:prompt => "Select one"}%>
+            </div>
+            <div class="row">
+              <label>Body Type</label>
+              <%= f.select :body_type, ["Will tell you later", "Slim", "Average", "Athletic",  "Muscular", "A Little Extra", "Curvy", "Full Figured"], {:prompt => "Select one"} %>
+            </div>
+            <div class="row">
+              <label>Languages</label>
+  <%#= f.select :languages_spoken, PROFILE_LANGUAGES, {}, :multiple => "multiple"  %>
+              <%= f.select :languages_spoken, PROFILE_LANGUAGES, {}  %>
+            </div>
+            <div class="row">
+              <label>Marital Status</label>
+              <%= f.select :marital_status, ["Will tell you later",  "Single", "Married", "In a relationship", "Divorced", "Widowed", "Swinger", "Engaged", "Just living together", "Other"], {:prompt => "Select one"}%>
+            </div>
+            <div class="row">
+              <label>Children</label>
+              <%= f.select :want_children, ["Will tell you later",  "Yes and I want more", "Yes and I don't want more",  " No and I don't want any", "No but I want to have them"], {} %>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              <label>Religion</label>
+              <%= f.select :religion, ["Will tell you later",  "Catholic", "Buddhist", "Hindu", "Lutheran", "Atheist", "Muslim", "Spritual", "Jewish", "Not Religious", "Other"], {:prompt => "Select one"} %>
+            </div>
+            <div class="row">
+              <label>Smoke</label>
+              <%= f.select :smoke, ["Will tell you later", "Yes", "No", "Occasionally", "Only Hookah"], {:prompt => "Select one"}%>
+            </div>
+            <div class="row">
+              <label>Drink</label>
+              <%= f.select :drink, ["Will tell you later", "Yes", "No", "Socially"], {:prompt => "Select one"} %>
+            </div>
+            <div class="row">
+              <label>Drugs</label>
+              <%= f.select :drugs, ["Will tell you later", "Yes", "No", "Occasionally"], {:prompt => "Select one"} %>
+            </div>
+            <div class="row">
+              <label>Pets</label>
+              <ul class="check-list-3">
+                <% ["None","Cats","Dogs", "Other"].each do |pet| %>
+                  <li>
+                    <% if @profile.pets.to_s.split(", ").include?(pet) or (params[:profile] && params[:profile][:pets] && params[:profile][:pets].include?(pet)) %>
+                      <%= check_box_tag("profile[pets][]", "#{pet}", true)  %>
+                    <% else %>
+                      <%= check_box_tag("profile[pets][]", "#{pet}")  %>
+                    <% end %>
+                    <%= f.label pet  %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- content box -->
+    <div class="content-box open-box active">
+      <header class="heading">
+        <h2><%= I18n.t('profile.label.professional')%></h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <div class="new-form">
+          <fieldset>
+            <div class="col">
+              <div class="row">
+                <label>Education </label>
+                <%= f.select :education_level, ["Will tell you later", "High school", "App 2 years College", "Bachelors Degree", "Masters Degree", "PHD", "MD", "JD", "Other"], {:prompt => "Select one"}%>
+              </div>
+              <div class="row">
+                <label>Income</label>
+                <%= f.select :income_level, ["Will tell you later", "15k-30k", "31k-45k", "46k-60k", "61k-75k", "76k-100k", "Over 100k"], {:prompt => "Select one"}%>
+              </div>
+            </div>
+            <div class="col">
+              <div class="row">
+                <label for="id-t1">Job</label>
+                <%= f.text_field :profession  %>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row" style="bottom: 0px;">
+  <%#= link_to I18n.t('user.label.delete_profile'), delete_account_user_path(current_user), :method => :delete, :confirm => "#{I18n.t('user.show.delete_account_confirm_alert')}", :class => 'delete'%>
+      <button class="btn-save" type="submit"><span>save</span></button>
+    </div>
+  </fieldset>
+<% end %>
+<script type="text/javascript" >
+  jQuery(document).ready(function() {
+    $('a#gallery1').lightBox();
+  });
+</script>

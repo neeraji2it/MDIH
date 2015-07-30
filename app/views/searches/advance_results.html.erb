@@ -1,0 +1,7 @@
+<%= render :partial => "searches/grid_style_results" %>
+<% if current_user and @users and !@users.empty? and !SavedSearch.exists?(:user_id => current_user.id, :url => request.url) %>
+  <div id="save_search_form" style="display:none;">
+    <% @saved_search = SavedSearch.new %>
+    <%= render :partial => "new" %>
+  </div>
+<% end %>

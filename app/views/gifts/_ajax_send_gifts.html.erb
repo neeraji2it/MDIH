@@ -1,0 +1,39 @@
+<div id="popup-5" class="new-message-popup">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3><%= I18n.t('gift.label.send_virtual_gift_to') + ' ' + "#{@user.display_name}" %></h3>
+      <%= select_tag "pcategory_id", options_for_select([["Select", ""]]+Pcategory.all.map{|pc| [pc.name, pc.id]}, params[:pcategory_id].to_i), :onchange => "if(this.value != 0){send_gifts(#{@user.id}, this.value)}", :style => "margin-top: 5px; width:120px;"  %>
+      <a href="#" class="close"  title="close" id="fancybox_close">close</a>
+    </header>
+    <div class="slide">
+      <div class="quest-container vscrollable" id="templates" style="height: 370px;">
+        <div style="margin-bottom: 10px;">
+          <%= link_to I18n.t('gift.label.recharge_now'), recharge_credits_users_path(:gift_to => @user.login),:remote => true, :method => :get, :class => "small_green" %>
+        </div>
+        <% if !@products.empty? %>
+          <div id="gift_list">
+            <%= render :partial => "gift_list" %>
+            <input type="hidden" value="<%= @user.id %>" id="gift_user_id" />
+          </div>
+          <br clear="all"/>
+        <% else %>
+          <p style="height: 50px;font-size: 13px;" align="center">
+            <%= I18n.t('gift.label.no_virtual_gifts_are_there_to_send') %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  jQuery(function() {
+    jQuery('#templates').scroll(
+    function() {
+      var elem = jQuery('#templates');
+      if ((elem[0].scrollHeight - elem.scrollTop()) == elem.outerHeight() && jQuery('#gifts_page').val() > 0)
+      {
+        get_more_gifts(jQuery('#gift_user_id').val(), jQuery('#gifts_page').val())
+      }
+    });
+  });
+</script>

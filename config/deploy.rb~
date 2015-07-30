@@ -1,0 +1,114 @@
+set :stages, %w(staging internal production)
+set :default_stage, "staging"
+require 'capistrano/ext/multistage'
+
+##############################
+set :application, 'mdih'
+##############################
+
+# BASIC DEPLOYMENT :  -- modified by Edward 12/15/2011
+#
+# cap staging deploy
+# cap production deploy
+# cap internal deploy (FOR USE INSIDE MDIH OFFICE INTERNAL NETWORK ONLY)
+#
+
+username = ENV['username'] || 'neeraj'
+
+# Application configuration
+
+# Specific stuff
+set :config_files, 'config/database.yml'
+
+# Servers
+# server { "#{domain}" } :app, :web, :db, :primary => true
+role (:web) {"#{domain}"}
+role (:app) {"#{domain}"}
+role (:db) { ["#{domain}", {:primary => true}] }
+
+
+set :use_sudo, false
+set :user, username#'neeraj'
+
+# Repository
+set :scm, :git
+set (:repository) { "#{gitrepo}" }
+set (:deploy_to) { "#{deploydir}" } 
+set :deploy_via, :remote_cache
+#set :deploy_via, :checkout
+
+#namespace :assets do
+#  task :web_upload, :roles => :web do
+#    top.upload "public/assets", "#{release_path}/public/assets", :via => :scp, :recursive => true
+#  end
+#
+#  task :app_upload, :roles => :app do
+#    run "mkdir -p #{release_path}/public/assets"
+#    top.upload "#{release_path}/public/assets", :via => :scp
+#  end
+#
+#  task :precompile do
+#    run_locally "rake RAILS_ENV=#{rails_env} assets:clean assets:precompile"
+#    web_upload
+#    app_upload
+#  end
+#end
+
+namespace :deploy do
+
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+  
+  [:start, :stop].each do |t|
+    desc "#{t.to_s.capitalize} task is a no-op with mod_rails"
+    task t, :roles => :app do ; end
+  end
+
+	# Defining the tasks to do after the deploy one
+  after "deploy", "deploy:restart"#, "deploy:cleanup"
+
+  
+  desc "Link to the configuration"
+  task :symlink do
+    run "rm -f #{current_path} && ln -s #{release_path} #{current_path}"
+    run "ln -s #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
+    run "ln -s #{shared_path}/config/facebooker.yml #{latest_release}/config/facebooker.yml"
+#    run "ln -s #{shared_path}/config/juggernaut_hosts.yml #{latest_release}/config/juggernaut_hosts.yml"
+#    run "ln -s #{shared_path}/config/juggernaut.yml #{latest_release}/juggernaut.yml"
+    run "ln -s #{shared_path}/config/s3.yml #{latest_release}/config/s3.yml"
+  end
+
+  desc "Symlink more"
+  task :symlink_more do
+    run "ln -s #{shared_path}/public/uploaded_files #{latest_release}/public/uploaded_files"
+    run "ln -s #{shared_path}/sphinx #{latest_release}/db/sphinx"
+
+  end
+
+  desc "Chowning symlink"
+  task :chowning, :roles => :app do
+    run "chown -R www.www #{release_path}"
+  end
+  
+  after "deploy:symlink", "deploy:symlink_more"#, "deploy:chowning"
+
+end
+
+
+namespace :debugging do
+
+	desc "Run Production Log Analyzer"
+	task :planalyze do
+		stream("pl_analyze #{current_release}/log/#{rails_env}.log")
+	end
+
+	desc "Print the end of the current environment log file"
+	task :tail_logs do
+		stream("tail -n 300 #{current_release}/log/#{rails_env}.log")
+	end
+
+end
+
+

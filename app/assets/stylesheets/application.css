@@ -1,0 +1,81 @@
+#overlay{
+     display: none;
+    background-color:#000000;
+    left:0;
+    position:absolute;
+    top:0;
+    z-index: 1000;
+    width: 100%;
+    height: 1400px;
+    opacity: 0.5;
+}
+#popup_box, #personal_message{
+    display:none;
+    height:auto;
+    width:auto;
+    left:50%;
+    margin: -220px 0 0 -250px;
+    padding:15px;
+    position:fixed;
+    top:80%;
+    z-index:2000;
+    background-color:#FFFFFF;
+    font-size: 12px;
+}
+
+#ajax_loader_big{
+    display:none;
+    height:auto;
+    left:50%;
+    position:fixed;
+    top:35%;
+    z-index:4;
+}
+#ajax_loader_big_div{
+    display:none;
+    height:auto;
+    left:50%;
+    position:fixed;
+    top:35%;
+    z-index:4;
+}
+
+#popup_box2 {
+    display:none;
+    height:auto;
+    width:auto;
+    left:50%;
+    margin:-220px 0 0 -250px;
+    padding:15px;
+    position:absolute;;
+    top:43%;
+    z-index:1001;
+    background-color:#FFFFFF;
+    font-size: 12px;
+}
+
+#popup_box3 {
+    display:none;
+    height:auto;
+    width:auto;
+    left:50%;
+    margin: -220px 0 0 -250px;
+    padding:15px;
+    position:fixed;
+    top:43%;
+    z-index:1001;
+    font-size: 12px;
+}
+
+#popup_box4 {
+    display:none;
+    height:auto;
+    width:auto;
+    left:50%;
+    margin:-220px 0 0 -250px;
+    padding:15px;
+    position:absolute;;
+    top:60%;
+    z-index:2000;
+    font-size: 12px;
+}

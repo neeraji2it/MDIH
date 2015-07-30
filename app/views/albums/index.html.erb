@@ -1,0 +1,25 @@
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>photo albums</h2>
+    <a class="new" href="#" onclick="new_album(<%=  current_user.id %>); return false;">new album</a>
+  </header>
+  <div id="more_albums">
+    <%= render :partial => "ajax_albums"   %>
+     <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+  </div>
+</div>
+<script>
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#albums_page').val() > 0)
+      {
+          more_albums(jQuery('#current_user_id').val(), jQuery('#albums_page').val())
+        
+      }
+    });
+  });
+</script>
+

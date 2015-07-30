@@ -1,0 +1,77 @@
+<form class="search-panel" action="#">
+  <fieldset>
+    <h2>search</h2>
+    <a class="opener" href="#">open</a>
+    <div class="search">
+      <input type="text">
+      <input type="submit">
+    </div>
+  </fieldset>
+</form>
+<div class="content-box">
+  <header class="heading">
+    <%= link_to "back", user_albums_path(:user_id => @user.id), :class => "back-link" %>
+    <h2>photo album - <%= @album.name %></h2>
+    <%= link_to "<span>add pic</span>".html_safe, new_user_album_photo_path(:user_id => current_user.id, :album_id => @album.id), :class => "new" %>
+  </header>
+  <div class="holder">
+    <!-- photo gallery -->
+    <div class="photo-gallery">
+      <div class="pageWrapper">
+        <div class="demo">
+          <div class="wrapper">
+            <div id="coverflow">
+              <% @photos.first(13).each do |photo| %>
+                <%= image_tag(photo.image.url(:original), :width => "316", :height => "304", "data-album" => "#{photo.album.name}", "data-artist" => "#{photo.image_file_name}",  :alt => "#{photo.image_file_name}") %>
+              <% end %>
+            </div>
+          </div>
+          <div id="imageCaption">
+          </div>
+          <div id='slider'></div>
+        </div>
+        <div class="demo-description"></div>
+        <div class="listholder">
+          <div id="scroll-pane">
+            <ul id="sortable">
+            </ul>
+          </div>
+          <div id="slider-vertical"></div>
+        </div>
+      </div>
+    </div>
+    <!-- photo slider -->
+    <div class="photo-slider autorotation-disabled">
+      <ul class="mask">
+        <% @photos.each_with_index do |photo, index| %>
+          <% count = index + 1 %>
+          <li class="slide <%= photo.id.to_s  == "#{params[:id]}" ? "active" : "" %>" style="display: block; <%= "opacity: 0;" if count > 1 %>">
+            <div class="visual">
+              <%= image_tag(photo.image.url(:original), :width => "316", :height => "304", :alt => "#{photo.image_file_name}", :id => "image_#{photo.id}") %>
+              <span class="caption"><%= photo.image_file_name %></span>
+              <% if @user.id == current_user.id %>
+                <nav class="photo-nav-2">
+                  <ul>
+                    <% if @album.cover_photo_id != photo.id %> <li><%= link_to "",make_album_cover_user_album_photo_path(current_user, @album, photo),:class=>"item-1", :title => "#{I18n.t('album.label.make_album_cover')}"  %></li><% end %>
+                    <li><%= link_to "person",make_profile_photo_user_album_photo_path(photo.album.user, photo.album, photo), :method => :post, :class => "item-2", :title => "#{I18n.t('photo.label.make_as')}" %></li>
+                    <li><%= link_to_function "rotate", "", :class => "item-3", :id => "rotate_#{photo.id}", :title => 'rotate' %></li>
+                    <li><%#= link_to "delete", user_album_photo_path(:user_id => @user.id, :album_id => @album.id, :id => photo.id), :method => :delete, :confirm => "Are you sure you want to delete this photo?",:remote => true, :class => "item-4" %></li>
+                  </ul>
+                </nav>
+                <script>
+                  var value_<%= photo.id %> = 0
+                  $("#rotate_<%= photo.id %>").click(function(){
+                    value_<%= photo.id %> +=90;
+                    $("#image_<%= photo.id %>").rotate({ animateTo:value_<%= photo.id %>})
+                  });
+                </script>
+              <% end%>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <a class="btn-prev" href="#">prev</a>
+      <a class="btn-next" href="#">next</a>
+    </div>
+  </div>
+</div>

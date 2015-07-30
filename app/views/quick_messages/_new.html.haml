@@ -1,0 +1,22 @@
+.whitehr
+  %p.greenhdrsm
+    = I18n.t('quick_message.label.quick_message')
+#stampbg
+  = render :partial => "user_details"
+  #msgarea
+    .lrggrey{:align => "center"}
+      = I18n.t('quick_message.label.dear') #{@user.display_name},
+    %br
+    - form_for :quick_message, @quick_message, :url => user_quick_messages_path(@user), :html => {:method => :post} do |f|
+      %p
+        = I18n.t('quick_message.label.subject')
+        = validation_error(@quick_message.errors["subject"])
+        = f.text_field :subject, :size => "46"
+      %p
+        = I18n.t('quick_message.label.message')
+      = f.text_area :body , :size => "58x18" ,:class => "inputtext"
+      %p
+        = image_submit_tag('submit-yellow.png')
+      
+
+  %br{:clear => "all"}

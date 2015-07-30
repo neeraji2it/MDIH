@@ -1,0 +1,40 @@
+<%  for message in @messages %>
+  <div class="chat-item">
+    <div class="visual">
+      <% if !message.user.facebook_id.present? %>
+        <%= link_to  image_tag(message.user.profile ?  message.user.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(message.user.id), "data-user_id_#{message.user.id}" => message.user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.user.id}" : "" )  %>
+      <% else %>
+        <%= link_to  image_tag(message.user.profile ? (message.user.profile.avatar_file_name != "picture_type_large.jpg" ?  message.user.profile.avatar.url(:default) : message.user.fb_big_image) : message.user.fb_big_image, :width => 96, :height => 104), user_path(message.user.id), "data-user_id_#{message.user.id}" => message.user.id, :id => (!EmailSetting.exists?(:user_id => current_user.id, :alert_type => 'popups', :status => false) and current_user.is_valid_account? ? "user_profile_#{message.user.id}" : "" )  %>
+      <% end %>
+      <%= user_online_status_image(message.user) %>
+      <% if message.user.available_today == true %>
+        <span class='free'>free</span>
+      <% else %>
+      <% end %>
+    </div>
+    <div class="text-block">
+      <ul class="message-info">
+        <li><%= message.user.display_name %></li>
+        <li><%= message.created_at.strftime("%d/%m/%y") %></li>
+        <li><%= message.created_at.strftime("%H:%M") %></li>
+      </ul>
+      <% if message.user_id == current_user.id and message.user_status ==  "unread" %>
+        <p><strong><%= link_to truncate(message.body.html_safe, :length => 75),  conversation_user_message_path(current_user, message.user.id)  %></strong></p>
+      <% else %>
+        <p><%= link_to truncate(message.body.html_safe, :length => 75),  conversation_user_message_path(current_user, message.user.id)  %></p>
+      <% end %>
+    </div>
+    <div class="m-nav-holder" style="width: 380px;">
+      <%= render :partial => "layouts/all_links", :locals => {:user => message.user} %>
+    </div>
+  </div>
+<% end %>
+<% if @messages.total_pages > @messages.current_page %>
+  <div id="more_messages_link">
+    <input type="hidden" value="<%= @messages.current_page+1 %>" id="messages_page" />
+    <%= link_to_function "more", "more_messages(#{@user.id}, #{@messages.current_page+1})",:class => "btn-more-2", :title => "click for more unread messages" %>
+  </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

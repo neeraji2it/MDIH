@@ -1,0 +1,29 @@
+.cartleftnav
+  %p{:align => "center"}
+    = link_to image_tag(@user.profile ? @user.profile.avatar.url(:default) : "default_avatar.jpg", :width => 200), user_path(@user)
+  %p
+    = link_to @user.display_name, user_path(@user), :style => "color:#258216;font-size:16px;font-weight: bold;"
+  %p
+    = @user.age
+    = I18n.t('quickmessage.label.year_old')
+    = @user.humanized_gender
+    %br
+    - if !user.looking_for.to_s.blank?
+      = I18n.t('search.label.looking_for')
+      = user.looking_for
+    - if !user.orientation.to_s.blank?
+      = I18n.t('search.label.orientation')
+      = user.orientation
+    %br
+    - if @profile = @user.profile
+      = I18n.t('general_word.from')
+      = @profile.city
+      = @profile.state
+      = @profile.country
+      %br
+    - if ['new', 'create'].include?(params[:action])
+      %p
+        =# link_to I18n.t('quick_message.label.see_all_messages'), user_quick_messages_path(@user), :class => "msglink"
+    - else
+      %p
+        =# link_to I18n.t('quick_message.label.send_message'), new_user_quick_message_path(@user), :class => "msglink"

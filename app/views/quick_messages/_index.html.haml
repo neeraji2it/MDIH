@@ -1,0 +1,12 @@
+
+.whitehr
+  %p.greenhdrsm
+    = I18n.t('quick_message.label.quick_message')
+#stampbg{:style => "background: #FFFFFF"}
+  = render :partial => "user_details"
+  #mymessages{:style => "float:right;padding:0;width:500px;"}
+    = render :partial => "quick_messages/messages"
+
+
+
+  %br{:clear => "all"}

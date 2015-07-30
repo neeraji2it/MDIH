@@ -1,0 +1,18 @@
+<% pending_friends = current_user.requested_friends.count %>
+<% if pending_friends > 0 %>
+  <h3><%= link_to  I18n.t('layout.my_friends_list'), "#", :class => "opener" %></h3>
+<% end %>
+<div class="slide">
+  <% if pending_friends > 0 %>
+    <p><%= pending_friends_link  %></p>
+  <% end %>
+  <% if @latest_receive_gift.to_i > 0 %>
+    <p><%= received_gifts_link_alert(@latest_receive_gift) %></p>
+  <% end %>
+<%# if params[:controller] == 'friends' %>
+<!--<p><%#= link_to I18n.t('layout.import_contacts'), import_user_contacts_path(current_user)  %></p>
+<%# if current_user.imported_contacts.count > 0 %>
+<p><%#= link_to I18n.t('layout.my_contacts'), user_contacts_path(current_user)  %></p>-->
+<%# end %>
+<%# end %>
+</div>

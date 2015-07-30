@@ -1,0 +1,25 @@
+<%if @user.valid? %>
+  <% session[:new_user_fields].merge!(params[:user]) %>
+  <% session[:new_user_profile_fields] = {:country => params[:country]} %>
+  <% @profile = Profile.new %>
+  var html = "<%= escape_javascript(render(:partial => 'users/newstep2')) %>"
+  jQuery.fancybox({
+    padding: 15,
+    cyclic: false,
+    overlayShow: false,
+    transitionIn:'elastic',
+    transitionOut:'elastic',
+    speedIn:600,
+    speedOut:600,
+    overlayOpacity:0,
+    titlePosition: 'inside',
+    content : html
+  });
+<% else %>
+  <%  errors = [] %>
+  <% @user.errors.each do |field, error| %>
+    <% errors  << "#{field}"+' '+"#{error}" %>
+  <%  end %>
+  show_flash_messages("<table align='center'><tr><td align='left'><%=  "#{errors.join('<br/>')}".html_safe %></td></tr></table>")
+  jQuery("#popup_body3").html("<%= escape_javascript(render(:partial => 'users/new')) %>");
+<% end %>

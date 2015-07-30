@@ -1,0 +1,44 @@
+#leftnav
+  %p.lefttopper
+  %p.lefthdr
+    = I18n.t('layout.user_menu.my_messages')
+  %ul
+    %li
+      - if params[:action] == 'new'
+        = link_to ("<strong>#{I18n.t('layout.compose')}</strong>").html_safe, new_user_message_path(current_user)
+      - else
+        = link_to I18n.t('layout.compose'), new_user_message_path(current_user)
+    %li
+      - if @message_type == 'inbox'
+        %strong
+          = link_to "#{ message_link_text('Inbox', 'unread') }", messages_box_path(current_user, "inbox")
+      - else
+        = link_to "#{ message_link_text('Inbox', 'unread') }", messages_box_path(current_user, "inbox")
+    %li
+      - if @message_type == 'draft'
+        %strong
+          = link_to "#{ message_link_text('Drafts', 'draft') }", messages_box_path(current_user, "draft")
+      - else
+        = link_to "#{ message_link_text('Drafts', 'draft') }", messages_box_path(current_user, "draft")
+    %li
+      - if @message_type == 'sent'
+        %strong
+          = link_to I18n.t('layout.sent'), messages_box_path(current_user, "sent")
+      - else
+        = link_to I18n.t('layout.sent'), messages_box_path(current_user, "sent")
+    %li
+      - if params[:controller] == 'message_templates'
+        %strong
+          = link_to I18n.t('layout.templates'), user_message_templates_path(current_user)
+      - else
+        = link_to I18n.t('layout.templates'), user_message_templates_path(current_user)
+
+  %br{ :clear => "all" }
+  =# render :partial => "layouts/left_menu_adds"
+  %p.leftbtm
+
+#rtcontent
+  #toprtshdw
+  = render :partial => partial_file
+  #btmrtshdw
+%br{ :clear => "all" }

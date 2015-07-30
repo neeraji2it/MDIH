@@ -1,0 +1,37 @@
+
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; background-color:#f5f0de; color:#6a5f39;" id="wrap">
+  <a href="http://www.mydateishere.com">
+    <div style="font-family:Arial, Helvetica, sans-serif;height:155px;" id="toparea1">
+      <img border="0" width="815px" src="<%= @url %>/assets/topbg.jpg" alt="">
+    </div>
+  </a>
+  <div  style="font-family:Arial, Helvetica, sans-serif;font-size:12px; line-height:20px; padding:30px;" class="textarea">
+    <p style="margin:0 0 20px 0;">
+
+
+
+    <div style="text-align:center;">
+      <img src="<%= @url %>/assets/birthday_cake_2.JPG">
+    </div>
+    <div style="padding: 10px">
+      Dear <b><%= @user.login %></b>, <br /><br />
+      HAPPY BIRTHDAY! <br />
+      We wish you a great day full of joy and happiness. To help with that MyDateIsHere.com is giving you <%= @birthday_credits %>  credits as a gift to celebrate this important day. You can use this credits to purchase virtual gifts for your friends or your special person.
+      <br /><br />
+      MyDateIsHere.com team.
+      <br /><br />
+    </div>
+
+
+    </p>
+    <hr style="clear:both;font-family:Arial, Helvetica, sans-serif;height: 1px; background: #ccc4aa; border: 0; margin:0 0 20px 0;" class="dark" />
+  </div>
+  <div  style="font-family:Arial, Helvetica, sans-serif;background-color:#1f4f7b; color:#fff; font-size:12px; padding:20px; text-align:center;" class="footer"></div>
+</div>
+<br />
+<div  style="font-family:Arial, Helvetica, sans-serif; width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer"></div><br />
+
+<div style="font-family:Arial, Helvetica, sans-serif;width:799px; margin:0 auto; text-align:center; font-size:12px; color:#999;" class="disclaimer">
+  This email was sent to <%= @user.email %>.<br />
+  Please add donotreply@mail.mydateishere.com  to your address book to ensure our emails reach your inbox!
+</div><br />

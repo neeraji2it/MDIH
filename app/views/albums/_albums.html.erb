@@ -1,0 +1,17 @@
+<div id="popup-6" class="lightbox popup-box popup-photos">
+  <div class="popup-box-holder">
+    <header class="heading">
+      <h3>photo albums</h3>
+      <a href="#" class="close" id="fancybox_close" title="close">close</a>
+    </header>
+    <% if @albums.empty? %>
+      <div id="empty" align="center">
+        No Albums
+      </div>
+    <% else %>
+    <div id="more_popup_albums">
+      <%= render :partial => "ajax_albums_popup" %>
+    </div>
+    <% end %>
+  </div>
+</div>

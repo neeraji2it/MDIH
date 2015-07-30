@@ -1,0 +1,50 @@
+.whitehr
+  %p.greenhdrsm
+    = I18n.t('gift.label.send_a_virtual_gift')
+#msginbox
+  .cartleftnav
+    %p.greencart{:align => "right"}
+      = I18n.t('gift.label.cart')
+    %p{:align => "center"}
+      = link_to image_tag(@user.profile ? @user.profile.avatar.url(:default) : "default_avatar.jpg", :height => 120), user_path(@user)
+    %h1
+      = @user.display_name
+    %p
+      = @user.age
+      = I18n.t('gift.label.year_old')
+      = @user.humanized_gender
+      %br
+      - if @profile = @user.profile
+        = I18n.t('general_word.from')
+        = @profile.city
+        = @profile.state
+        = @profile.country
+        %br
+
+  %div
+    %table{ :width => "70%" }
+      %tr
+        %td{ :valign => "top", :width => "30%" }
+          %div{:class => 'grid1and2'}
+            = link_to image_tag(@product.photo.url(:default)), @product.photo.url(:original), :id => "single_image"
+            %br
+            %strong
+              = @product.name
+              %br
+              = I18n.t('gift.label.credits')
+              = @product.credits
+        %td
+          = form_tag(send_to_friend_user_gift_path(@user, @product), :method => :post) do
+            %table{ :width => "100%" }
+              %tr
+                %td{:style => "font-size: 12px;"}
+                  = render :partial => "send_gift_form"
+              %tr
+                %td{ :valign => "top" }
+                  = submit_tag I18n.t('links.submit.send')
+                  = link_to I18n.t('links.back'), send_gifts_user_gifts_path(@user, :page => params[:page])
+
+    %br{:clear => "all"}
+.whitehr
+  %p.greenhdrsm
+    = I18n.t('gift.label.send_a_virtual_gift')

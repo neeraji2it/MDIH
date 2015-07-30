@@ -1,0 +1,17 @@
+<% if @status == true  %>
+  <%flash.now[:error] = I18n.t('session.create.error')%>
+  <%if params[:login_from_signup]%>
+    <%  @user = User.new %>
+    jQuery("#popup_body").html("<%= escape_javascript(render(:partial => 'users/new')) %>");
+  <%else%>
+    jQuery("#login_flash").html("<%= "#{flash.now[:error]}" %>");
+  <%end%>
+<% else %>
+  <%error = "#{I18n.t('session.create.error1')} <br />#{I18n.t('session.create.error2')}<a href='/users/reactivate_account/#{params[:login]}'>here</a> #{I18n.t('session.create.error3')}"%>
+  <% if params[:login_from_signup] %>
+    <%  @user = User.new %>
+    jQuery('login__signup_flash').html("<%= "#{error}" %>
+  <%else%>
+    jQuery('login_flash').html("<%= "#{error}" %>
+  <%end%>
+<%end%>

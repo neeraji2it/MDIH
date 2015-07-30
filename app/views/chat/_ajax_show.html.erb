@@ -1,0 +1,26 @@
+<% @messages.each do |message| %>
+  <div id="message_<%= message.id %>" class="message-item <%= message.sender.id == current_user.id ? "my-message" : ""%>">
+    <article class="message-item-holder">
+      <ul class="message-info">
+        <li><%= message.sender.id == current_user.id ? "Me" : message.sender.display_name %></li>
+        <li><%= message.created_at.strftime("%d/%m/%y") rescue ""%></li>
+        <li><%= message.created_at.strftime("%H:%M") rescue ""%></li>
+      </ul>
+      <p><%= message.text %></p>
+      <%= hidden_field_tag :date, "#{message.created_at.strftime("%d/%m/%y") rescue ""}"  %>
+      <%= hidden_field_tag :time, "#{message.created_at.strftime("%H:%M") rescue ""}"  %>
+    </article>
+    <% if message.sender.id == current_user.id %>
+      <%= link_to_function "delete", "delete_chat_message(#{message.id})", :class=>"delete-link" %>
+    <% end %>
+  </div>
+<% end %>
+<% if @messages.total_pages > @messages.current_page %>
+  <div id="more_chats_link">
+    <input type="hidden" value="<%= @messages.current_page+1 %>" id="chats_page" />
+    <%= link_to_function "more", "more_chats(#{@reciever.id}, #{@messages.current_page+1})",:class => "btn-more", :title => "click for more chats" %>
+  </div>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

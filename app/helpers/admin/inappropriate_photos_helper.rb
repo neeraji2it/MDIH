@@ -1,0 +1,2 @@
+module Admin::InappropriatePhotosHelper
+end

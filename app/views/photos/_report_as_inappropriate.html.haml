@@ -1,0 +1,13 @@
+%p{ :style => "font-size: 17px;border-bottom: 1px solid #8DB986;" }
+  = I18n.t('photo.label.report_photo_inappropriate')
+= form_for @inappropriate_photo, :url => report_as_inappropriate_user_album_photo_path(@photo.album.user, @photo.album, @photo) , :remote => true, :html => { :method => "post" } do |f|
+  %table{ :cellspacing => "0", :style => "padding-top: 5px;", :width => "100%", :cellpadding => "0" }
+    %tr
+      %td{:width => "160px", :valign => "top"}
+        = image_tag(@photo.image.url(:medium))
+      %td{:valign => "top"}
+        = I18n.t('photo.label.comment')
+        %br
+        = f.text_area :comment, :rows => 10, :cols => 40
+        %br
+        = f.submit I18n.t('links.submit.submit1')

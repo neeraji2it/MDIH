@@ -1,0 +1,37 @@
+<div id="feedback_heading">
+  <h3><%= I18n.t('feedback.label.feedback1')%></h3>
+</div>
+<div style="padding: 12px;">
+  <p><%= I18n.t('feedback.label.please_leave_us') %></p>
+  <%= form_for :feedback, :as => @feedback, :url => "/feedbacks", :html => {:id => "feedback_form"} do |f| %>
+    <table width="100%" cellspacing="4" cellpadding="0">
+      <tr>
+        <td valign="top"><%= I18n.t('feedback.feedback_mailer.subject') %></td>
+        <td>
+          <%= validation_error(@feedback.errors["subject"]) %>
+          <%= f.select 'subject', ['Problem', 'Suggestion', 'Question', 'Other'] %>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <%= I18n.t('feedback.label.email') %>
+        </td>
+        <td>
+          <%= validation_error(@feedback.errors["email"]) %>
+          <%= f.text_field 'email' %>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"><%= I18n.t('feedback.label.comment') %></td>
+        <td>
+          <%= validation_error(@feedback.errors["comment"]) %>
+          <%= f.text_area 'comment', :rows => 10, :cols => 35 %>
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><%= f.submit I18n.t('feedback.label.send') %></td>
+      </tr>
+    </table>
+  <% end %>
+</div>

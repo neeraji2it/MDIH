@@ -1,0 +1,53 @@
+<div class="holder">
+  <% if @albums.empty? %>
+    <div id="empty" align="center">
+      No Albums
+    </div>
+  <% else %>
+    <!-- album item -->
+    <% @albums.each_with_index do |album, index| %>
+       <% count = index + 1 %>
+      <div class="album-item">
+        <div class="photo-box">
+          <div class="visual">
+            <div class="visual-holder">
+              <a href="#" class="visual-frame">
+                <% if album.status == true %>
+                  <span class="default-mask">Profile</span>
+                <% elsif index == 0 %>
+                  <span class="default-mask">Profile</span>
+                <% end %>
+                <%=  link_to image_tag(album.cover_photo ? album.cover_photo.image.url(:medium) : "empty_album.jpg", :width=>"96", :height=>"104", :alt=>"image description"), user_album_path(@user, album) %>
+              </a>
+            </div>
+          </div>
+          <%  if @user.id == current_user.id %>
+            <nav class="photo-nav">
+              <ul>
+                <li><%= link_to "add", user_album_path(@user, album), :class => "add" %></li>
+                <li><%= (album.status == false and index != 0) ? (link_to_function "edit", "edit_album(#{current_user.id}, #{album.id})", :class => "edit") : "" %></li>
+                <li><%= (album.status == false and index != 0) ? (link_to "delete", user_album_path(current_user, album), :confirm => I18n.t('album.label.confirm_delete_album'), :method => :delete,  :class => "delete") : "" %></li>
+              </ul>
+            </nav>
+          <% end %>
+        </div>
+        <div class="text-block">
+          <h3><%= link_to album.name, user_album_path(@user, album) %></h3>
+          <span><%= album.photos.count %> Photos</span>
+          <span>Created: <%= album.created_at.strftime("%B %d, %Y") %></span>
+          <span>Updated: <%= album.updated_at.strftime("%B %d, %Y") %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <br/>
+  <% if @albums.total_pages > @albums.current_page %>
+    <div id="more_albums_link">
+      <input type="hidden" value="<%= @albums.current_page+1 %>" id="albums_page" />
+      <%= link_to_function "more", "more_albums(#{@user.id}, #{@albums.current_page+1})",:class => "btn-more", :title => "click for more  albums" %>
+    </div>
+  <% end %>
+<% end %>
+  <div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

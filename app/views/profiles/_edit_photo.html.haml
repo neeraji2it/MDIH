@@ -1,0 +1,15 @@
+= form_for @profile, :remote => true, :url => update_photo_user_profiles_path(current_user),:html => {:method => :post, :multipart => true, :id => 'profile_photo', :name => "profile_photo"} do |f|
+  %table{:width => "100%", :cellspacing => "0", :cellpadding => "0"}
+    %tr
+      %td{:style => "font-size: 16px;font-weight: bold;"}
+        = I18n.t('profile.label.upload_profile_pic')
+        <hr class="brown">
+    %tr
+      %td
+        = validation_error(@profile.errors["avatar"])
+        = f.file_field :avatar
+        <br />
+        = I18n.t('profile.label.select_an_image')
+    %tr
+      %td
+        = f.submit I18n.t('links.submit.submit1'), :onclick => "upload_profile_photo()"

@@ -1,0 +1,34 @@
+#outergrid
+  - i = 1
+  - for product in @products
+    - class_name = 'grid1and2'
+    - if i == 3
+      - class_name = 'grid3'
+    %div{:class => class_name}
+      =# link_to image_tag(product.photo.url(:default)), product.photo.url(:original), :id => "single_image"
+      = link_to_function image_tag(product.photo.url(:default)), "window.open('#{product.photo.url(:original)}', 'name','height=500,width=500');"
+      %br
+      %strong
+        = product.name
+        %br
+          = I18n.t('gift.label.credits')
+        = product.credits
+      %br
+      =# link_to_remote image_tag('send_gift.gif'), :url => send_to_friend_user_gift_path(@user, product), :method => :post, :html => {:onclick => "jQuery('#ajax_loader_big').show()"}
+      - if current_user.credits.to_f >= product.credits
+        = link_to image_tag('send_gift.gif'),  send_gift_user_gift_path(@user, product), :remote => :true, :method => :get, :onclick => "jQuery('#ajax_loader_big').show()"
+      - else
+        = link_to_function image_tag('send_gift.gif'), "alert('You do not have enough credits to send this gift. Please reacharge your credits')"
+    - if i == 3
+      - i = 1
+      %br{:clear => "all"}
+      %br
+    - else
+      - i += 1
+%br{:clear => "all"}
+- if @products.total_pages > @products.current_page
+  #more_gifts_link
+    %input{:type => "hidden", :value => @products.current_page+1, :id => "gifts_page"}
+    %br{:clear => "all"}
+    %div{:style => "text-align: center;"}
+      = link_to_function I18n.t('general_word.load_more'), "get_more_gifts(#{@user.id}, #{@products.current_page+1})", :class => "small_green"

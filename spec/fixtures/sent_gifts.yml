@@ -1,0 +1,91 @@
+sent_gift1:
+    id: 1
+    user_id: 1
+    product_id: 1
+    sent_to: 2
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift2:
+    id: 2
+    user_id: 1
+    product_id: 2
+    sent_to: 2
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift3:
+    id: 3
+    user_id: 1
+    product_id: 3
+    sent_to: 2
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift4:
+    id: 4
+    user_id: 2
+    product_id: 4
+    sent_to: 1
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift5:
+    id: 5
+    user_id: 1
+    product_id: 1
+    sent_to: 3
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift6:
+    id: 6
+    user_id: 3
+    product_id: 3
+    sent_to: 1
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift7:
+    id: 7
+    user_id: 2
+    product_id: 1
+    sent_to: 3
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift8:
+    id: 8
+    user_id: 1
+    product_id: 5
+    sent_to: 3
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift9:
+    id: 9
+    user_id: 1
+    product_id: 3
+    sent_to: 3
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+sent_gift10:
+    id: 10
+    user_id: 2
+    product_id: 5
+    sent_to: 3
+    sent_on: <%= Time.now %>
+    sender_status: sent
+    receiver_status: received
+
+

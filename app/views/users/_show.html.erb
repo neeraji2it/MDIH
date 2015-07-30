@@ -1,0 +1,166 @@
+<div class="my-form">
+  <div class="text-block">
+    <% if @user.profile %>
+      <% if !@user.profile.i_am_up_to.blank? %>
+        <h3>I am up to</h3>
+        <p><%= @user.profile.i_am_up_to rescue ""%></p>
+      <% end %>
+    <% end %>
+    <h3>Basic Information</h3>
+    <p><%= !@user.age.blank? ? "#{@user.age} yr old /" : "" %>  <%= @user.gender %> / <%= @user.orientation %> <% if @user.profile  %><%= !@user.profile.marital_status.to_s.blank? ?  "/ #{@user.profile.marital_status}" : "" %> <%= !@user.profile_address.to_s.blank? ? "/ #{@user.profile_address.to_s}" : "" %><% end %></p>
+    <% if  !@user.looking_for.to_s.blank? %>
+      <h3>Looking For...</h3>
+      <p><%= !@user.looking_for.to_s.blank? ? "#{@user.looking_for.split(',').join(', ')}" : "" %></p>
+    <% end %>
+    <% if  !@user.interested_in.to_s.blank? %>
+      <h3><%= "#{I18n.t('user.label.interested_in')}..." %></h3>
+      <p><%= ("#{@user.interested_in.split(',').map{|inter| inter.capitalize}.join(', ')}").html_safe if !@user.interested_in.to_s.blank? %></p>
+    <% end %>
+  </div>
+</div>
+<% if @user.albums.where("status = true").present? %>
+  <div class="profile-slider profile-slider-2 profile-slider-3">
+    <div class="mask">
+      <ul>
+        <% @user.albums.where("status = true").first.photos.each do |photo| %>
+          <li>
+            <%= link_to image_tag(photo.image.url(:original), :width => "40", :height => "40", :alt => "#{photo.image_file_name}"),"#{photo.image.url(:original)}", :id => "gallery1" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <a href="#" class="btn-prev">prev</a>
+    <a href="#" class="btn-next">next</a>
+  <%= link_to  "#{@user.albums.where("status = true").first.photos.count} pics", user_albums_path(@user), :class => "link" %>
+  </div>
+<% end %>
+<% if current_user.id != @user.id  %>
+  <div class="message-nav-4">
+    <%= render :partial => "layouts/all_links", :locals => {:user => @user} %>
+  </div>
+<% end %>
+<% @profile = @user.profile %>
+<% if @profile %>
+  <% if can_display_profile_quations_info?(@profile) %>
+    <!-- content box -->
+    <div class="content-box open-box active">
+      <header class="heading">
+        <h2>questions</h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <div class="quest-container vscrollable">
+          <h3>1. A teaser about myself in one sentence...</h3>
+          <p><%= @profile.who_am_i %></p>
+          <h3>2. My passion is...</h3>
+          <p><%= @profile.what_is_my_passion %></p>
+          <h3>3. The most important things in my life are...</h3>
+          <p><%= @profile.important_things %></p>
+          <h3>4. Remind me to tell you this funny story when we meet...</h3>
+          <p><%= @profile.funny_story_when_we_meet %></p>
+          <h3>5. My pet peeves are...</h3>
+          <p><%= @profile.my_pet_peeves_are %></p>
+          <h3>6. I am really good at...</h3>
+          <p><%= @profile.i_am_really_good_at %></p>
+          <h3>7. My favorite books, music and movies are...</h3>
+          <p><%= @profile.favorite_books_music_movies %></p>
+          <h3>8. The most embarrassing thing that happened to me is...</h3>
+          <p><%= @profile.embarrassing_thing %></p>
+          <h3>9. If I could be anything I want, I would be...</h3>
+          <p><%= @profile.anything_i_want %></p>
+          <h3>10. Things I would never do or tell on the first date...</h3>
+          <p><%= @profile.things_i_would_never_do %></p>
+          <h3>11. My friends tell me that I am...</h3>
+          <p><%= @profile.my_friends_tell_me_that_i_am %></p>
+          <h3>12. Something private about me that you'd never think to ask...</h3>
+          <p><%= @profile.private_about_me %></p>
+          <h3>13. 5 Things in my bucket list...</h3>
+          <p><%= @profile.my_bucket_list %></p>
+          <h3>14. On a normal weekend I...</h3>
+          <p><%= @profile.on_a_normal_weekend_i %></p>
+          <h3>15. The most interesting place I have been to...</h3>
+          <p><%= @profile.most_interesting_place %></p>
+          <h3>16. The weirdest thing that I know...</h3>
+          <p><%= @profile.weirdest_thing_that_i_know %></p>
+          <h3>17. I fear the most...</h3>
+          <p><%= @profile.i_fear_the_most %></p>
+          <h3>18. My best feature is...</h3>
+          <p><%= @profile.my_best_feature_is %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <%  if can_display_profile_personal_info?(@profile) %>
+    <!-- content box -->
+    <div class="content-box open-box active">
+      <header class="heading">
+        <h2>personal</h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <ul class="def-list">
+          <% if !@profile.height.to_s.blank? %>
+            <li><strong>Height</strong><span><% if @profile.height_units.to_s == 'Centimeters' %><%= @profile.height %><% else %><%= display_cm_to_inches(@profile.height)%><% end %></span></li>
+          <% end %>
+          <% if !@profile.ethnicity.to_s.blank? %>
+            <li><strong>Ethnicity</strong><span><%= @profile.ethnicity %></span></li>
+          <% end %>
+          <% if !@profile.body_type.to_s.blank? %>
+            <li><strong>Body Type</strong><span><%= @profile.body_type %></span></li>
+          <% end %>
+          <% if !@profile.languages_spoken.to_s.blank? %>
+            <li><strong>Languages</strong><span><%= @profile.languages_spoken %></span></li>
+          <% end %>
+          <% if !@profile.marital_status.to_s.blank? %>
+            <li><strong>Marital Status</strong><span><%= @profile.marital_status %></span></li>
+          <% end %>
+          <% if !@profile.want_children.to_s.blank? %>
+            <li><strong>Children</strong><span><%= @profile.want_children %></span></li>
+          <% end %>
+          <% if !@profile.religion.to_s.blank? %>
+            <li><strong>Religion</strong><span><%= @profile.religion %></span></li>
+          <% end %>
+          <% if !@profile.smoke.to_s.blank? %>
+            <li><strong>Smoke</strong><span><%= @profile.smoke %></span></li>
+          <% end %>
+          <% if !@profile.drink.to_s.blank? %>
+            <li><strong>Drink</strong><span><%= @profile.drink %></span></li>
+          <% end %>
+          <% if !@profile.drugs.to_s.blank? %>
+            <li><strong>Drugs</strong><span><%= @profile.drugs %></span></li>
+          <% end %>
+          <% if !@profile.pets.to_s.blank? %>
+            <li><strong>Pets</strong><span><%= @profile.pets %></span></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  <% if can_display_profile_professional_info?(@profile) %>
+    <!-- content box -->
+    <div class="content-box open-box active">
+      <header class="heading">
+        <h2>professional</h2>
+        <a href="#" class="opener">open/close</a>
+      </header>
+      <div class="slide">
+        <ul class="def-list">
+          <% if !@profile.education_level.to_s.blank? %>
+            <li><strong>Education</strong><span><%= @profile.education_level %></span></li>
+          <% end %>
+          <% if !@profile.income_level.to_s.blank? %>
+            <li><strong>Income</strong><span><%= @profile.income_level %></span></li>
+          <% end %>
+          <% if !@profile.profession.to_s.blank? %>
+            <li><strong>Job</strong><span><%= @profile.profession %></span></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<script type="text/javascript" >
+  jQuery(document).ready(function() {
+    $('a#gallery1').lightBox();
+  });
+</script>

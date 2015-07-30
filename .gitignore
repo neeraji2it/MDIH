@@ -1,0 +1,17 @@
+*.tmproj
+.tmp*
+nbproject/
+Capfile
+config/database_yml
+config/deploy.rb
+db/schema.rb
+db/cstore/**
+log/*.log
+tmp/**/*
+db/*.sqlite3
+doc/api
+doc/app
+doc/plugins
+doc/*.dot
+public/uploaded_files/**
+

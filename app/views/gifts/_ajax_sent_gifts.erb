@@ -1,0 +1,37 @@
+<% if @gifts.empty? %>
+  <div id="empty" align="center">
+    No sent gifts
+  </div>
+<% else %>
+  <% for gift in @gifts %>
+    <!-- gift item -->
+    <!--<div class="<%#= cycle('gift-item', 'my-gift') %>">-->
+    <div id="message_<%= gift.id %>"class="message-item <%= gift.receiver.id == current_user.id ? "my-gift" : ""%>">
+      <article class="message-item-holder">
+        <%= link_to image_tag(gift.product.photo.url(:default),:width=>"86", :height=>"99"), gift.product.photo.url(:original) , :class=>"alignright", :id => "single_image_#{gift.product.id}",:title => "#{gift.product.photo_file_name}"  %>
+        <div class="messages-gift-holder">
+          <ul class="message-info">
+            <li><%= gift.receiver.display_name %></li>
+            <li><%= gift.sent_on.strftime("%d/%m/%y") %></li>
+            <li><%= gift.sent_on.strftime("%H:%M") %></li>
+          </ul>
+          <p><%= gift.message %></p>
+          <div style="color:green;">
+            <%= gift.receiver_status %>
+          </div>
+        </div>
+      </article>
+    <%#= link_to "delete",receiver_gift_path(current_receiver.id, gift), :method => :delete, :remote => true, :confirm => I18n.t('receiver.block.confirm_alert'), :class=>"delete-link", :title => 'delete' %>
+      <%= link_to_function "delete", "delete_gift(#{current_user.id},#{gift.id})", :class=>"delete-link", :title => 'delete' %>
+    </div>
+  <% end %>
+  <% if @gifts.total_pages > @gifts.current_page %>
+    <div id="more_sent_gifts_link">
+      <input type="hidden" value="<%= @gifts.current_page+1 %>" id="more_sent_gifts_page" />
+      <%= link_to_function "more", "more_sent_gifts(#{current_user.id},#{@user.id}, #{@gifts.current_page+1})",:class => "btn-more", :title => "click for more sent gifts" %>
+    </div>
+  <% end %>
+<% end %>
+<div id="auto_scroll_img" style="display: none;text-align: center;">
+  <%= image_tag("/assets/icons/ajax-loader.gif") %>
+</div>

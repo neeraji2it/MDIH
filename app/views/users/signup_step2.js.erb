@@ -1,0 +1,45 @@
+<% errors = [] %>
+<% signup_status = false %>
+<% captcha_status = yacaph_validated? %>
+<%  if params[:accept] == 'yes' and captcha_status %>
+  <% session[:new_user_profile_fields] = session[:new_user_profile_fields] || {} %>
+  <% @user = User.new(session[:new_user_fields]) %>
+  <%  params[:profile] = params[:profile] || {} %>
+  <%  @profile = Profile.new(params[:profile].merge(session[:new_user_profile_fields])) %>
+  <%  if @profile.valid? and @user.profile = @profile and @user.save && UserMailer.signup_notification(@user).deliver %>
+    <% album = Album.create(:user_id => @user.id,:name => "default",:description => "default album", :status => true) %>
+    <%  photo = Photo.create(:user_id => @user.id,:album_id => album.id,:image => @profile.avatar) %>
+    <%  album.update_attribute(:cover_photo_id,photo.id) %>
+    <% session.delete(:new_user_fields) %>
+    <%  session.delete(:new_user_profile_fields) %>
+    <%  signup_status = true %>
+    <% errors << "<span style='color:green;font-size:20px;'>#{I18n.t('user.create_old.notice')}</span>" %>
+  <% else %>
+    <%  @profile.errors.each_with_index do |error| %>
+      <%  errors << ("#{error[0]}" == 'avatar' ? "Photo" : "#{error[0]}")+" "+"#{error[1]}" %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% @profile = Profile.new %>
+  <%  errors << I18n.t('user.create_old.captcha_error') if !captcha_status %>
+  <%  errors << I18n.t('user.signup_step2.accept_agreement') if params[:accept] != 'yes' %>
+<% end %>
+<% if signup_status %>
+  var html = "<%= escape_javascript(render(:partial => 'users/signup_step2')) %>"
+  jQuery.fancybox({
+  padding: 15,
+  cyclic: false,
+  overlayShow: true,
+  transitionIn:'elastic',
+  transitionOut:'elastic',
+  speedIn:600,
+  speedOut:600,
+  overlayOpacity:0,
+  titlePosition: 'inside',
+  content : html
+  });
+<% else %>
+  <%  errors << I18n.t('user.signup_failed') if errors.empty? %>
+  show_flash_messages("<table align='center'><tr><td align='left'><%=  "#{errors.join('<br/>')}".html_safe %></td></tr></table>")
+<% end %>
+jQuery('#ajax_loader_big_div').hide();

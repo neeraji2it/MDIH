@@ -1,0 +1,9 @@
+## YAML Template.
+
+draft1:
+    to_id: 2
+    message_id: 3
+
+draft2:
+    to_id: 3
+    message_id: 3

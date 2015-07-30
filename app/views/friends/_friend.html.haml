@@ -1,0 +1,9 @@
+%div{ :style => "float:left;width:100px;" }
+  %div{:style => "float:left;width: 80px; height: 80px; overflow: hidden;padding: 5px;"}
+    = link_to image_tag(friend.profile ? friend.profile.avatar.url(:other) : "default_avatar.jpg", :width => 80), user_path(friend)
+  %br
+  = link_to friend.display_name, user_path(friend.id)
+  %br
+  = I18n.t('general_home.age') :
+  = friend.age
+

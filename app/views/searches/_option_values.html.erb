@@ -1,0 +1,15 @@
+<% for option in options %>
+  <% value = option == 'Any' ? "" : (field_name == 'income_level' ? option.split('-').last : option) %>
+  <table>
+    <tr>
+      <td>
+        <% if field_type and field_type == 'radio_button' %>
+          <%= radio_button_tag "#{field_name}", "#{ value }"%>
+        <% else%>
+          <%= check_box_tag "#{field_name}", "#{option}"%>
+        <% end %>
+      </td>
+      <td><%= option %></td>
+    </tr>
+  </table>
+<% end %>

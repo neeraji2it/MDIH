@@ -1,0 +1,31 @@
+<% if params[:controller] == "users" && params[:action] == "show" %>
+  <%  @user =  begin User.find(params[:id]) rescue nil end %>
+  <% if !@user.facebook_id.present? %>
+    <%= link_to image_tag(@user.profile ?   @user.profile.avatar.url(:original)  : "/assets/default_avatar.jpg", :width => 172, :id => "single_image",:title => "Optional Caption.", :alt => "#{@user.display_name}", :title => "#{@user.display_name}"),(@user.profile ?   @user.profile.avatar.url(:original)  : "/assets/default_avatar.jpg"), :id => "single_image" %>
+  <% else %>
+    <%= link_to image_tag(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ?  @user.profile.avatar.url(:original) : @user.fb_big_image) : @user.fb_big_image, :width => 172,:title => "Optional Caption.", :alt => "#{@user.display_name}", :title => "#{@user.display_name}"),(@user.profile ? (@user.profile.avatar_file_name != "picture_type_large.jpg" ?  @user.profile.avatar.url(:original) : @user.fb_big_image) : @user.fb_big_image), :id => "single_image" %>
+  <% end %>
+  <h2>Welcome <%= @user.display_name %></h2>
+  <% if current_user.id != @user.id %>
+    <div class="status-row" style="text-align: center; float: right; margin-right: 50px;">
+      <%= user_online_status_image(@user) %>
+      <% unless @user.available_today == false %>
+        <span class='free'>free</span>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render :partial => "/layouts/free_chat_forms", :locals => {:user => @user} %>
+  <% end %>
+<% else %>
+  <% if !current_user.facebook_id.present? %>
+    <%= link_to image_tag(current_user.profile ?   current_user.profile.avatar.url(:original)  : "/assets/default_avatar.jpg", :width => 172, :id => "single_image",:title => "Optional Caption.", :alt => "#{current_user.display_name}", :title => "#{current_user.display_name}"),(current_user.profile ?   current_user.profile.avatar.url(:original)  : "/assets/default_avatar.jpg"), :id => "single_image" %>
+  <% else %>
+    <%= link_to image_tag(current_user.profile ? (current_user.profile.avatar_file_name != "picture_type_large.jpg" ?  current_user.profile.avatar.url(:original) : current_user.fb_big_image) : current_user.fb_big_image, :width => 172,:title => "Optional Caption.", :alt => "#{current_user.display_name}", :title => "#{current_user.display_name}"),(current_user.profile ? (current_user.profile.avatar_file_name != "picture_type_large.jpg" ?  current_user.profile.avatar.url(:original) : current_user.fb_big_image) : current_user.fb_big_image), :id => "single_image" %>
+  <% end %>
+  <h2>Welcome <%= current_user.display_name %></h2>
+  <%= render :partial => "/layouts/free_chat_forms", :locals => {:user => current_user} %>
+<% end %>
+<% User.where("available_today = #{true}").all.each do |user| %>
+  <% user.available_today_expire %>
+<% end %>
+

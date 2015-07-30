@@ -1,0 +1,31 @@
+<div class="content-box">
+  <header class="heading">
+    <h2><%= I18n.t('friend.requested_friends.title')  %></h2>
+  </header>
+  <div class="holder">
+    <% for friend in @pending_friends %>
+      <div class="chat-item">
+        <div class="chat-item-frame">
+          <div class="visual" id='friend_visual_<%=  friend.id %>'>
+            <% if !friend.facebook_id.present? %>
+              <%= link_to image_tag(friend.profile ? friend.profile.avatar.url(:default)  : "/assets/default_avatar.jpg", :width => 96, :height => 104), user_path(friend), :title => "#{friend.display_name}(#{friend.gender})" %>
+            <% else %>
+              <%= link_to image_tag(friend.profile ? (friend.profile.avatar_file_name != "picture_type_large.jpg" ?  friend.profile.avatar.url(:default) : friend.fb_big_image) : friend.fb_big_image, :width => 96, :height => 104), user_path(friend), :title => "#{friend.display_name}(#{friend.gender})" %>
+            <% end %>
+          </div>
+          <div class="text-block">
+            <strong><%= link_to friend.display_name, user_path(friend) %></strong> <%= "(#{friend.gender})" %><br/>
+            <%= "Age : #{friend.age} years " %><br/>
+            <% if friend.profile %>
+              <%= "From #{[friend.profile.city, friend.profile.state, friend.profile.country].delete_if{|a| a.to_s.blank?}.join(', ')}" %><br/><br/>
+            <% end %>
+              <p><%= link_to I18n.t('links.confirm'),  confirm_or_ignore_user_friend_path(current_user, friend, :status => "accepted"), :remote => true, :method => 'post',  :style => "color: green" %></p>
+              <p><%= link_to I18n.t('links.ignore'),  confirm_or_ignore_user_friend_path(current_user, friend, :status => "ignored"), :remote => true,  :method => 'post',  :style => "color: red" %></p>
+          </div>
+        </div>
+      </div>
+      <div id="request_link_#{friend.id.to_s }"></div>
+      <div id="status_#{friend.id.to_s }"></div>
+    <% end %>
+  </div>
+</div>

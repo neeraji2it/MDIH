@@ -1,0 +1,39 @@
+%div{:style => "float:right;color:#494949"}
+  - if @photos.previous_page and @page.to_i != 1 and false
+    = link_to I18n.t('photo.label.previous'), fancy_show_user_album_photos_path(@user, @photo.album_id, :page => (@page.to_i - 1)), :remote => true, :html => {:class => "small_green"}
+  - else
+    =# Previous
+  =# |
+  - if @photos.next_page and @page.to_i != 8 and false
+    = link_to I18n.t('photo.label.next'), fancy_show_user_album_photos_path(@user, @photo.album_id, :page => (@page.to_i + 1)), :remote => true, :html => {:class => "small_green"}
+  - else
+    =# Next
+%div{:style=>"width:100%;height:100%;"}
+  = image_tag(@photo.image.url(:original))
+- if @photos.previous_page and @page.to_i != 1
+  %div{:onmouseover => "jQuery('#previous').show();", :onmouseout => "jQuery('#previous').hide();", :style => "cursor:pointer;display: inline; left: 2%; position: absolute; height: 100%; top: 0%;width: 20%"}
+    &nbsp;
+  %div{:onmouseover => "jQuery('#previous').show();", :onmouseout => "jQuery('#previous').hide();",:style => "cursor:pointer;display: none; left: 10%; position: absolute; height: 100%; top: 0%;", :id => "previous"}
+    = link_to image_tag('/assets/icons/fancy_nav_left.png'), fancy_show_user_album_photos_path(@user, @photo.album_id, :page => (@page.to_i - 1)), :remote => true, :style => "left: 20%;display: block;top:40%;position: absolute;"
+
+- if @photos.next_page and @page.to_i != 8
+  %div{:onmouseover => "jQuery('#next').show();", :onmouseout => "jQuery('#next').hide();", :style => "float:right;cursor:pointer;display: inline; right: 2%; position: absolute; height: 100%; top: 0%;width: 20%"}
+    &nbsp;
+  %div{:onmouseover => "jQuery('#next').show();", :onmouseout => "jQuery('#next').hide();", :style => "float:right;cursor:pointer;display: none; right: 10%; position: absolute; height: 100%; top: 0%;", :id => "next"}
+    = link_to image_tag('/assets/icons/fancy_nav_right.png'), fancy_show_user_album_photos_path(@user, @photo.album_id, :page => (@page.to_i + 1)), :remote => true, :style => "right: 20%;display: block;top:40%;position: absolute;"
+
+
+#comment_status
+#photo_comments
+  = render :partial => "photos/fancy_comments"
+
+#photo_comment_status{:align => "left"}
+%div{:align => "left"}
+  = form_for(PhotoComment.new, :url => post_comment_user_album_photo_path(current_user, @photo.album, @photo), :remote => true) do |f|
+    %div
+      %div{:style => "float:left;width: 50px; height: 50px; overflow: hidden;padding-right: 10px;padding-left: 5px;"}
+        = image_tag(current_user.profile ? current_user.profile.avatar.url(:other) : "/assets/default_avatar.jpg", :width => 50)
+      %div{:style => "float:left;"}
+        = f.text_area :comment, :cols => "50", :rows => "2"
+      %div{:style => "float:left;"}
+        = f.submit I18n.t('links.submit.post')

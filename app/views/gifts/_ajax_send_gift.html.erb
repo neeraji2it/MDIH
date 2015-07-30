@@ -1,0 +1,23 @@
+<div class="new-message-popup">
+  <header class="heading">
+    <h3><%= I18n.t('gift.label.send_virtual_gift_to') +' '+ "#{@user.display_name}" %> </h3>
+    <a href="#" class="close" id="fancybox_close">close</a>
+  </header>
+  <div class="gifts-form">
+    <div class="col">
+      <%= link_to_function image_tag(@product.photo.url(:default)), "window.open(#{@product.photo.url(:original)}, 'name','height=200,width=150');" %>
+      <br/>
+      <strong><%= @product.name %><br/><%= I18n.t('gift.label.credits') %><%= @product.credits %></strong>
+    </div>
+    <div class="col">
+      <%= form_tag(send_to_friend_user_gift_path(@user, @product), :remote => true, :method => :post) do %>
+        <div id="send_gift_to_friend_status_#{@user.id}"></div>
+        <%= render :partial => "send_gift_form"  %>
+        <div>
+          <%= submit_tag  I18n.t('links.send'), :onclick => "jQuery('#ajax_loader_big').show()", :class => "send-btn" %>
+          <%= button_to_function I18n.t('links.back'), "send_gifts(#{@user.id}, '')", :class => "send-btn", :style => "margin-left: 10px;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<% if @status %>
+  hide_popup();
+  alert(<%= I18n.t('photo.report_as_inappropriate.alert') %>");
+  jQuery("#inappropriate_photo").html("<span style='color:green'><%=I18n.t('photo.report_as_inappropriate.alert') %></span>")
+<%   else%>
+  <%=  @inappropriate_photo_error = I18n.t('photo.report_as_inappropriate.error_occured') %>
+  jQuery("#popup_body").html("<%= escape_javascript(render :partial => "report_as_inappropriate", :layout => false) %>");
+  jQuery("#overlay").show();
+  jQuery("#popup_box").show();
+<%   end%>

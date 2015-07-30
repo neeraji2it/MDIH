@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <link rel= "shortcut icon" href = "/assets/favicon.ico"></link>
+    <title>Free Dating Site for all, Women seeking Women, TS Dating - Free Online Dating for all - MyDateIsHere.com</title>
+    <meta content="English" http-equiv="Content-Language"></meta>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"></meta>
+    <meta name ="description" content="100% Free Online Dating for everyone. A place for everyone seeking a relationship or just friendship. Men Seeking Men, TS singles, men seeking women, women seeking women - MyDateIsHere.com" ></meta>
+    <script src="http://px.smowtion.com/validate?sid=140932" type="text/javascript">
+<% if !BASE_URL.to_s.include?('mydateishere') %>
+<% end %>
+    </script>
+    <meta name="robots" content="noindex"></meta>
+    <%= stylesheet_link_tag    "application","all", "demos", "fancybox", "ie", "jquery-ui-1.8.5.custom","jquery.notifyBar", :media => "all" %>
+    <%= javascript_include_tag 'application', 'jquery-1.7.2.min.js', 'jquery.main.js' , 'jquery.notifyBar.js', "user_nav" %>
+    <%= fb_connect_async_js %>
+    <%= csrf_meta_tag %>
+    <%['notice', 'error', 'warning', 'alert'].each do |f|%>
+      <%if flash[f.to_sym]%>
+        <script type="text/javascript" >
+          jQuery(function () {
+            jQuery.notifyBar({
+              cls: "<%= f %>",
+              html: "<%=  flash[f.to_sym] %>",
+              delay: 3000,
+              animationSpeed: "normal"
+            });
+          });
+        </script>
+      <%end%>
+    <%end%>
+<%# if current_user %>
+<%#= feedback_tab(:position => 'right') %>
+<%#= javascript_include_tag  'jquery.feedback.js' %>
+<%#= stylesheet_link_tag 'feedback' %>
+<%#= render :partial => "layouts/chat_includes" %>
+<%#end%>
+    <%= render :partial => "layouts/google_analytics" %>
+<%# if current_user %>
+<%#= javascript_include_tag 'prototype','juggernaut'%>
+<%# end %>
+  </head>
+  <body class="home">
+    <div id="wrapper">
+      <div class="w1">
+        <header id="header">
+          <div class="header-holder">
+            <div class="bar">
+              <h1 class="logo vcard"><a href="#" class="fn org url">MyDateIsHere</a></h1>
+              <div class="user-box">
+                <%= link_to_function "member login", "show_login_form()",:class=>"user-link"  %>
+                <div id="login_form" style="display:none;z-index:2;">
+                  <%= render :partial => '/sessions/login' %>
+                </div>
+              </div>
+              <!-- social networks -->
+              <ul class="social-networks">
+                <li><a href="#" class="facebook">facebook</a></li>
+                <li><a href="#" class="twitter">twitter</a></li>
+                <li><a href="#" class="google">google+</a></li>
+                <li><a href="#" class="b">b</a></li>
+              </ul>
+            </div>
+            <section class="promo-section">
+              <!-- assets -->
+              <div class="frames">
+                <% @users = User.order('created_at DESC') %>
+                <% @users.first(5).each_with_index do |user, index| %>
+                  <% count = index + 1 %>
+                  <%= image_tag(user.profile ? user.profile.avatar.url(:default) : "/assets/default_avatar.jpg", :width => 60, :height => 60, :class => "image-#{count}", :alt => "#{user.display_name}", :title => "#{user.display_name}") %>
+                <% end %>
+<%#*<img src="assets/img-13.jpg" class="image-1" width="60" height="60" alt="image description">%>
+<%#*<img src="assets/img-14.jpg" class="image-2" width="60" height="60" alt="image description">%>
+<%#*<img src="assets/img-15.jpg" class="image-3" width="60" height="60" alt="image description">%>
+<%#*<img src="assets/img-16.jpg" class="image-4" width="60" height="60" alt="image description">%>
+<%#*<img src="assets/img-17.jpg" class="image-5" width="60" height="60" alt="image description">%>
+              </div>
+              <!-- sign-up form -->
+              <%= form_for User.new, :remote => true, :url => signup_step1_users_path, :html => {:method => "post", :class=>"sign-up-form" } do |f| %>
+                <fieldset>
+                  <div class="sign-box">
+                    <div class="row">
+                      <%= f.label 'i' ,I18n.t('general_word.i_am_a') %>
+                      <%= f.select "orientation", options_for_select(ORIENTATION, "Straight") %>
+                      <%= f.select "gender", options_for_select(GENDERS, "Male") %>
+                      <%= f.label 'looking' ,I18n.t('general_word.looking_for') %>
+                      <%= f.select "looking_for", options_for_select(LOOKING_FOR, "Female") %>
+                    </div>
+                    <div class="container">
+                      <%= f.label 'interested_in:' ,"Interested in:" %>
+                      <ul class="check-list-2">
+                        <%  for interested in HOME_INTERESTED_IN %>
+                          <li>
+                            <%= check_box_tag("interested_in[]", "#{interested}", false ) %>
+                            <%= f.label "interested_i", interested %>
+                          </li>
+                        <% end %>
+                        <li class="last">
+                          <%= check_box_tag "interested_in_", "friends w/benefits", false %>
+                          <%= f.label "interested_i", "friends w/benefits" %>
+                        </li>
+                      </ul>
+                      <%= submit_tag "Sign up free", :class=>"btn-sign" %>
+                    </div>
+                  </div>
+                </fieldset>
+              <% end %>
+            </section>
+          </div>
+        </header>
+        <section id="main">
+          <%= yield %>
+        </section>
+      </div>
+      <footer id="footer">
+        <div class="footer-holder">
+          <div class="footer-frame">
+            <div class="footer-container">
+              <!-- column 1 -->
+              <div class="col-1">
+                <h3>A better way of dating.</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus porta malesuada eros, eu molestie tortor varius id. Morbi dolor metus, faucibus eget bibendum vel, vestibulum vitae quam. In tempor mauris in orci ornare nec dictum sapien dapibus. Etiam fermentum ornare quam id aliquet. Praesent accumsan mollis tincidunt. Sed imperdiet sapien et lectus tincidunt et ultrices libero dignissim.</p>
+                <span class="copy">&copy; 2000-2012&nbsp;&nbsp;&nbsp;MYDATEISHERE&nbsp;&nbsp;&nbsp;<a href="#">Terms and Conditions of Service</a></span>
+              </div>
+              <!-- column 2 -->
+              <div class="col-2">
+                <h3>keep in touch:</h3>
+                <ul class="social">
+                  <li><a href="#" class="twitter">Follow on Twitter</a></li>
+                  <li><a href="#" class="facebook">Follow on facebook</a></li>
+                  <li><a href="#" class="google">Follow on Google Plus</a></li>
+                  <li><a href="#" class="blog">Our Blog</a></li>
+                </ul>
+              </div>
+              <!-- column 3 -->
+              <div class="col-3">
+                <h3>Got questions?</h3>
+                <ul class="list">
+                  <li><a href="#">About MDIH</a></li>
+                  <li><a href="#">Help / FAQs</a></li>
+                  <li><a href="#">Sitemap</a></li>
+                  <li><a href="#">Mobile</a></li>
+                  <li><a href="#">Privacy Policy</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id='ajax_loader_big_div' style='z-index:1000000;'>
+      <img alt="Ajax-loader-big" src="/assets/ajax-loader-big.gif" style="z-index:1000000;" />
+      <img alt="Ajax-loader-big" id="ajax_loader_big" src="/assets/ajax-loader-big.gif" style="z-index:1000000;" />
+    </div>
+  </body>
+</html>
+

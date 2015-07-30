@@ -1,0 +1,79 @@
+<!-- search panel -->
+<%= render :partial => "/layouts/search_form" %>
+<!-- content box -->
+<div class="content-box">
+  <header class="heading">
+    <h2>Messages</h2>
+<%#= will_paginate @messages %>
+  </header>
+  <div class="holder">
+    <!-- tabset -->
+    <ul class="box-tabs1">
+      <% msgcount = current_user.received_messages.where("receiver_status = 'unread'").count %>
+      <li><%= link_to "Inbox #{msgcount > 0 ? "(#{msgcount})" : "" }", messages_box_path(current_user, "inbox"), :class => @message_type == 'inbox' ? "active" : "" %></li>
+      <li><%= link_to "Sent", messages_box_path(current_user, "sent"), :class => @message_type == 'sent' ? "active" : "" %></li>
+      <li><%= link_to  "Template", user_message_templates_path(current_user), :class => controller_path == "message_templates" ? "active" : "" %></li>
+    </ul>
+    <% if @message_type == "sent"%>
+      <div id="sent_messages">
+        <%= render :partial => "sent" %>
+        <input type="hidden" value="sent" id="message_type" />
+        <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+      </div>
+    <% else %>
+      <div id="inbox_messages">
+        <%= render :partial => "inbox" %>
+        <input type="hidden" value="inbox" id="message_type" />
+        <input type="hidden" value="<%= @user.id %>" id="current_user_id" />
+      </div>
+    <% end %>
+  </div>
+</div>
+<script>
+  jQuery(function() {
+    jQuery(window).scroll(
+    function() {
+      if (($(window).scrollTop() == $(document).height() - $(window).height()) && jQuery('#message_inbox_page').val() > 0)
+      {
+        if (jQuery("#message_type").val() == 'inbox') {
+          more_inbox_messages(jQuery('#current_user_id').val(), jQuery('#message_inbox_page').val())
+        }
+        else{
+          more_index_sent_messages(jQuery('#current_user_id').val(), jQuery('#message_inbox_page').val())
+        }
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

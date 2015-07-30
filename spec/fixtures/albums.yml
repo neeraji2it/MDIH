@@ -1,0 +1,26 @@
+
+album1:
+    id: 1
+    name: My Album 1
+    description: My Album
+    cover_photo_id: 1
+
+album2:
+    id: 2
+    name: My Album 2
+    description: My Album
+    cover_photo_id:
+
+album3:
+    id: 3
+    name: My Album 3
+    description: My Album
+    cover_photo_id:
+
+album4:
+    id: 4
+    name: My Album 4
+    description: My Album
+    cover_photo_id:
+
+

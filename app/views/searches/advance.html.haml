@@ -1,0 +1,248 @@
+%table{ :align => "center", :width => "100%", :border => "0" }
+  %tr
+    %td{ :valign => "top" }
+      %h1
+        = I18n.t('search.label.advance_search')
+      - form_tag advance_results_searches_path, :method => :get do
+        %table{ :width => "100%", :style => "background: #629859;color: #FFFFFF;padding: 20px 20px 20px 20px;" }
+          %tr
+            %td{ :valign => "top", :width => "25%" }
+              %div
+                %div{ :style => "float:left;padding-right: 20px;" }
+                  = I18n.t('search.label.i_m_a')
+                  %br
+                  = select_tag "i_am_a", options_for_select(GENDERS, params[:i_am_a])
+                %div{ :style => "float:left" }
+                  = I18n.t('search.label.looking_for_a')
+                  %br
+                  = select_tag "looking_for", options_for_select(LOOKING_FOR, params[:looking_for])
+            %td{ :valign => "top", :width => "20%" }
+              = I18n.t('search.label.between_the_ages')
+              %br
+              = select_tag "age_from", options_for_select((18..100), params[:age_from].to_i)
+              and
+              = select_tag "age_to", options_for_select((18..100), params[:age_to].to_i)
+            %td{ :valign => "top", :width => "30%" }
+              = I18n.t('search.label.located')
+              %br
+              = text_field_tag "distance", params[:distance], :size => "3"
+              = I18n.t('search.label.miles_of')
+              = text_field_tag "zip_code", params[:zip_code] ? params[:zip_code] : 'Zip/postal code', :size => "7", :onfocus => "zip_hint('zip_code', 'Zip/postal code')", :onblur => "zip_hint('zip_code', 'Zip/postal code')", :style => "color: #{params[:zip_code] ? '#000000' : '#CFCFCF'};"
+          %tr
+            %td{ :colspan => "3", :style => "padding: 5px;font-size: 12px;border-bottom: 1px groove" }
+              = check_box_tag :has_picture
+              = I18n.t('search.label.has_picture')
+              %br
+              = check_box_tag :has_contacted
+              = I18n.t('search.label.hide_people')
+          %tr
+            %td{:colspan => "3", :style => "padding-bottom: 5px;border-bottom: 1px groove" }
+              %table{ :width => "100%" }
+                %tr{:style => "font-size: 12px;color: #FFFFFF;"}
+                  %td{ :colspan => "3"}
+                    = link_to_function "expand all", "expan_all_search_options()", :class => "whiteLink", :id => "expand_all"
+                %tr{:style => "font-size: 12px;color: #FFFFFF;"}
+                  %td{ :valign => "top", :width => "33%"}
+                    %p{ :style => "font-size: 16px;font-weight: bold;" }
+                      Personal
+                    = link_to_function "[+] Height", "expan_search_options('height', 'Height')", :id => "height_link", :class => "whiteLink"
+
+                    #height{ :style => "display:none"}
+                      = text_field_tag "height",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Weight", "expan_search_options('weight', 'Weight')", :id => "weight_link", :class => "whiteLink"
+                    #weight{ :style => "display:none"}
+                      = text_field_tag "weight",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Ethnic Origin", "expan_search_options('ethnicity', 'Ethnic Origin')", :id => "ethnicity_link", :class => "whiteLink"
+
+                    #ethnicity{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Caucasian" , "Hispanic", "Asian",  "Indian", "Pacific Islander", "American Indian" , "Black", "Aborigines", "Arabic",  "Mixed", "Other"], :break_num => 2, :field_name => "ethnicity", :field_type => "radio_button"}
+
+                    %br
+                    = link_to_function "[+] Skin Color", "expan_search_options('skin_color', 'Skin Color')", :id => "skin_color_link", :class => "whiteLink"
+
+                    #skin_color{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Caucasian" , "Hispanic", "Asian",  "Indian", "Pacific Islander", "American Indian" , "Black", "Aborigines", "Arabic",  "Mixed", "Other"], :break_num => 3, :field_name => "skin_color", :field_type => "radio_button"}
+
+                    %br
+                    = link_to_function "[+] Eye Color", "expan_search_options('eye_color', 'Eye Color')", :id => "eye_color_link", :class => "whiteLink"
+
+                    #eye_color{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Black", "Blue", "Brown", "Green", "Hazel"], :break_num => 3, :field_name => "eye_color", :field_type => "radio_button"}
+
+                    %br
+                    = link_to_function "[+] Hair Color", "expan_search_options('hair_color', 'Hair Color')", :id => "hair_color_link", :class => "whiteLink"
+
+                    #hair_color{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Black", "Brown" , "Light Brown", "Blond", "Greay", "Colored", "Bold"], :break_num => 3, :field_name => "hair_color", :field_type => "radio_button"}
+
+                    %br
+                    = link_to_function "[+] Body Type", "expan_search_options('personality', 'Body Type')", :id => "personality_link", :class => "whiteLink"
+
+                    #personality{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Normal", "Skinny", "Athletic",  "Muscular", "Chubby", "Fat"], :break_num => 3, :field_name => "body_type", :field_type => "radio_button"}
+
+                    %br
+                    = link_to_function "[+] Languages", "expan_search_options('languages', 'Languages')", :id => "languages_link", :class => "whiteLink"
+
+                    #languages{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["English", "Spanish", "Portuguese", "Italian", "French", "German", "Finish", " Dutch", "Flemish", "Russian", "African languages", "Arabic", "Hindi Languages", "Farsi", "Chinese", "Japanese", "Korean"], :break_num => 2, :field_name => "languages_spoken[]", :field_type => "check_box"}
+
+                    %br
+                    = link_to_function "[+] Marital status", "expan_search_options('marital_status', 'Marital status')", :id => "marital_status_link", :class => "whiteLink"
+
+                    #marital_status{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Single", "Married", "Separated",  "Divorced", "Widow", "Attached"], :break_num => 2, :field_name => "marital_status", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Has kids", "expan_search_options('has_kids', 'Has kids')", :id => "has_kids_link", :class => "whiteLink"
+
+                    #has_kids{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "Yes", "No"], :break_num => 3, :field_name => "has_kids", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Want kids", "expan_search_options('want_kids', 'Want kids')", :id => "want_kids_link", :class => "whiteLink"
+
+                    #want_kids{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "Yes", "No"], :break_num => 3, :field_name => "want_kids", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Religion", "expan_search_options('religion', 'Religion')", :id => "religion_link", :class => "whiteLink"
+
+                    #religion{ :style => "display:none;"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "Christian", "Jewish", "Muslim", "Buddhist", "Spiritual", "Atheist"], :break_num => 3, :field_name => "religion", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Fetish", "expan_search_options('fetish', 'Fetish')", :id => "fetish_link", :class => "whiteLink"
+
+                    #fetish{ :style => "display:none"}
+                      = text_field_tag "fetish",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Sexual Activity", "expan_search_options('sexual_activity', 'Sexual Activity')", :id => "sexual_activity_link", :class => "whiteLink"
+
+                    #sexual_activity{ :style => "display:none"}
+                      = text_field_tag "sexual_activity",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Smoke", "expan_search_options('smoke', 'Smoke')", :id => "smoke_link", :class => "whiteLink"
+
+                    #smoke{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "No Smoke","Rarely", "Yes", "Chain Smoker"], :break_num => 2, :field_name => "smoke", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Drink", "expan_search_options('drink', 'Drink')", :id => "drink_link", :class => "whiteLink"
+
+                    #drink{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "Never","Rarely", "Socially", "Always"], :break_num => 2, :field_name => "drink", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Drugs", "expan_search_options('drugs', 'Drugs')", :id => "drugs_link", :class => "whiteLink"
+
+                    #drugs{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Any", "No Drugs","Rarely", "Marijuana OK", "Anything goes"], :break_num => 2, :field_name => "drugs", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Zodiac Sign", "expan_search_options('zodiac_sign', 'Zodiac Sign')", :id => "zodiac_sign_link", :class => "whiteLink"
+
+                    #zodiac_sign{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Aries" , "Taurus", "Asian",  "Gemini", "Cancer", "Leo" , "Virgo", "Libra", "Scorpio",  "Sagittarius", "Capricorn", "Aquarius", "Pisces"], :break_num => 3, :field_name => "zodiac_sign", :field_type => "radio_button"}
+
+                  %td{ :valign => "top", :width => "33%"}
+                    %p{ :style => "font-size: 16px;font-weight: bold;" }
+                      = I18n.t('searches.professional')
+                    = link_to_function "[+] Education Level", "expan_search_options('education_level', 'Education Level')", :id => "education_level_link", :class => "whiteLink"
+
+                    #education_level{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Primary", "Secondary", "High School", "College", "Master", "PHD", "Apprenticeship", "Self taught", "none"], :break_num => 2, :field_name => "education_level", :field_type => "radio_button"}
+                    %br
+                    = link_to_function "[+] Profession", "expan_search_options('profession', 'Profession')", :id => "profession_link", :class => "whiteLink"
+
+                    #profession{ :style => "display:none"}
+                      = text_field_tag "profession",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Income Level", "expan_search_options('income_level', 'Income Level')", :id => "income_level_link", :class => "whiteLink"
+
+                    #income_level{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["0-29k","30-49k", "50-69k", "70-89k", "90-109k", "110-199k", "200+"], :break_num => 3, :field_name => "income_level", :field_type => "radio_button"}
+                      -# income_level = {"0-29k" => "29k", "30-49k" => "49k", "50-69k" => "69k", "70-89k" => "89k", "90-109k" => "109k", "110-199k" => "199k", "200+" => "200+" }
+                    %br
+
+                  %td{ :valign => "top", :width => "33%"}
+                    %p{ :style => "font-size: 16px;font-weight: bold;" }
+                      = I18n.t('search.label.interests')
+                    = link_to_function "[+] Favorite Music", "expan_search_options('favorite_music', 'Favorite Music')", :id => "favorite_music_link", :class => "whiteLink"
+
+                    #favorite_music{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Club", "Electronic", "Trance", "Hip hop", "Classical", "Opera", "Country", "New Age", "Tribal", "World Bit", "Arabic", "Chinese"], :break_num => 3, :field_name => "favorite_music[]", :field_type => "check_box"}
+                    %br
+                    = link_to_function "[+] Favorite movies", "expan_search_options('favorite_movies', 'Favorite movies')", :id => "favorite_movies_link", :class => "whiteLink"
+
+                    #favorite_movies{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Romantic comedies", "Dramas", "Horror", "Sci Fi", "Suspense", "Thriller", "Action", "Coming of age"], :break_num => 3, :field_name => "favorite_movies[]", :field_type => "check_box"}
+                    %br
+                    = link_to_function "[+] Favorite Actors", "expan_search_options('favorite_actors', 'Favorite Actors')", :id => "favorite_actors_link", :class => "whiteLink"
+
+                    #favorite_actors{ :style => "display:none"}
+                      = text_field_tag "favorite_actors",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Tv Show", "expan_search_options('favorite_tv_show', 'Favorite Tv Show')", :id => "favorite_tv_show_link", :class => "whiteLink"
+
+                    #favorite_tv_show{ :style => "display:none" }
+                      = text_field_tag "favorite_tv_show",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Books", "expan_search_options('favorite_books', 'Favorite Books')", :id => "favorite_books_link", :class => "whiteLink"
+
+                    #favorite_books{ :style => "display:none"}
+                      = text_field_tag "favorite_books",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Authors", "expan_search_options('favorite_authors', 'Favorite Authors')", :id => "favorite_authors_link", :class => "whiteLink"
+
+                    #favorite_authors{ :style => "display:none"}
+                      = text_field_tag "favorite_authors",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Role Model", "expan_search_options('role_model', 'Role Model')", :id => "role_model_link", :class => "whiteLink"
+
+                    #role_model{ :style => "display:none"}
+                      = text_field_tag "role_model",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite type of cuisine", "expan_search_options('favorite_type_of_cuisine', 'Favorite type of cuisine')", :id => "favorite_type_of_cuisine_link", :class => "whiteLink"
+
+                    #favorite_type_of_cuisine{ :style => "display:none"}
+                      = text_field_tag "favorite_type_of_cuisine",'', :size => "20"
+                      =# render :partial => "option_values", :locals => { :options => ["American", "French", "Italian", "Chinese", "Japanese", "Korean", "Vietnamese", "Indian", "Mediterranean", "African", "German", "Nouvelle", "Cuisine", "Californian"], :break_num => 3, :field_name => "favorite_food", :field_type => "check_box"}
+                    %br
+                    = link_to_function "[+] Favorite Sports", "expan_search_options('favorite_sports', 'Favorite Sports')", :id => "favorite_sports_link", :class => "whiteLink"
+
+                    #favorite_sports{ :style => "display:none"}
+                      = text_field_tag "favorite_sports",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Clubs", "expan_search_options('favorite_clubs', 'Favorite Clubs')", :id => "favorite_clubs_link", :class => "whiteLink"
+
+                    #favorite_clubs{ :style => "display:none"}
+                      = text_field_tag "favorite_clubs",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Resaurants", "expan_search_options('favorite_resaurants', 'Favorite Resaurants')", :id => "favorite_resaurants_link", :class => "whiteLink"
+
+                    #favorite_resaurants{ :style => "display:none"}
+                      = text_field_tag "favorite_resaurants",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Favorite Avtivity", "expan_search_options('favorite_avtivity', 'Favorite Avtivity')", :id => "favorite_avtivity_link", :class => "whiteLink"
+
+                    #favorite_avtivity{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Walking in nature", "Reading", "Sport", "Gym", "Spa", "Movies", "Eating", "Wine testing", "Traveling", "discovering new places", "Flee markets", "Sleeping", "Scuba diving"], :break_num => 3, :field_name => "favorite_avtivity[]", :field_type => "check_box"}
+                    %br
+                    = link_to_function "[+] Ideal Places To live", "expan_search_options('ideal_places', 'Ideal Places To live')", :id => "ideal_places_link", :class => "whiteLink"
+
+                    #ideal_places{ :style => "display:none"}
+                      = text_field_tag "ideal_places",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Ideal Vacation Type", "expan_search_options('ideal_vacation', 'Ideal Vacation Type')", :id => "ideal_vacation_link", :class => "whiteLink"
+
+                    #ideal_vacation{ :style => "display:none"}
+                      = text_field_tag "ideal_vacation",'', :size => "20"
+                    %br
+                    = link_to_function "[+] Hobbies", "expan_search_options('interests', 'Hobbies')", :id => "interests_link", :class => "whiteLink"
+
+                    #interests{ :style => "display:none"}
+                      = render :partial => "option_values", :locals => { :options => ["Art", "Music", "Dancing", "Meditating", "Religion", "Politics"], :break_num => 3, :field_name => "interests[]", :field_type => "check_box"}
+                    %br
+          %tr
+            %td{:colspan => "3", :align => "right"}
+              = image_submit_tag("search.gif")
+    %td{ :valign => "top",:align => "center", :width => "20px" }
+      = image_tag("devider.jpg", :height => 300)
+    %td{ :width => "20%", :valign => "top"  }
+      = render :partial => "saved_searches"
