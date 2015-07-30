@@ -60,6 +60,20 @@ MDIH::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+  config.action_mailer.default_url_options = { :host => "23.227.172.68" }
+
+  ActionMailer::Base.delivery_method = :smtp
+
+  ActionMailer::Base.smtp_settings = {
+    :enable_starttls_auto => true,
+    :address => 'smtp.gmail.com',
+    :domain => 'gmail.com',
+    :port => '587',
+    :user_name => 'mydateishere1@gmail.com',
+    :password => 'mydateishere',
+    :authentication => :login
+  }
+  ActionMailer::Base.perform_deliveries = true
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)

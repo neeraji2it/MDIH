@@ -53,8 +53,8 @@ end
     :address => 'smtp.gmail.com',
     :domain => 'gmail.com',
     :port => '587',
-    :user_name => 'rails.app.email@gmail.com',
-    :password => 'rubyonrails',
+    :user_name => 'mydateishere1@gmail.com',
+    :password => 'mydateishere',
     :authentication => :login
   }
   ActionMailer::Base.perform_deliveries = true
