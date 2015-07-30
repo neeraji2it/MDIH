@@ -23,6 +23,8 @@ gem 'jquery-rails'
 gem 'american_date'
 gem 'facebooker2'
 gem 'opentok'
+gem 'rvm-capistrano'
+gem 'capistrano-ext'
 
 group :development do
   gem "haml-rails", ">= 0.3.4"
